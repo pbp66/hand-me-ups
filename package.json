@@ -1,10 +1,14 @@
 {
-  "name": "03-hand-me-ups",
+  "name": "hand-me-ups",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Ebay/Depop/Ecommerce website/server to resell goods",
+  "main": "server/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server --ignore client",
+    "develop": "concurrently \"cd server && npm run start\" \"cd client && npm start\"",
+    "install": "cd server && npm i && cd ../client && npm i",
+    "seed": "cd server && npm run seed",
+    "build": "cd client && npm run build"
   },
   "repository": {
     "type": "git",
@@ -12,9 +16,12 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/pbp66/hand-me-ups/issues"
   },
-  "homepage": "https://github.com/pbp66/hand-me-ups#readme"
+  "homepage": "https://github.com/pbp66/hand-me-ups#readme",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
 }

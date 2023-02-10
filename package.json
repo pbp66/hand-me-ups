@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Ebay/Depop/Ecommerce website/server to resell goods",
   "main": "server/server.js",
+  "type": "module",
   "scripts": {
     "start": "node server --ignore client",
     "develop": "concurrently \"cd server && npm run start\" \"cd client && npm start\"",

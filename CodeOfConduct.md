@@ -19,15 +19,11 @@
 
 1. Use camelCase for variables and functions/methods
 
-```
-superLongExampleThatNeverEnds
-```
+    - `superLongExampleThatNeverEnds`
 
 2. Use UpperCamelCase for Classes
 
-```
-SuperSimpleClassNameExampleButNotReally
-```
+    - `SuperSimpleClassNameExampleButNotReally`
 
 3. Use Es6 imports -`import variable from "../../../file-path.js"`
     - If a module does not provide an equivalent for es6, reach out to the group for assistance

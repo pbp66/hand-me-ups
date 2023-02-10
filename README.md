@@ -7,21 +7,42 @@ TODO
 User Story:
 
 ```
-AS A shopper interested in used clothing,
-I WANT an e-commerce website/client server
+AS A shopper interested in used/vintage clothing,
+I WANT an e-commerce website
 SO THAT I can buy, sell, browse, and save clothing items that I'm interested in.
 ```
 
 Acceptance Criteria:
 
 ```
-GIVEN a CMS-style blog site
-AS A USER i want to be able to create an account to buy or sell clothes...
+GIVEN an e-commerce website
+
+WHEN I visit the site
+THEN a search bar, featured items, recommended items, account icon, logo/brand, shopping cart, and navbar appear on screen
+
+WHEN I click on sign-up
+THEN an account is created allowing me to sell clothes
+
+WHEN I click on a listing
+THEN a page loads with the listing details (price, tags, description, item title, etc), product images, seller username/account link, seller rating, favorite seller button, save item button, and add to cart button.
+
+WHEN I favorite a seller
+THEN the seller is added to my followed seller list.
+
+WHEN I view my recommended items
+THEN a list of items is shown containing listings from followed sellers, saved items, and other items with similar tags
+
+WHEN I click on the shopping cart icon
+THEN I am taken to a shopping cart page displaying the contents of the shopping cart and a button to checkout
+
+WHEN I click on the checkout button
+THEN I fill out a form for shipping address, billing address, and credit card information
+
+WHEN I submit the checkout form
+THEN my order is placed and the product listing is marked as purchased
+
 AS A USER i want to be able to browse clothing that interests me...
 AS A USER i want to be able to sell clothes at a price of my choice...
-AS A USER i want to be able to like items and save them to my saved profile page...
-AS A USER i want to be able to buy items...
-AS A USER i want to be able to follow sellers im interested in...
 ```
 
 ## Table of Contents
@@ -31,6 +52,7 @@ AS A USER i want to be able to follow sellers im interested in...
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Usage](#usage)
+  - [Credits](#credits)
   - [License](#license)
   - [How to Contribute](#how-to-contribute)
   - [Tests](#tests)
@@ -43,6 +65,8 @@ TODO
 ## Usage
 
 TODO
+
+## Credits
 
 ## License
 

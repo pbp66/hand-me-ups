@@ -28,7 +28,7 @@ const typeDefs = `
 		size: String
 		color: [String]
 		condition: Condition!
-		image: [String] # Link to image in firebase?
+		image: String # Link to image in firebase?
 		seller: User
 		listing_date: String! # Date represented as a string?
 		edit_status: Boolean!
@@ -72,7 +72,7 @@ const typeDefs = `
 		_id: ID!
 		user: User!
 		card_number: String!
-		card_type: String!
+		card_brand: String!
 		expiration_date: String!
 		security_code: String!
 	}

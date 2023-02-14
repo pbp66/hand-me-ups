@@ -18,8 +18,8 @@ const userSchema = new Schema({
 	},
 	password: {
 		type: String,
-		required: true,
-		minlength: 5,
+		required: "A password is required",
+		minlength: 7,
 	},
 });
 

@@ -13,11 +13,11 @@ import { signToken } from "../utils/auth";
 
 const resolvers = {
 	Query: {
-		users: async (parent, args, context, info) => {
+		allUsers: async (parent, args, context, info) => {
 			return User.find();
 		},
 
-		user: async (parent, { userId }, context, info) => {
+		oneUser: async (parent, { userId }, context, info) => {
 			return User.findOneById(userId);
 		},
 		// By adding context to our query, we can retrieve the logged in user without specifically searching for them
@@ -117,6 +117,19 @@ const resolvers = {
 				},
 			});
 		},
+
+		// TODO...
+		allTags: async (parent, args, context, info) => {},
+		allCategories: async (parent, args, context, info) => {},
+
+		userPaymentMethods: async (parent, args, context, info) => {},
+		userAddresses: async (parent, args, context, info) => {},
+
+		myPaymentMethods: async (parent, args, context, info) => {},
+		myAddresses: async (parent, args, context, info) => {},
+
+		userCart: async (parent, args, context, info) => {},
+		myCart: async (parent, args, context, info) => {},
 	},
 
 	Mutation: {
@@ -166,6 +179,7 @@ const resolvers = {
 			});
 		},
 
+		// TODO...
 		updateUser: async (parent, args, context, info) => {}, // update password, username, etc...
 
 		addListing: async (parent, args, context, info) => {},

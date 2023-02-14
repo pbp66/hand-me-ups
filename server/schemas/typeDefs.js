@@ -99,6 +99,21 @@ const typeDefs = `
 		shipping_address: Address
 	}
 
+	input ListingInput {
+		title: String!
+		description: String!
+		price: Float!
+		categories: [String] # Convert to category schema in resolver
+		tags: [String] # Convert to tag schema in resolver
+		size: String
+		color: [String]
+		condition: Condition!
+		image: [String] # Link to image in firebase?
+		listing_date: String! # Date represented as a string?
+		edit_status: Boolean!
+		edit_dates: [String] # Date represented as a string?
+	}
+
   	type Query {
     	users: [User]
     	user(userId: ID!): User
@@ -117,7 +132,8 @@ const typeDefs = `
     	addUser(username: String!, email: String!, password: String!): Auth
     	login(email: String!, password: String!): Auth
     	removeUser: User
-		addOrder(cart: Cart!, orderDetails: OrderInput): Order
+		addOrder(cart: Cart!, orderDetails: OrderInput!): Order
+		addListing(listing: ListingInput!): Listing
   	}
 `;
 

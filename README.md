@@ -1,4 +1,4 @@
-# Hand-Me-Up
+# Hand-Me-Ups
 
 ## Description
 
@@ -47,7 +47,7 @@ AS A USER i want to be able to sell clothes at a price of my choice...
 
 ## Table of Contents
 
-- [Hand-Me-Up](#hand-me-up)
+- [Hand-Me-Ups](#hand-me-ups)
   - [Description](#description)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)

@@ -55,7 +55,7 @@ function App() {
 							<Route path="/" element={<Discover />} />
 							<Route path="/SavedItems" element={<SavedItems />} />
 							<Route path="/MyListings" element={<MyListings />}  />
-							<Route path="/ShoppingCart" element={<Cart />} />
+							<Route path="/Cart" element={<Cart />} />
 							<Route path="/Login" element={<Login />} />
 							<Route path="/PurchaseHistory" element={<PurchaseHistory />} />
 							<Route path="/Signup" element={<Signup />} />

@@ -15,6 +15,7 @@ import ShoppingCart from "./pages/ShoppingCart"
 import Login from "./pages/Login";
 import PurchaseHistory from "./pages/PurchaseHistory"
 import Signup from "./pages/Signup";
+import Checkout from "./pages/Checkout"
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -56,6 +57,7 @@ function App() {
 							<Route path="/Login" element={<Login />} />
 							<Route path="/PurchaseHistory" element={<PurchaseHistory />} />
 							<Route path="/Signup" element={<Signup />} />
+							<Route path="/Checkout" element={<Checkout />} />
 						</Routes>
 					</div>
 					<Footer />

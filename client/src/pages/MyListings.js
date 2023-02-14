@@ -1,6 +1,11 @@
+import AddListing from "./AddListing";
+
 const MyListings = () => {
 	return (
-		<h1>MyListings</h1>
+		<>
+			<h1>MyListings</h1>
+			<AddListing />
+		</>
 	);
 };
 

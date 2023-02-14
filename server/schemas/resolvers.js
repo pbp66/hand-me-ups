@@ -13,11 +13,11 @@ import { signToken } from "../utils/auth";
 
 const resolvers = {
 	Query: {
-		users: async (parent, args, context, info) => {
+		allUsers: async (parent, args, context, info) => {
 			return User.find();
 		},
 
-		user: async (parent, { userId }, context, info) => {
+		oneUser: async (parent, { userId }, context, info) => {
 			return User.findOneById(userId);
 		},
 		// By adding context to our query, we can retrieve the logged in user without specifically searching for them
@@ -117,6 +117,19 @@ const resolvers = {
 				},
 			});
 		},
+
+		// TODO...
+		allTags: async (parent, args, context, info) => {},
+		allCategories: async (parent, args, context, info) => {},
+
+		userPaymentMethods: async (parent, args, context, info) => {},
+		userAddresses: async (parent, args, context, info) => {},
+
+		myPaymentMethods: async (parent, args, context, info) => {},
+		myAddresses: async (parent, args, context, info) => {},
+
+		userCart: async (parent, args, context, info) => {},
+		myCart: async (parent, args, context, info) => {},
 	},
 
 	Mutation: {
@@ -165,30 +178,43 @@ const resolvers = {
 				},
 			});
 		},
+
+		// TODO...
+		updateUser: async (parent, args, context, info) => {}, // update password, username, etc...
+
 		addListing: async (parent, args, context, info) => {},
 		removeListing: async (parent, args, context, info) => {},
 		saveListing: async (parent, args, context, info) => {}, // update listing
+
 		favoriteListing: async (parent, args, context, info) => {}, // save listing to favorites list
-		removeFavoriteListing: async (parent, args, context, infO) => {},
+		removeFavoriteListing: async (parent, args, context, info) => {},
+
 		addOrder: async (parent, args, context, info) => {},
-		removeOrder: async (parent, args, context, infO) => {},
-		updateOrder: async (parent, args, context, infO) => {},
-		createOrder: async (parent, args, context, infO) => {},
-		createCart: async (parent, args, context, infO) => {},
+		removeOrder: async (parent, args, context, info) => {},
+		updateOrder: async (parent, args, context, info) => {},
+
+		createCart: async (parent, args, context, info) => {},
+		removeCart: async (parent, args, context, info) => {},
 		addToCart: async (parent, args, context, info) => {},
 		removeFromCart: async (parent, args, context, info) => {},
-		updateCart: async (parent, args, context, infO) => {}, // TODO: Is this needed with addTo and removeFrom Cart methods?
-		removeCart: async (parent, args, context, infO) => {},
-		addAddress: async (parent, args, context, infO) => {},
-		removeAddress: async (parent, args, context, infO) => {},
-		updateAddress: async (parent, args, context, infO) => {},
-		createAddress: async (parent, args, context, infO) => {},
-		addPaymentMethod: async (parent, args, context, infO) => {},
-		removePaymentMethod: async (parent, args, context, infO) => {},
-		updatePaymentMethod: async (parent, args, context, infO) => {},
-		createPaymentMethod: async (parent, args, context, infO) => {},
-		updateDefaultPaymentMethod: async (parent, args, context, infO) => {},
-		updateDefaultAddress: async (parent, args, context, infO) => {},
+
+		addAddress: async (parent, args, context, info) => {},
+		removeAddress: async (parent, args, context, info) => {},
+		updateAddress: async (parent, args, context, info) => {},
+		createAddress: async (parent, args, context, info) => {},
+
+		addPaymentMethod: async (parent, args, context, info) => {},
+		removePaymentMethod: async (parent, args, context, info) => {},
+		updatePaymentMethod: async (parent, args, context, info) => {},
+
+		updateDefaultPaymentMethod: async (parent, args, context, info) => {},
+		updateDefaultAddress: async (parent, args, context, info) => {},
+
+		addTag: async (parent, args, context, info) => {},
+		removeTag: async (parent, args, context, info) => {},
+
+		addCategory: async (parent, args, context, info) => {},
+		removeCategory: async (parent, args, context, info) => {},
 	},
 };
 

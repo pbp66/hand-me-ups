@@ -133,8 +133,10 @@ const typeDefs = `
     	addUser(username: String!, email: String!, password: String!): Auth
     	login(email: String!, password: String!): Auth
     	removeUser: User
-		addOrder(cart: Cart!, orderDetails: OrderInput!): Order
 		addListing(listing: ListingInput!): Listing
+		removeListing(listingId: ID!): User
+		addOrder(cart: Cart!, orderDetails: OrderInput!): Order
+
   	}
 `;
 

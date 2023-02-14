@@ -1,15 +1,39 @@
 const typeDefs = `
   	type User {
-    	_id: ID
-    	username: String
-    	email: String
-    	password: String
+    	_id: ID!
+    	username: String!
+    	email: String!
+    	password: String!
   	}
 
   	type Auth {
     	token: ID!
     	user: User
   	}
+
+	type Listing {
+		_id: ID!
+		description: String!
+		price: Float!
+		categories: [String]
+		tags: [String]
+		size: String
+		color: [String]
+		condition: Condition!
+		image: [String] # Link to image in firebase?
+		seller: User
+		listing_date: String! # Date represented as a string?
+		edit_status: Boolean!
+		edit_dates: [String] # Date represented as a string?
+	}
+
+	enum Condition {
+		NEW
+		USED - LIKE NEW
+		USED - GOOD
+		USED - FAIR
+		USED - POOR
+	}
 
   	type Query {
     	users: [User]!

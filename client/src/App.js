@@ -8,12 +8,20 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Home from "./pages/Home";
-import Profile from "./pages/User";
-import Signup from "./pages/Signup";
+import Discover from "./pages/Discover";
+import SavedItems from "./pages/SavedItems"
+import MyListings from "./pages/MyListings"
+import ShoppingCart from "./pages/ShoppingCart"
 import Login from "./pages/Login";
+import PurchaseHistory from "./pages/PurchaseHistory"
+import Signup from "./pages/Signup";
+import Checkout from "./pages/Checkout"
+
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import AddProduct from "./components/Form/AddProduct";
+
+
 
 const httpLink = createHttpLink({
 	uri: "/graphql",
@@ -39,31 +47,20 @@ const client = new ApolloClient({
 function App() {
 	return (
 		<ApolloProvider client={client}>
+			<AddProduct/>
 			<Router>
 				<div className="flex-column justify-flex-start min-100-vh">
 					<Header />
 					<div className="container">
 						<Routes>
-							<Route
-								path="/"
-								element={<Home />}
-							/>
-							<Route
-								path="/login"
-								element={<Login />}
-							/>
-							<Route
-								path="/signup"
-								element={<Signup />}
-							/>
-							<Route
-								path="/me"
-								element={<Profile />}
-							/>
-							<Route
-								path="/users/:userId"
-								element={<Profile />}
-							/>
+							<Route path="/" element={<Discover />} />
+							<Route path="/SavedItems" element={<SavedItems />} />
+							<Route path="/MyListings" element={<MyListings />} />
+							<Route path="/ShoppingCart" element={<ShoppingCart />} />
+							<Route path="/Login" element={<Login />} />
+							<Route path="/PurchaseHistory" element={<PurchaseHistory />} />
+							<Route path="/Signup" element={<Signup />} />
+							<Route path="/Checkout" element={<Checkout />} />
 						</Routes>
 					</div>
 					<Footer />

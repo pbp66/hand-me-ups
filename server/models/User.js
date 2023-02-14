@@ -106,5 +106,4 @@ userSchema.methods.isCorrectPassword = async function (password) {
 };
 
 const User = model("User", userSchema);
-
 export default User;

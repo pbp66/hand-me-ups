@@ -52,5 +52,4 @@ addressSchema.methods.getFullAddress = function () {
 };
 
 const Address = model("Address", addressSchema);
-
 export default Address;

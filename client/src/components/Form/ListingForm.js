@@ -1,48 +1,8 @@
-import { storage } from '../../utils/firebase'
+
 import slugify from "slugify"
-import { uploadBytes, getDownloadURL, ref } from "firebase/storage";
 import { useState, useMutation } from 'react'
 
-function AddProduct() {
-
-  const [formState, setFormState] = useState({
-    title: "",
-    image: "",
-    description: "",
-    price: 0,
-    category: "",
-    tags: [],
-    colors: [],
-    condition: "",
-  })
-  const [newTag, setNewTag] = useState("")
-  const [newColor, setNewColor] = useState("")
-  const [files, setFiles] = useState(null)
-  // const [addListing] = useMutation(ADD_LISTING)
-
-  const handleFileInput = (e) => {
-    setFiles(e.target.files)
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    for (const file of files) {
-      const imagesRef = ref(storage, `images/${file.name}`)
-      const snapshot = await uploadBytes(imagesRef, file)
-      const url = await getDownloadURL(snapshot.ref)
-    }
-
-    //   try {
-    //     const { data } = await addListing({
-    //       variables: { ...formState }
-    //     })
-    //   } catch (err) {
-    //     console.log(error)
-    //   }
-    // }
-  }
-
+function ListingForm({handleSubmit, handleFileInput, formState, newTag, setFormState, setNewTag, newColor, setNewColor, disabled}) {
   return (
     <form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
       <div className='container'>
@@ -89,7 +49,9 @@ function AddProduct() {
             value={newTag}
             onChange={(e) => setNewTag(e.target.value)}
           />
+          <br/>
           <button
+          className="btn btn-success"
             type="button"
             onClick={() => {
               setFormState({
@@ -143,7 +105,9 @@ function AddProduct() {
             value={newColor}
             onChange={(e) => setNewColor(e.target.value)}
           />
+          <br/>
           <button
+          className="btn btn-success"
             type="button"
             onClick={() => {
               setFormState({
@@ -154,7 +118,7 @@ function AddProduct() {
             }
             }
           >
-            Add tag
+            Add Color
           </button>
         </div>
         <div className="mb-3">
@@ -195,9 +159,9 @@ function AddProduct() {
         <div className="mb-3">
           <select
             className="form-select"
-            aria-label="Default select example"
+            aria-label="Condition Drop-Down"
             value={formState.condition}>
-            <option selected>Open this select menu</option>
+            <option selected>Condition</option>
             <option value="1">Mint</option>
             <option value="2">Excellent</option>
             <option value="3">Great</option>
@@ -220,7 +184,7 @@ function AddProduct() {
             multiple />
         </div>
         <div>
-          <button className="btn btn-success">Success</button>
+          <button className="btn btn-success">Submit new Hand Me Up</button>
         </div>
       </div>
     </form>
@@ -229,4 +193,4 @@ function AddProduct() {
 }
 
 
-export default AddProduct
+export default ListingForm

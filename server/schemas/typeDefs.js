@@ -5,7 +5,7 @@ const typeDefs = `
     	email: String!
     	password: String!
 		listings: [Listing]
-		saved_items: [Listing]
+		favorites: [Listing]
 		orders: [Order]
 		payment_methods: [Payment]
 		addresses: [Address]

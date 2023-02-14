@@ -7,7 +7,7 @@ const typeDefs = `
 		listings: [Listing]
 		saved_items: [Listing]
 		orders: [Order]
-		payment_method: [Payment]
+		payment_methods: [Payment]
   	}
 
   	type Auth {

@@ -12,6 +12,7 @@ function AddListing() {
         description: "",
         price: 0,
         category: "",
+        size: "",
         tags: [],
         colors: [],
         condition: "",
@@ -40,7 +41,8 @@ function AddListing() {
             [field]: value
         }
         setFormState(updatedFormState)
-        console.log(formState)
+
+
     }
 
     const handleFileInput = (e) => {
@@ -56,20 +58,19 @@ function AddListing() {
             const snapshot = await uploadBytes(imagesRef, file)
             imageUrl = await getDownloadURL(snapshot.ref)
         }
-
         if (imageUrl === "") {
             setDisabled(true)
 
         } else {
             setDisabled(false)
         }
-        console.log(imageUrl)
+        const updatedFormState = {
+            ...formState,
+            image: imageUrl
+        }
+        await setFormState(updatedFormState)
 
-
-
-
-
-
+        await console.log(formState)
         //   try {
         //     const { data } = await addListing({
         //       variables: { ...formState }
@@ -78,9 +79,9 @@ function AddListing() {
         //     console.log(error)
         //   }
         // }
-        console.log(formState)
-    }
 
+    }
+    console.log(formState)
     return (
         <form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
             <div className='container'>
@@ -116,13 +117,112 @@ function AddListing() {
                     </div>
                     <input
                         name="price"
-                        type="text"
+                        type="number"
                         className="form-control"
                         aria-label="Amount (to the nearest dollar)" placeholder="Asking Price"
                         onChange={handleInputs}
                         value={formState.price} />
                 </div>
 
+                {/* CATEGORIES */}
+                <div className="mb-3">
+                    <h5>Category</h5>
+                    <select
+                        name="category"
+                        className="form-select"
+                        aria-label="Default select example"
+                        onChange={handleInputs}
+                        value={formState.category}>
+                        <option selected value> -- select an option -- </option>
+                        <option>Shirt</option>
+                        <option>Hat</option>
+                        <option>JNCOS</option>
+                    </select>
+                </div>
+
+                {/* SIZE */}
+                <div className="mb-3">
+                    <h5>Size</h5>
+                    <select
+                        name="size"
+                        className="form-select"
+                        aria-label="Default select example"
+                        onChange={handleInputs}
+                        value={formState.size}>
+                        <option selected value> -- select an option -- </option>
+                        <option>XXXL</option>
+                        <option>XXL</option>
+                        <option>XL</option>
+                        <option>L</option>
+                        <option>M</option>
+                        <option>S</option>
+                        <option>XS</option>
+                    </select>
+                </div>
+
+                {/* CONDITION */}
+                <div className="mb-3">
+                    <h5>Condition</h5>
+                    <select
+                        name="condition"
+                        className="form-select"
+                        aria-label="Condition Drop-Down"
+                        onChange={handleInputs}
+                        value={formState.condition}>
+                        <option selected value> -- select an option -- </option>
+                        <option>Mint</option>
+                        <option>Excellent</option>
+                        <option>Great</option>
+                        <option>Good</option>
+                        <option>Decent</option>
+                        <option>Bad</option>
+                        <option>Wrecked</option>
+                    </select>
+                </div>
+                {/* COLORS */}
+                <div className="mb-3">
+                    <label htmlFor="exampleFormControlTextarea1" className="form-label"><h5>Colors</h5></label>
+                    <input
+                        className="form-control" id="exampleFormControlTextarea1"
+                        rows="1"
+                        placeholder="colors"
+                        value={newColor}
+                        onChange={(e) => setNewColor(e.target.value)}
+                    />
+                    <br />
+                    <center>
+                        <button
+                            className="btn btn-success"
+                            type="button"
+                            onClick={() => {
+                                setFormState({
+                                    ...formState,
+                                    colors: [...formState.colors, slugify(newColor, { lower: true })]
+                                })
+                                setNewColor("")
+                            }
+                            }
+                        >
+                            Add Color
+                        </button>
+                    </center>
+                </div>
+                <div className="mb-3">
+                    <ul>
+                        {formState.colors.map(tag => {
+                            return <li
+                                onClick={() => {
+                                    setFormState({
+                                        ...formState,
+                                        colors: formState.colors.filter(t => t !== tag)
+                                    })
+                                }}
+                                key={tag}>
+                                {tag}
+                            </li>
+                        })}
+                    </ul>
+                </div>
                 {/* TAGS */}
                 <div className="mb-3">
                     <label htmlFor="exampleFormControlTextarea1" className="form-label"><h5>Tags</h5></label>
@@ -168,121 +268,7 @@ function AddListing() {
                     </ul>
                 </div>
 
-                {/* CATEGORIES */}
-                <div className="mb-3">
-                    <select
-                        name="category"
-                        className="form-select"
-                        aria-label="Default select example"
-                        onChange={handleInputs}
-                        value={formState.category}>
-                        <option selected>Product Category</option>
-                        <option value="1">Shirt</option>
-                        <option value="2">Hat</option>
-                        <option value="3">JNCOS</option>
-                    </select>
-                </div>
-
-                {/* COLORS */}
-                <div className="mb-3">
-                    <label htmlFor="exampleFormControlTextarea1" className="form-label"><h5>Colors</h5></label>
-                    <input
-                        className="form-control" id="exampleFormControlTextarea1"
-                        rows="1"
-                        placeholder="colors"
-                        value={newColor}
-                        onChange={(e) => setNewColor(e.target.value)}
-                    />
-                    <br />
-                    <center>
-                        <button
-                            className="btn btn-success"
-                            type="button"
-                            onClick={() => {
-                                setFormState({
-                                    ...formState,
-                                    colors: [...formState.colors, slugify(newColor, { lower: true })]
-                                })
-                                setNewColor("")
-                            }
-                            }
-                        >
-                            Add Color
-                        </button>
-                    </center>
-                </div>
-                <div className="mb-3">
-                    <ul>
-                        {formState.colors.map(tag => {
-                            return <li
-                                onClick={() => {
-                                    setFormState({
-                                        ...formState,
-                                        colors: formState.colors.filter(t => t !== tag)
-                                    })
-                                }}
-                                key={tag}>
-                                {tag}
-                            </li>
-                        })}
-                    </ul>
-                </div>
-
-                {/* SIZE */}
-                <div className="mb-3">
-                    <h5>Size</h5>
-                    <select
-                        name="size"
-                        className="form-select"
-                        aria-label="Default select example"
-                        onChange={handleInputs}
-                        value={formState.size}>
-                        <option selected>Size</option>
-                        <option value="2">XXXL</option>
-                        <option value="3">XXL</option>
-                        <option value="3">XL</option>
-                        <option value="3">L</option>
-                        <option value="3">M</option>
-                        <option value="3">S</option>
-                        <option value="3">XS</option>
-                    </select>
-                </div>
-
-                {/* CONDITION */}
-                <div className="mb-3">
-                    <h5>Condition</h5>
-                    <select
-                        name="condition"
-                        className="form-select"
-                        aria-label="Condition Drop-Down"
-                        onChange={handleInputs}
-                        value={formState.condition}>
-                        <option value="1">Mint</option>
-                        <option value="2">Excellent</option>
-                        <option value="3">Great</option>
-                        <option value="3">Good</option>
-                        <option value="3">Decent</option>
-                        <option value="3">Bad</option>
-                        <option value="3">Wrecked</option>
-                    </select>
-                </div>
-
-
-
-
-
-                {/* IMAGE */}
-
-                {/* 
-
-
-
-
-                        <br />
-                        <input type="file" accept="image/*" capture="user" />
-                    </center>
-                </div> */}
-
+                {/* detect if mobile to use camera or file upload */}
                 {!isMobile
                     ?
                     <input
@@ -312,12 +298,20 @@ function AddListing() {
                 <div>
                     <br />
                     <center>
-                        <button className="btn btn-success">Submit new Hand Me Up</button>
+                        {disabled
+                            ?
+                            <center>
+                                <h2>{errorMessage}</h2>
+                            </center>
+                            :
+                            <button className="btn btn-success">Submit new Hand Me Up</button>}
+
                     </center>
                 </div>
-
+                <br />
 
             </div>
+
         </form>
 
     );

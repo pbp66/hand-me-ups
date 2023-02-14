@@ -4,6 +4,10 @@ const typeDefs = `
     	username: String!
     	email: String!
     	password: String!
+		listings: [Listing]
+		saved_items: [Listing]
+		orders: [Order]
+		payment_method: [Payment]
   	}
 
   	type Auth {

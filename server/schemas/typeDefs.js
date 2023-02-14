@@ -1,4 +1,4 @@
-const typeDefs = gql`
+const typeDefs = `
   	type User {
     	_id: ID!
     	username: String!

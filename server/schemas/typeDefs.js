@@ -8,6 +8,9 @@ const typeDefs = gql`
 		saved_items: [Listing]
 		orders: [Order]
 		payment_methods: [Payment]
+		addresses: [Address]
+		default_address: Address
+		default_payment: Payment
   	}
 
   	type Auth {
@@ -15,13 +18,13 @@ const typeDefs = gql`
     	user: User
   	}
 
-	type Listing {
+	type Listing { # TODO: Schema does not allow for listing inventories greater than 1 item per listing
 		_id: ID!
 		title: String!
 		description: String!
 		price: Float!
-		categories: [String]
-		tags: [String]
+		categories: [Category]
+		tags: [Tag]
 		size: String
 		color: [String]
 		condition: Condition!
@@ -40,12 +43,22 @@ const typeDefs = gql`
 		USED - POOR
 	}
 
-	type Order { # TODO: Ensure listings is the defacto
+	type Tag {
+		_id: ID!
+		tag: String!
+	}
+
+	type Category {
+		_id: ID!
+		category: String!
+	}
+
+	type Order { # TODO: Ensure listings is the default item to save/link. Otherwise, Id can be used. 
 		_id: ID!
 		date_purchased: String!
-		purchased_listings: [Listing]
+		purchased_listings: [Listing]!
 		billing_address: Address!
-		shipping_address: Address
+		shipping_address: Address # Only needed if billing and shipping address are separate
 		purchaser: User!
 		payment_method: Payment!
 		subtotal: Float!
@@ -57,6 +70,7 @@ const typeDefs = gql`
 
 	type Payment { # TODO: Need to review for feasibility/use with Stripe. Encrypted all strings below? We don't want to save the actual value. Is this handled by Stripe?
 		_id: ID!
+		user: User!
 		card_number: String!
 		card_type: String!
 		expiration_date: String!
@@ -65,7 +79,7 @@ const typeDefs = gql`
 
 	type Address { # TODO: Encrypt user address data?
 		_id: ID!
-		user: User
+		user: User!
 		building_number: String!
 		street: String!
 		city: String!

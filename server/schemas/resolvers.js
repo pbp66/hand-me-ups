@@ -18,12 +18,12 @@ const resolvers = {
 		},
 
 		user: async (parent, { userId }, context, info) => {
-			return User.findOne({ _id: userId });
+			return User.findOneById(userId);
 		},
 		// By adding context to our query, we can retrieve the logged in user without specifically searching for them
 		me: async (parent, args, context, info) => {
 			if (context.user) {
-				return User.findOne({ _id: context.user._id });
+				return User.findOneById(context.user._id);
 			}
 			throw new GraphQLError("User is not authenticated", {
 				extensions: {
@@ -32,11 +32,9 @@ const resolvers = {
 				},
 			});
 		},
-
 		allListings: async (parent, args, context, info) => {
 			return Listing.find();
 		},
-
 		userListings: async (parent, { userId }, context, info) => {
 			const user = await User.findOneById(userId).populate("listings");
 			if (!user) {
@@ -49,13 +47,68 @@ const resolvers = {
 			}
 			return user.listings;
 		},
-
 		myListings: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findOne({
-					_id: context.user._id,
-				}).populate("listings");
+				const user = await User.findOneById(context.user._id).populate(
+					"listings"
+				);
 				return user.listings;
+			}
+			throw new GraphQLError("User is not authenticated", {
+				extensions: {
+					code: "UNAUTHENTICATED",
+					http: { status: 401 },
+				},
+			});
+		},
+		favoriteListings: async (parent, args, context, info) => {
+			if (context.user) {
+				const user = await User.findOneById(context.user._id).populate(
+					"saved_items"
+				);
+				return user.saved_items;
+			}
+			throw new GraphQLError("User is not authenticated", {
+				extensions: {
+					code: "UNAUTHENTICATED",
+					http: { status: 401 },
+				},
+			});
+		},
+		searchListings: async (
+			parent,
+			{ searchTerms, tags, ...args },
+			context,
+			info
+		) => {
+			// TODO: Search listing titles and descriptions. May need aggregate: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
+			// TODO: Create list of matching categories and tags from the tags variable
+			Listing.find({});
+		},
+		allOrders: async (parent, args, context, info) => {
+			return Order.find();
+		},
+		getOrder: async (parent, { orderId }, context, info) => {
+			return Order.findOneById(orderId);
+		},
+		userOrders: async (parent, { userId }, context, info) => {
+			const user = await User.findOneById(userId).populate("orders");
+			if (!user) {
+				throw new GraphQLError("User does not exist", {
+					extensions: {
+						code: "USER NOT FOUND",
+						http: { status: 401 },
+					},
+				});
+			}
+			return user.orders;
+		},
+		myOrders: async (parent, args, context, info) => {
+			if (context.user) {
+				const user = await User.findOneById(context.user._id).populate(
+					"orders"
+				);
+				return user.orders;
 			}
 			throw new GraphQLError("User is not authenticated", {
 				extensions: {

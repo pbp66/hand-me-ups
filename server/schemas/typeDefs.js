@@ -119,13 +119,14 @@ const typeDefs = `
     	user(userId: ID!): User
     	# Because we have the context functionality in place to check a JWT and decode its data, we can use a query that will always find and return the logged in user's data
     	me: User
-		allListings: [Listings]
-		userListings(userId: ID!): [Listings]
-		favoriteListings(userId: ID!): [Listings]
-		searchListings(searchTerms: [String]!, tags: [Tag]): [Listings]
-		allOrders: [Orders]
-		userOrders(userId: ID!): [Orders]
+		allListings: [Listing]
+		userListings(userId: ID!): [Listing]
+		favoriteListings(): [Listing]
+		searchListings(searchTerms: [String]!, tags: [Tag]): [Listing]
+		allOrders: [Order]
+		userOrders(userId: ID!): [Order]
 		getOrder(orderId: ID!): Order
+		myOrders(): [Order]
   	}
 
   	type Mutation {

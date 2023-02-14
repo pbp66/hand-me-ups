@@ -11,7 +11,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Discover from "./pages/Discover";
 import SavedItems from "./pages/SavedItems"
 import MyListings from "./pages/MyListings"
-import ShoppingCart from "./pages/ShoppingCart"
+import Cart from "./pages/Cart"
 import Login from "./pages/Login";
 import PurchaseHistory from "./pages/PurchaseHistory"
 import Signup from "./pages/Signup";
@@ -55,7 +55,7 @@ function App() {
 							<Route path="/" element={<Discover />} />
 							<Route path="/SavedItems" element={<SavedItems />} />
 							<Route path="/MyListings" element={<MyListings />}  />
-							<Route path="/ShoppingCart" element={<ShoppingCart />} />
+							<Route path="/Cart" element={<Cart />} />
 							<Route path="/Login" element={<Login />} />
 							<Route path="/PurchaseHistory" element={<PurchaseHistory />} />
 							<Route path="/Signup" element={<Signup />} />

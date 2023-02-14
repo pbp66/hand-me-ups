@@ -26,11 +26,10 @@ function AddListing() {
 
 
     const handleInputs = e => {
-        let value = e.target.value
-        let field = e.target.name
+        const {value, name} = e.target
 
         if (!value.length) {
-            setErrorMessage(`${field} is required`)
+            setErrorMessage(`${name} is required`)
             setDisabled(true)
         } else {
             setDisabled(false)
@@ -38,7 +37,7 @@ function AddListing() {
         }
         const updatedFormState = {
             ...formState,
-            [field]: value
+            [name]: value
         }
         setFormState(updatedFormState)
 
@@ -70,7 +69,6 @@ function AddListing() {
         }
         await setFormState(updatedFormState)
 
-        await console.log(formState)
         //   try {
         //     const { data } = await addListing({
         //       variables: { ...formState }
@@ -81,7 +79,6 @@ function AddListing() {
         // }
 
     }
-    console.log(formState)
     return (
         <form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
             <div className='container'>

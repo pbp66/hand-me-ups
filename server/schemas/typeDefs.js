@@ -1,4 +1,4 @@
-const typeDefs = `
+const typeDefs = gql`
   	type User {
     	_id: ID!
     	username: String!
@@ -17,6 +17,7 @@ const typeDefs = `
 
 	type Listing {
 		_id: ID!
+		title: String!
 		description: String!
 		price: Float!
 		categories: [String]
@@ -37,6 +38,39 @@ const typeDefs = `
 		USED - GOOD
 		USED - FAIR
 		USED - POOR
+	}
+
+	type Order { # TODO: Ensure listings is the defacto
+		_id: ID!
+		date_purchased: String!
+		purchased_listings: [Listing]
+		billing_address: Address!
+		shipping_address: Address
+		purchaser: User!
+		payment_method: Payment!
+		subtotal: Float!
+		shipping_handling: Float!
+		pretax_total: Float!
+		estimated_tax: Float!
+		order_total: Float!
+	}
+
+	type Payment { # TODO: Need to review for feasibility/use with Stripe. Encrypted all strings below? We don't want to save the actual value. Is this handled by Stripe?
+		_id: ID!
+		card_number: String!
+		card_type: String!
+		expiration_date: String!
+		security_code: String!
+	}
+
+	type Address { # TODO: Encrypt user address data?
+		_id: ID!
+		user: User
+		building_number: String!
+		street: String!
+		city: String!
+		state: String!
+		zip_code: String!
 	}
 
   	type Query {

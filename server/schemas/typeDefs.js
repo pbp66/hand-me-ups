@@ -5,7 +5,7 @@ const typeDefs = `
     	email: String!
     	password: String!
 		listings: [Listing]
-		saved_items: [Listing]
+		favorites: [Listing]
 		orders: [Order]
 		payment_methods: [Payment]
 		addresses: [Address]
@@ -28,7 +28,7 @@ const typeDefs = `
 		size: String
 		color: [String]
 		condition: Condition!
-		image: [String] # Link to image in firebase?
+		image: String # Link to image in firebase?
 		seller: User
 		listing_date: String! # Date represented as a string?
 		edit_status: Boolean!
@@ -72,7 +72,7 @@ const typeDefs = `
 		_id: ID!
 		user: User!
 		card_number: String!
-		card_type: String!
+		card_brand: String!
 		expiration_date: String!
 		security_code: String!
 	}
@@ -99,25 +99,44 @@ const typeDefs = `
 		shipping_address: Address
 	}
 
+	input ListingInput {
+		title: String!
+		description: String!
+		price: Float!
+		categories: [String] # Convert to category schema in resolver
+		tags: [String] # Convert to tag schema in resolver
+		size: String
+		color: [String]
+		condition: Condition!
+		image: [String] # Link to image in firebase?
+		listing_date: String! # Date represented as a string?
+		edit_status: Boolean!
+		edit_dates: [String] # Date represented as a string?
+	}
+
   	type Query {
     	users: [User]
     	user(userId: ID!): User
     	# Because we have the context functionality in place to check a JWT and decode its data, we can use a query that will always find and return the logged in user's data
     	me: User
-		allListings: [Listings]
-		userListings(userId: ID!): [Listings]
-		favoriteListings(userId: ID!): [Listings]
-		searchListings(searchTerms: [String]!, tags: [Tag]): [Listings]
-		allOrders: [Orders]
-		userOrders(userId: ID!): [Orders]
+		allListings: [Listing]
+		userListings(userId: ID!): [Listing]
+		favoriteListings(): [Listing]
+		searchListings(searchTerms: [String]!, tags: [Tag]): [Listing]
+		allOrders: [Order]
+		userOrders(userId: ID!): [Order]
 		getOrder(orderId: ID!): Order
+		myOrders(): [Order]
   	}
 
   	type Mutation {
     	addUser(username: String!, email: String!, password: String!): Auth
     	login(email: String!, password: String!): Auth
     	removeUser: User
-		addOrder(cart: Cart!, orderDetails: OrderInput): Order
+		addListing(listing: ListingInput!): Listing
+		removeListing(listingId: ID!): User
+		addOrder(cart: Cart!, orderDetails: OrderInput!): Order
+
   	}
 `;
 

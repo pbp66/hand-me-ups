@@ -17,13 +17,6 @@ const typeDefs = `
     	username: String
     	email: String
     	password: String
-		listings: [Listing]
-		favorites: [Listing]
-		orders: [Order]
-		payment_methods: [Payment]
-		addresses: [Address]
-		default_address: Address
-		default_payment: Payment
 	}
 
 	type Auth {
@@ -97,9 +90,9 @@ const typeDefs = `
 	}
 
 	input orderInput {
-		payment_method: Payment!
-		billing_address: Address!
-		shipping_address: Address
+		payment_method: paymentInput
+		billing_address: addressInput
+		shipping_address: addressInput
 	}
 
 	type Payment { # TODO: Need to review for feasibility/use with Stripe. Encrypted all strings below? We don't want to save the actual value. Is this handled by Stripe?

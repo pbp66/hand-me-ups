@@ -163,7 +163,7 @@ const typeDefs = `
 		addListing(listing: listingInput!): Listing
 		removeListing(listingId: ID!): User
 		addOrder(cartId: ID!, orderDetails: orderInput!): Order
-		updateUser(userId: ID!, user: updateUserInput): User
+		updateMe(userId: ID!, user: updateUserInput): User
 		saveListing(listingId: ID!, listing: listingInput): Listing
 		favoriteListing(listingId: ID!): [Listing]
 		removeFavoriteListing(listing: ID!): [Listing]

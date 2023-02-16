@@ -128,6 +128,14 @@ const typeDefs = `
 		zip_code: String!
 	}
 
+	input addressInput {
+		building_number: String
+		street: String
+		city: String
+		state: String
+		zip_code: String
+	}
+
 	type Cart {
 		_id: ID!
 		user: User!
@@ -172,7 +180,6 @@ const typeDefs = `
 		saveListing(listingId: ID!, listing: listingInput): Listing
 		favoriteListing(listingId: ID!): [Listing]
 		removeFavoriteListing(listing: ID!): [Listing]
-		addOrder(order: orderInput!): Order
 		removeOrder(orderId: ID!): Order
 		updateOrder(orderId: ID!, order: orderInput): Order
 		createCart(cart: cartInput): Cart

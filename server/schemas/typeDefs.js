@@ -97,7 +97,11 @@ const typeDefs = `
 	type Cart {
 		_id: ID!
 		user: User!
-		items: [Listings]
+		items: [Listing]
+	}
+
+	input cartInput {
+		items: [Listing]
 	}
 
 	input OrderInput {
@@ -170,14 +174,13 @@ const typeDefs = `
 		removeFavoriteListing(listing: ID!): [Listing]
 
 		addOrder:
-		removeOrder:
+		removeOrder(orderId: ID!): Order
 		updateOrder:
 
-		createCart:
-		removeCart:
-		addToCart:
-		removeFromCart:
-
+		createCart(cart: cartInput): Cart
+		removeCart(cartId: ID!): Cart
+		addToCart(cardId: ID!, listingId: ID!): Cart
+		removeFromCart(cardId: ID!, listingId: ID!): Cart
 		addAddress(address: addressInput!): [Address]
 		removeAddress(addressId: ID!): [Address]
 		updateAddress(addressId: ID!, address: addressInput): [Address]

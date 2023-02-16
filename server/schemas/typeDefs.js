@@ -152,8 +152,6 @@ const typeDefs = `
 		myOrders: [Order]
 		allTags: [Tag]
 		allCategories: [Category]
-		userPaymentMethods(userId: ID!): [Payment]
-		userAddresses(userId: ID!): [Address]
 		myPaymentMethods: [Payment]
 		myAddresses: [Address]
 		userCart(userId: ID!): Cart

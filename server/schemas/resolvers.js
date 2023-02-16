@@ -113,10 +113,6 @@ const resolvers = {
 		allCategories: async (parent, args, context, info) => {
 			return Category.find();
 		},
-
-		userPaymentMethods: async (parent, args, context, info) => {},
-		userAddresses: async (parent, args, context, info) => {},
-
 		myPaymentMethods: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findOneById(context.user._id).populate(

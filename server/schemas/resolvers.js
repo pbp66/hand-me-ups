@@ -176,10 +176,31 @@ const resolvers = {
 			}
 			throwUnauthenticatedError();
 		},
-
+		updateMe: async (parent, { user, ...args }, context, info) => {
+			try {
+				const updatedUser = await User.findByIdAndUpdate(
+					context.user._id,
+					{
+						username: user.username,
+						email: user.email,
+						password: user.password,
+					},
+					{ new: true, runValidators: true }
+				);
+				if (!updatedUser) {
+					throw new GraphQLError("User does not exist", {
+						extensions: {
+							code: "USER NOT FOUND",
+							http: { status: 401 },
+						},
+					});
+				}
+				return updatedUser;
+			} catch (err) {
+				console.error(err);
+			}
+		},
 		// TODO...
-		updateMe: async (parent, args, context, info) => {}, // update password, username, etc...
-
 		addListing: async (parent, args, context, info) => {},
 		removeListing: async (parent, args, context, info) => {},
 		saveListing: async (parent, args, context, info) => {}, // update listing
@@ -207,12 +228,19 @@ const resolvers = {
 		updateDefaultPaymentMethod: async (parent, args, context, info) => {},
 		updateDefaultAddress: async (parent, args, context, info) => {},
 
-		addTag: async (parent, args, context, info) => {},
-		removeTag: async (parent, args, context, info) => {},
+		addTag: async (parent, { tag, ...args }, context, info) => {
+			const newTag = await Tag.create({ tag });
+			return newTag;
+		},
+		removeTag: async (parent, { tagId, ...args }, context, info) => {
+			const tag = await Category.findOneById(tagId);
+			Tag.findByIdAndDelete(tagId);
+			return tag;
+		},
 
 		addCategory: async (parent, { category, ...args }, context, info) => {
-			const category = await Category.create({ category });
-			return category;
+			const newCategory = await Category.create({ category });
+			return newCategory;
 		},
 		removeCategory: async (
 			parent,

@@ -37,3 +37,20 @@ export const QUERY_CHECKOUT = gql`
     }
   }
 `;
+
+export const QUERY_LISTINGS = gql `
+query listings{
+	listing{
+		_id
+		title
+		description
+		price
+		categories
+		tags
+		size
+		color
+		condition
+		image
+	}
+
+}`

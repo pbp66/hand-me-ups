@@ -37,10 +37,10 @@ const typeDefs = `
 
 	enum Condition {
 		NEW
-		USED - LIKE NEW
-		USED - GOOD
-		USED - FAIR
-		USED - POOR
+		USED_LIKE_NEW
+		USED_GOOD
+		USED_FAIR
+		USED_POOR
 	}
 
 	type Tag {
@@ -77,12 +77,12 @@ const typeDefs = `
 		security_code: String!
 	}
 
-input paymentInput {
-	card_number: String
-	card_brand: String
-	expiration_date: String
-	security_code: String
-}
+	input paymentInput {
+		card_number: String
+		card_brand: String
+		expiration_date: String
+		security_code: String
+	}
 
 	type Address { # TODO: Encrypt user address data?
 		_id: ID!
@@ -106,7 +106,7 @@ input paymentInput {
 		shipping_address: Address
 	}
 
-	input ListingInput {
+	input listingInput {
 		title: String!
 		description: String!
 		price: Float!
@@ -161,13 +161,11 @@ input paymentInput {
     	addUser(username: String!, email: String!, password: String!): Auth
     	login(email: String!, password: String!): Auth
     	removeUser: User
-		addListing(listing: ListingInput!): Listing
+		addListing(listing: listingInput!): Listing
 		removeListing(listingId: ID!): User
 		addOrder(cart: Cart!, orderDetails: OrderInput!): Order
 		updateUser(userId: ID!, user: updateUserInput): User
-
-		saveListing:
-
+		saveListing(listingId: ID!, listing: listingInput): Listing
 		favoriteListing(listingId: ID!): [Listing]
 		removeFavoriteListing(listing: ID!): [Listing]
 
@@ -180,20 +178,16 @@ input paymentInput {
 		addToCart:
 		removeFromCart:
 
-		addAddress:
+		addAddress(address: addressInput!): [Address]
 		removeAddress(addressId: ID!): [Address]
-		updateAddress:
-
+		updateAddress(addressId: ID!, address: addressInput): [Address]
 		addPaymentMethod(payment: paymentInput!): [Payment]
 		removePaymentMethod(paymentId: ID!): [Payment]
-		updatePaymentMethod(paymentId: ID!, payment: paymentInput):
-
+		updatePaymentMethod(paymentId: ID!, payment: paymentInput): [Payment]
 		updateDefaultPaymentMethod(paymentId: ID!): User
 		updateDefaultAddress(addressId: ID!): User
-
 		addTag(tag: String!): Tag
 		removeTag(tagId: ID!): Tag
-
 		addCategory(category: String!): Category
 		removeCategory(categoryId: ID!): Category
   	}

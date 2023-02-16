@@ -135,10 +135,6 @@ const typeDefs = `
 		items: [Listing]
 	}
 
-	input cartInput {
-		items: [Listing]
-	}
-
   	type Query {
     	allUsers: [User]
     	oneUser(userId: ID!): User
@@ -169,14 +165,14 @@ const typeDefs = `
     	removeUser: User
 		addListing(listing: listingInput!): Listing
 		removeListing(listingId: ID!): User
-		addOrder(cart: Cart!, orderDetails: orderInput!): Order
+		addOrder(cartId: ID!, orderDetails: orderInput!): Order
 		updateUser(userId: ID!, user: updateUserInput): User
 		saveListing(listingId: ID!, listing: listingInput): Listing
 		favoriteListing(listingId: ID!): [Listing]
 		removeFavoriteListing(listing: ID!): [Listing]
 		removeOrder(orderId: ID!): Order
 		updateOrder(orderId: ID!, order: orderInput): Order
-		createCart(cart: cartInput): Cart
+		createCart: Cart
 		removeCart(cartId: ID!): Cart
 		addToCart(cardId: ID!, listingId: ID!): Cart
 		removeFromCart(cardId: ID!, listingId: ID!): Cart

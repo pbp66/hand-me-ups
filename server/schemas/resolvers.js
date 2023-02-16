@@ -11,6 +11,15 @@ import {
 } from "../models";
 import { signToken } from "../utils/auth";
 
+function throwUnauthenticatedError() {
+	throw new GraphQLError("User is not authenticated", {
+		extensions: {
+			code: "UNAUTHENTICATED",
+			http: { status: 401 },
+		},
+	});
+}
+
 const resolvers = {
 	Query: {
 		allUsers: async (parent, args, context, info) => {
@@ -25,12 +34,7 @@ const resolvers = {
 			if (context.user) {
 				return User.findOneById(context.user._id);
 			}
-			throw new GraphQLError("User is not authenticated", {
-				extensions: {
-					code: "UNAUTHENTICATED",
-					http: { status: 401 },
-				},
-			});
+			throwUnauthenticatedError();
 		},
 		allListings: async (parent, args, context, info) => {
 			return Listing.find();
@@ -54,12 +58,7 @@ const resolvers = {
 				);
 				return user.listings;
 			}
-			throw new GraphQLError("User is not authenticated", {
-				extensions: {
-					code: "UNAUTHENTICATED",
-					http: { status: 401 },
-				},
-			});
+			throwUnauthenticatedError();
 		},
 		favoriteListings: async (parent, args, context, info) => {
 			if (context.user) {
@@ -68,12 +67,7 @@ const resolvers = {
 				);
 				return user.saved_items;
 			}
-			throw new GraphQLError("User is not authenticated", {
-				extensions: {
-					code: "UNAUTHENTICATED",
-					http: { status: 401 },
-				},
-			});
+			throwUnauthenticatedError();
 		},
 		// searchListings: async (
 		// 	parent,
@@ -110,12 +104,7 @@ const resolvers = {
 				);
 				return user.orders;
 			}
-			throw new GraphQLError("User is not authenticated", {
-				extensions: {
-					code: "UNAUTHENTICATED",
-					http: { status: 401 },
-				},
-			});
+			throwUnauthenticatedError();
 		},
 
 		allTags: async (parent, args, context, info) => {
@@ -131,21 +120,33 @@ const resolvers = {
 		myPaymentMethods: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findOneById(context.user._id).populate(
-					"payment"
+					"payment_methods"
 				);
 				return user.payment_methods;
 			}
+			throwUnauthenticatedError();
 		},
-		myAddresses: async (parent, args, context, info) => {},
-
+		myAddresses: async (parent, args, context, info) => {
+			if (context.user) {
+				const user = await User.findOneById(context.user._id).populate(
+					"addresses"
+				);
+				return user.addAddress;
+			}
+			throwUnauthenticatedError();
+		},
 		userCart: async (parent, args, context, info) => {},
 		myCart: async (parent, args, context, info) => {},
 	},
 
 	Mutation: {
-		
-		addUser: async (parent, { username, email, password }, context, info) => {
-			console.log(username, email, password)
+		addUser: async (
+			parent,
+			{ username, email, password },
+			context,
+			info
+		) => {
+			console.log(username, email, password);
 			const user = await User.create({ username, email, password });
 			const token = signToken(user);
 
@@ -183,12 +184,7 @@ const resolvers = {
 			if (context.user) {
 				return User.findOneAndDelete({ _id: context.user._id });
 			}
-			throw new GraphQLError("User is not authenticated", {
-				extensions: {
-					code: "UNAUTHENTICATED",
-					http: { status: 401 },
-				},
-			});
+			throwUnauthenticatedError();
 		},
 
 		// TODO...

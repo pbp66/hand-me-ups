@@ -106,7 +106,7 @@ const resolvers = {
 		myOrders: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findOneById(context.user._id).populate(
-					"orders"
+					"order"
 				);
 				return user.orders;
 			}
@@ -133,7 +133,7 @@ const resolvers = {
 				const user = await User.findOneById(context.user._id).populate(
 					"payment"
 				);
-				return user.orders;
+				return user.payment_methods;
 			}
 		},
 		myAddresses: async (parent, args, context, info) => {},

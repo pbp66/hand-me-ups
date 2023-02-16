@@ -1,32 +1,32 @@
 {
-  "name": "hand-me-ups",
-  "version": "1.0.0",
-  "description": "Ebay/Depop/Ecommerce website/server to resell goods",
-  "main": "server/server.js",
-  "type": "module",
-  "scripts": {
-    "start": "node server --ignore client",
-    "develop": "concurrently \"cd server && npm run start\" \"cd client && npm start\"",
-    "install": "cd server && npm i && cd ../client && npm i",
-    "seed": "cd server && npm run seed",
-    "build": "cd client && npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/pbp66/hand-me-ups.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/pbp66/hand-me-ups/issues"
-  },
-  "homepage": "https://github.com/pbp66/hand-me-ups#readme",
-  "devDependencies": {
-    "concurrently": "^7.6.0"
-  },
-  "dependencies": {
-    "express": "^4.18.2",
-    "graphql": "^16.6.0"
-  }
+	"name": "hand-me-ups",
+	"version": "1.0.0",
+	"description": "Ebay/Depop/Ecommerce website/server to resell goods",
+	"main": "server/server.js",
+	"type": "module",
+	"scripts": {
+		"start": "node --experimental-modules --es-module-specifier-resolution=node server/server.js --ignore client",
+		"develop": "concurrently \"cd server && npm run start\" \"cd client && npm start\"",
+		"install": "cd server && npm i && cd ../client && npm i",
+		"seed": "cd server && npm run seed",
+		"build": "cd client && npm run build"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/pbp66/hand-me-ups.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/pbp66/hand-me-ups/issues"
+	},
+	"homepage": "https://github.com/pbp66/hand-me-ups#readme",
+	"devDependencies": {
+		"concurrently": "^7.6.0"
+	},
+	"dependencies": {
+		"express": "^4.18.2",
+		"graphql": "^16.6.0"
+	}
 }

@@ -144,7 +144,41 @@ const typeDefs = `
 		addListing(listing: ListingInput!): Listing
 		removeListing(listingId: ID!): User
 		addOrder(cart: Cart!, orderDetails: OrderInput!): Order
+		updateUser:
 
+		addListing:
+		removeListing:
+		saveListing:
+
+		favoriteListing:favorites list
+		removeFavoriteListing:
+
+		addOrder:
+		removeOrder:
+		updateOrder:
+
+		createCart:
+		removeCart:
+		addToCart:
+		removeFromCart:
+
+		addAddress:
+		removeAddress:
+		updateAddress:
+		createAddress:
+
+		addPaymentMethod:
+		removePaymentMethod:
+		updatePaymentMethod:
+
+		updateDefaultPaymentMethod:
+		updateDefaultAddress:
+
+		addTag:
+		removeTag:
+
+		addCategory:
+		removeCategory:
   	}
 `;
 

@@ -75,16 +75,16 @@ const resolvers = {
 				},
 			});
 		},
-		searchListings: async (
-			parent,
-			{ searchTerms, tags, ...args },
-			context,
-			info
-		) => {
-			// TODO: Search listing titles and descriptions. May need aggregate: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
-			// TODO: Create list of matching categories and tags from the tags variable
-			Listing.find({});
-		},
+		// searchListings: async (
+		// 	parent,
+		// 	{ searchTerms, tags, ...args },
+		// 	context,
+		// 	info
+		// ) => {
+		// TODO: Search listing titles and descriptions. May need aggregate: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
+		// TODO: Create list of matching categories and tags from the tags variable
+		// 	Listing.find({});
+		// },
 		allOrders: async (parent, args, context, info) => {
 			return Order.find();
 		},

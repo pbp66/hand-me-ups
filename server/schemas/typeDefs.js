@@ -77,6 +77,13 @@ const typeDefs = `
 		security_code: String!
 	}
 
+input paymentInput {
+	card_number: String
+	card_brand: String
+	expiration_date: String
+	security_code: String
+}
+
 	type Address { # TODO: Encrypt user address data?
 		_id: ID!
 		user: User!
@@ -174,16 +181,15 @@ const typeDefs = `
 		removeFromCart:
 
 		addAddress:
-		removeAddress:
+		removeAddress(addressId: ID!): [Address]
 		updateAddress:
-		createAddress:
 
-		addPaymentMethod:
-		removePaymentMethod:
-		updatePaymentMethod:
+		addPaymentMethod(payment: paymentInput!): [Payment]
+		removePaymentMethod(paymentId: ID!): [Payment]
+		updatePaymentMethod(paymentId: ID!, payment: paymentInput):
 
-		updateDefaultPaymentMethod:
-		updateDefaultAddress:
+		updateDefaultPaymentMethod(paymentId: ID!): User
+		updateDefaultAddress(addressId: ID!): User
 
 		addTag(tag: String!): Tag
 		removeTag(tagId: ID!): Tag

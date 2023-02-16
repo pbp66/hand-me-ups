@@ -131,12 +131,20 @@ const resolvers = {
 				const user = await User.findOneById(context.user._id).populate(
 					"addresses"
 				);
-				return user.addAddress;
+				return user.addresses;
 			}
 			throwUnauthenticatedError();
 		},
 		userCart: async (parent, args, context, info) => {},
-		myCart: async (parent, args, context, info) => {},
+		myCart: async (parent, args, context, info) => {
+			if (context.user) {
+				const user = await User.findOneById(context.user._id).populate(
+					"cart"
+				);
+				return user.cart;
+			}
+			throwUnauthenticatedError();
+		},
 	},
 
 	Mutation: {

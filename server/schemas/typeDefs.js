@@ -11,6 +11,7 @@ const typeDefs = `
 		addresses: [Address]
 		default_address: Address
 		default_payment: Payment
+		cart: Cart
   	}
 
 	input updateUserInput {

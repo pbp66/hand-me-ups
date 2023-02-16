@@ -92,7 +92,7 @@ const resolvers = {
 			return Order.findOneById(orderId);
 		},
 		userOrders: async (parent, { userId }, context, info) => {
-			const user = await User.findOneById(userId).populate("orders");
+			const user = await User.findOneById(userId).populate("Order");
 			if (!user) {
 				throw new GraphQLError("User does not exist", {
 					extensions: {
@@ -118,14 +118,24 @@ const resolvers = {
 			});
 		},
 
-		// TODO...
-		allTags: async (parent, args, context, info) => {},
-		allCategories: async (parent, args, context, info) => {},
+		allTags: async (parent, args, context, info) => {
+			return Tag.find();
+		},
+		allCategories: async (parent, args, context, info) => {
+			return Category.find();
+		},
 
 		userPaymentMethods: async (parent, args, context, info) => {},
 		userAddresses: async (parent, args, context, info) => {},
 
-		myPaymentMethods: async (parent, args, context, info) => {},
+		myPaymentMethods: async (parent, args, context, info) => {
+			if (context.user) {
+				const user = await User.findOneById(context.user._id).populate(
+					"payment"
+				);
+				return user.orders;
+			}
+		},
 		myAddresses: async (parent, args, context, info) => {},
 
 		userCart: async (parent, args, context, info) => {},

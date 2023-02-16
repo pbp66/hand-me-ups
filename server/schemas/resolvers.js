@@ -211,7 +211,6 @@ const resolvers = {
 		addAddress: async (parent, args, context, info) => {},
 		removeAddress: async (parent, args, context, info) => {},
 		updateAddress: async (parent, args, context, info) => {},
-		createAddress: async (parent, args, context, info) => {},
 
 		addPaymentMethod: async (parent, args, context, info) => {},
 		removePaymentMethod: async (parent, args, context, info) => {},

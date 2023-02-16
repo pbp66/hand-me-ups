@@ -1,9 +1,11 @@
 import { storage } from '../../src/utils/firebase'
+import {DateTime} from 'luxon'
 import slugify from "slugify"
 import { uploadBytes, getDownloadURL, ref } from "firebase/storage";
 import { useState, useMutation } from 'react'
 import { isMobile } from 'react-device-detect'
 import { ADD_LISTING } from '../utils/mutations';
+
 
 function AddListing() {
 
@@ -69,18 +71,16 @@ function AddListing() {
         }
         const updatedFormState = {
             ...listing,
-            image: imageUrl
+            image: imageUrl,
+            listing_date: DateTime.now()
+
         }
+
+        console.log(updatedFormState)
         await setListing(updatedFormState)
 
-        //   try {
-        //     const { data } = await addListing({
-        //       variables: { ...listing }
-        //     })
-        //   } catch (err) {
-        //     console.log(error)
-        //   }
-        // }
+
+       
 
     }
     return (

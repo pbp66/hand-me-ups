@@ -3,10 +3,11 @@ import slugify from "slugify"
 import { uploadBytes, getDownloadURL, ref } from "firebase/storage";
 import { useState, useMutation } from 'react'
 import { isMobile } from 'react-device-detect'
+import { ADD_LISTING } from '../utils/mutations';
 
 function AddListing() {
 
-    const [formState, setFormState] = useState({
+    const [listing, setListing] = useState({
         title: "",
         image: "",
         description: "",
@@ -36,15 +37,16 @@ function AddListing() {
             setErrorMessage("")
         }
         const updatedFormState = {
-            ...formState,
+            ...listing,
             [name]: value
         }
-        setFormState(updatedFormState)
+        setListing(updatedFormState)
 
 
     }
 
     const handleFileInput = (e) => {
+        console.log(e)
         setFiles(e.target.files)
 
     }
@@ -52,6 +54,8 @@ function AddListing() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         let imageUrl = ""
+
+        
         for (const file of files) {
             const imagesRef = ref(storage, `images/${file.name}`)
             const snapshot = await uploadBytes(imagesRef, file)
@@ -64,14 +68,14 @@ function AddListing() {
             setDisabled(false)
         }
         const updatedFormState = {
-            ...formState,
+            ...listing,
             image: imageUrl
         }
-        await setFormState(updatedFormState)
+        await setListing(updatedFormState)
 
         //   try {
         //     const { data } = await addListing({
-        //       variables: { ...formState }
+        //       variables: { ...listing }
         //     })
         //   } catch (err) {
         //     console.log(error)
@@ -92,7 +96,7 @@ function AddListing() {
                         className="form-control" id="exampleFormControlInput1"
                         placeholder="What is this Hand me up?"
                         onChange={handleInputs}
-                        value={formState.title} />
+                        value={listing.title} />
                 </div>
 
                 {/* DESCRIPTION */}
@@ -104,7 +108,7 @@ function AddListing() {
                         rows="2"
                         placeholder="Write a short description of the Hand-me-up"
                         onChange={handleInputs}
-                        value={formState.description}></textarea>
+                        value={listing.description}></textarea>
                 </div>
 
                 {/* PRICE */}
@@ -118,7 +122,7 @@ function AddListing() {
                         className="form-control"
                         aria-label="Amount (to the nearest dollar)" placeholder="Asking Price"
                         onChange={handleInputs}
-                        value={formState.price} />
+                        value={listing.price} />
                 </div>
 
                 {/* CATEGORIES */}
@@ -129,7 +133,7 @@ function AddListing() {
                         className="form-select"
                         aria-label="Default select example"
                         onChange={handleInputs}
-                        value={formState.category}>
+                        value={listing.category}>
                         <option selected value> -- select an option -- </option>
                         <option>Shirt</option>
                         <option>Hat</option>
@@ -145,7 +149,7 @@ function AddListing() {
                         className="form-select"
                         aria-label="Default select example"
                         onChange={handleInputs}
-                        value={formState.size}>
+                        value={listing.size}>
                         <option selected value> -- select an option -- </option>
                         <option>XXXL</option>
                         <option>XXL</option>
@@ -165,15 +169,13 @@ function AddListing() {
                         className="form-select"
                         aria-label="Condition Drop-Down"
                         onChange={handleInputs}
-                        value={formState.condition}>
+                        value={listing.condition}>
                         <option selected value> -- select an option -- </option>
-                        <option>Mint</option>
-                        <option>Excellent</option>
-                        <option>Great</option>
-                        <option>Good</option>
-                        <option>Decent</option>
-                        <option>Bad</option>
-                        <option>Wrecked</option>
+                        <option>NEW</option>
+                        <option>USED - LIKE NEW</option>
+                        <option>USED - GOOD</option>
+                        <option>USED - FAIR</option>
+                        <option>USED - POOR</option>
                     </select>
                 </div>
                 {/* COLORS */}
@@ -192,9 +194,9 @@ function AddListing() {
                             className="btn btn-success"
                             type="button"
                             onClick={() => {
-                                setFormState({
-                                    ...formState,
-                                    colors: [...formState.colors, slugify(newColor, { lower: true })]
+                                setListing({
+                                    ...listing,
+                                    colors: [...listing.colors, slugify(newColor, { lower: true })]
                                 })
                                 setNewColor("")
                             }
@@ -206,12 +208,12 @@ function AddListing() {
                 </div>
                 <div className="mb-3">
                     <ul>
-                        {formState.colors.map(tag => {
+                        {listing.colors.map(tag => {
                             return <li
                                 onClick={() => {
-                                    setFormState({
-                                        ...formState,
-                                        colors: formState.colors.filter(t => t !== tag)
+                                    setListing({
+                                        ...listing,
+                                        colors: listing.colors.filter(t => t !== tag)
                                     })
                                 }}
                                 key={tag}>
@@ -236,9 +238,9 @@ function AddListing() {
                             className="btn btn-success"
                             type="button"
                             onClick={() => {
-                                setFormState({
-                                    ...formState,
-                                    tags: [...formState.tags, slugify(newTag, { lower: true })]
+                                setListing({
+                                    ...listing,
+                                    tags: [...listing.tags, slugify(newTag, { lower: true })]
                                 })
                                 setNewTag("")
                             }
@@ -250,12 +252,12 @@ function AddListing() {
                 </div>
                 <div className="mb-3">
                     <ul>
-                        {formState.tags.map(tag => {
+                        {listing.tags.map(tag => {
                             return <li
                                 onClick={() => {
-                                    setFormState({
-                                        ...formState,
-                                        tags: formState.tags.filter(t => t !== tag)
+                                    setListing({
+                                        ...listing,
+                                        tags: listing.tags.filter(t => t !== tag)
                                     })
                                 }}
                                 key={tag}>

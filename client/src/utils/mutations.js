@@ -23,3 +23,22 @@ export const LOGIN_USER = gql`
 		}
 	}
 `;
+
+// export const ADD_LISTING = gql`
+// 	mutation addListing(
+// 		$title: String!
+// 		$description: String!
+// 		$price: String!
+// 		$categories: [Category!]
+// 		$tags: [Tag]
+// 		$size: String!
+// 		$color: [String!]
+// 		$condition: String!
+// 		$image: String!
+// 		)
+// 		{
+// 			listing{
+// 				_id
+// 			}
+			
+// 		}`

@@ -13,7 +13,20 @@ const typeDefs = `
 		default_payment: Payment
   	}
 
-  	type Auth {
+	input updateUserInput {
+    	username: String
+    	email: String
+    	password: String
+		listings: [Listing]
+		favorites: [Listing]
+		orders: [Order]
+		payment_methods: [Payment]
+		addresses: [Address]
+		default_address: Address
+		default_payment: Payment
+	}
+
+	type Auth {
     	token: ID!
     	user: User
   	}
@@ -43,6 +56,21 @@ const typeDefs = `
 		USED_POOR
 	}
 
+	input listingInput {
+		title: String!
+		description: String!
+		price: Float!
+		categories: [String] # Convert to category schema in resolver
+		tags: [String] # Convert to tag schema in resolver
+		size: String
+		color: [String]
+		condition: Condition!
+		image: [String] # Link to image in firebase?
+		listing_date: String! # Date represented as a string?
+		edit_status: Boolean!
+		edit_dates: [String] # Date represented as a string?
+	}
+
 	type Tag {
 		_id: ID!
 		tag: String!
@@ -66,6 +94,12 @@ const typeDefs = `
 		pretax_total: Float!
 		estimated_tax: Float!
 		order_total: Float!
+	}
+
+	input orderInput {
+		payment_method: Payment!
+		billing_address: Address!
+		shipping_address: Address
 	}
 
 	type Payment { # TODO: Need to review for feasibility/use with Stripe. Encrypted all strings below? We don't want to save the actual value. Is this handled by Stripe?
@@ -104,27 +138,6 @@ const typeDefs = `
 		items: [Listing]
 	}
 
-	input OrderInput {
-		payment_method: Payment!
-		billing_address: Address!
-		shipping_address: Address
-	}
-
-	input listingInput {
-		title: String!
-		description: String!
-		price: Float!
-		categories: [String] # Convert to category schema in resolver
-		tags: [String] # Convert to tag schema in resolver
-		size: String
-		color: [String]
-		condition: Condition!
-		image: [String] # Link to image in firebase?
-		listing_date: String! # Date represented as a string?
-		edit_status: Boolean!
-		edit_dates: [String] # Date represented as a string?
-	}
-
   	type Query {
     	allUsers: [User]
     	oneUser(userId: ID!): User
@@ -148,35 +161,20 @@ const typeDefs = `
 		myCart: Cart
   	}
 
-	input updateUserInput {
-    	username: String
-    	email: String
-    	password: String
-		listings: [Listing]
-		favorites: [Listing]
-		orders: [Order]
-		payment_methods: [Payment]
-		addresses: [Address]
-		default_address: Address
-		default_payment: Payment
-	}
-
   	type Mutation {
     	addUser(username: String!, email: String!, password: String!): Auth
     	login(email: String!, password: String!): Auth
     	removeUser: User
 		addListing(listing: listingInput!): Listing
 		removeListing(listingId: ID!): User
-		addOrder(cart: Cart!, orderDetails: OrderInput!): Order
+		addOrder(cart: Cart!, orderDetails: orderInput!): Order
 		updateUser(userId: ID!, user: updateUserInput): User
 		saveListing(listingId: ID!, listing: listingInput): Listing
 		favoriteListing(listingId: ID!): [Listing]
 		removeFavoriteListing(listing: ID!): [Listing]
-
-		addOrder:
+		addOrder(order: orderInput!): Order
 		removeOrder(orderId: ID!): Order
-		updateOrder:
-
+		updateOrder(orderId: ID!, order: orderInput): Order
 		createCart(cart: cartInput): Cart
 		removeCart(cartId: ID!): Cart
 		addToCart(cardId: ID!, listingId: ID!): Cart

@@ -13,8 +13,9 @@ const NavTitle = styled.nav`
         color: #96BBBB;
     }
 `
-const SearchForm = styled.form `
-
+const SearchButton = styled.button `
+    background-color: #394648;
+    color: #F8E9E9;
 `
 
 const Navbar = () => {
@@ -48,7 +49,7 @@ const Navbar = () => {
                     </ul>
                     <form className="d-flex justify-content-end" role="search">
                         <input className="form-control me-2 w-50" type="search" placeholder="Search" aria-label="Search" />
-                        <button className="btn btn-outline-success" type="submit">Search</button>
+                        <SearchButton className="btn btn-outline-success" type="submit">Search</SearchButton>
                     </form>
                 </div>
             </MainDiv>

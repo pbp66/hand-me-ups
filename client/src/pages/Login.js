@@ -2,8 +2,14 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from "../utils/mutations";
+import styled from 'styled-components';
 
 import Auth from "../utils/auth";
+
+const LoginHeader = styled.h4`
+	color: #394648;
+	background-color: #F8E9E9;
+`
 
 const Login = (props) => {
 	const [formState, setFormState] = useState({ email: "", password: "" });
@@ -44,9 +50,9 @@ const Login = (props) => {
 		<main className="flex-row justify-center mb-4">
 			<div className="col-12 col-lg-10">
 				<div className="card">
-					<h4 className="card-header bg-dark text-light p-2">
+					<LoginHeader className="card-header p-2">
 						Login
-					</h4>
+					</LoginHeader>
 					<div className="card-body">
 						{data ? (
 							<p>

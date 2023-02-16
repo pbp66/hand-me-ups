@@ -1,0 +1,62 @@
+[
+	{
+        "title": "Cheetah Romper",
+        "image": "",
+        "description": "Cheetah print Romper for Men",
+        "price": 10,
+        "category": "Men",
+        "size": "L",
+        "tags": ["Romper", "Men"],
+        "colors": ["Purple", "Pink"],
+        "condition": "Fair",
+        "user": "jujub3"
+	},
+	{
+        "title": "Bucket Hat",
+        "image": "",
+        "description": "Bucket Hat perfect for fishing ",
+        "price": 7,
+        "category": "accesories",
+        "size": "One Size",
+        "tags": ["hat"],
+        "colors": ["Multicolors"],
+        "condition": "Good",
+        "user": "ericsimmons1"
+	},
+    {
+        "title": "",
+        "image": "",
+        "description": "",
+        "price": 0,
+        "category": "",
+        "size": "",
+        "tags": [],
+        "colors": [],
+        "condition": "",
+        "user": ""
+	},
+    {
+        "title": "",
+        "image": "",
+        "description": "",
+        "price": 0,
+        "category": "",
+        "size": "",
+        "tags": [],
+        "colors": [],
+        "condition": "",
+        "user": ""
+	},
+    {
+        "title": "",
+        "image": "",
+        "description": "",
+        "price": 0,
+        "category": "",
+        "size": "",
+        "tags": [],
+        "colors": [],
+        "condition": "",
+        "user": ""
+	}
+]

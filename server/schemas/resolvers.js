@@ -211,8 +211,8 @@ const resolvers = {
 		removeTag: async (parent, args, context, info) => {},
 
 		addCategory: async (parent, { category, ...args }, context, info) => {
-			const category = await Category.create({ category });
-			return category;
+			const newCategory = await Category.create({ category });
+			return newCategory;
 		},
 		removeCategory: async (
 			parent,

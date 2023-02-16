@@ -26,7 +26,11 @@ const Navbar = () => {
                                 <li><NavLink className="dropdown-item" to="/MyListings">My Listings</NavLink></li>
                                 <li><NavLink className="dropdown-item" to="/PurchaseHistory">Purchase History</NavLink></li>
                                 <li><hr className="dropdown-divider" /></li>
-                                <li><button className="dropdown-item">Logout</button></li>
+                                <li><button 
+                                onClick={() => {Auth.logout()}}
+                                className="dropdown-item"
+                                
+                                >Logout</button></li>
                             </ul>
                         </li>
                         </>

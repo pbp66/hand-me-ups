@@ -85,18 +85,6 @@ const resolvers = {
 		getOrder: async (parent, { orderId }, context, info) => {
 			return Order.findOneById(orderId);
 		},
-		userOrders: async (parent, { userId }, context, info) => {
-			const user = await User.findOneById(userId).populate("Order");
-			if (!user) {
-				throw new GraphQLError("User does not exist", {
-					extensions: {
-						code: "USER NOT FOUND",
-						http: { status: 401 },
-					},
-				});
-			}
-			return user.orders;
-		},
 		myOrders: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findOneById(context.user._id).populate(
@@ -131,7 +119,6 @@ const resolvers = {
 			}
 			throwUnauthenticatedError();
 		},
-		userCart: async (parent, args, context, info) => {},
 		myCart: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findOneById(context.user._id).populate(

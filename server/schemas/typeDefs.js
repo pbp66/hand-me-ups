@@ -147,14 +147,12 @@ const typeDefs = `
 		favoriteListings: [Listing]
 		searchListings(searchTerms: [String]!, tags: [ID!]): [Listing]
 		allOrders: [Order]
-		userOrders(userId: ID!): [Order]
 		getOrder(orderId: ID!): Order
 		myOrders: [Order]
 		allTags: [Tag]
 		allCategories: [Category]
 		myPaymentMethods: [Payment]
 		myAddresses: [Address]
-		userCart(userId: ID!): Cart
 		myCart: Cart
   	}
 

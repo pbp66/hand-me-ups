@@ -153,6 +153,7 @@ const typeDefs = `
     	me: User
 		allListings: [Listing]
 		userListings(userId: ID!): [Listing]
+		myListings: [Listing]
 		favoriteListings: [Listing]
 		searchListings(searchTerms: [String]!, tags: [Tag]): [Listing]
 		allOrders: [Order]

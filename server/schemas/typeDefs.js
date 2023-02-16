@@ -13,7 +13,20 @@ const typeDefs = `
 		default_payment: Payment
   	}
 
-  	type Auth {
+	input updateUserInput {
+    	username: String
+    	email: String
+    	password: String
+		listings: [Listing]
+		favorites: [Listing]
+		orders: [Order]
+		payment_methods: [Payment]
+		addresses: [Address]
+		default_address: Address
+		default_payment: Payment
+	}
+
+	type Auth {
     	token: ID!
     	user: User
   	}
@@ -37,10 +50,25 @@ const typeDefs = `
 
 	enum Condition {
 		NEW
-		USED - LIKE NEW
-		USED - GOOD
-		USED - FAIR
-		USED - POOR
+		USED_LIKE_NEW
+		USED_GOOD
+		USED_FAIR
+		USED_POOR
+	}
+
+	input listingInput {
+		title: String!
+		description: String!
+		price: Float!
+		categories: [String] # Convert to category schema in resolver
+		tags: [String] # Convert to tag schema in resolver
+		size: String
+		color: [String]
+		condition: Condition!
+		image: [String] # Link to image in firebase?
+		listing_date: String! # Date represented as a string?
+		edit_status: Boolean!
+		edit_dates: [String] # Date represented as a string?
 	}
 
 	type Tag {
@@ -68,6 +96,12 @@ const typeDefs = `
 		order_total: Float!
 	}
 
+	input orderInput {
+		payment_method: Payment!
+		billing_address: Address!
+		shipping_address: Address
+	}
+
 	type Payment { # TODO: Need to review for feasibility/use with Stripe. Encrypted all strings below? We don't want to save the actual value. Is this handled by Stripe?
 		_id: ID!
 		user: User!
@@ -75,6 +109,13 @@ const typeDefs = `
 		card_brand: String!
 		expiration_date: String!
 		security_code: String!
+	}
+
+	input paymentInput {
+		card_number: String
+		card_brand: String
+		expiration_date: String
+		security_code: String
 	}
 
 	type Address { # TODO: Encrypt user address data?
@@ -90,28 +131,11 @@ const typeDefs = `
 	type Cart {
 		_id: ID!
 		user: User!
-		items: [Listings]
+		items: [Listing]
 	}
 
-	input OrderInput {
-		payment_method: Payment!
-		billing_address: Address!
-		shipping_address: Address
-	}
-
-	input ListingInput {
-		title: String!
-		description: String!
-		price: Float!
-		categories: [String] # Convert to category schema in resolver
-		tags: [String] # Convert to tag schema in resolver
-		size: String
-		color: [String]
-		condition: Condition!
-		image: [String] # Link to image in firebase?
-		listing_date: String! # Date represented as a string?
-		edit_status: Boolean!
-		edit_dates: [String] # Date represented as a string?
+	input cartInput {
+		items: [Listing]
 	}
 
   	type Query {
@@ -121,22 +145,52 @@ const typeDefs = `
     	me: User
 		allListings: [Listing]
 		userListings(userId: ID!): [Listing]
-		favoriteListings(): [Listing]
+		favoriteListings: [Listing]
 		searchListings(searchTerms: [String]!, tags: [Tag]): [Listing]
 		allOrders: [Order]
 		userOrders(userId: ID!): [Order]
 		getOrder(orderId: ID!): Order
-		myOrders(): [Order]
+		myOrders: [Order]
+		allTags: [Tag]
+		allCategories: [Category]
+		userPaymentMethods(userId: ID!): [Payment]
+		userAddresses(userId: ID!): [Address]
+		myPaymentMethods: [Payment]
+		myAddresses: [Address]
+		userCart(userId: ID!): Cart
+		myCart: Cart
   	}
 
   	type Mutation {
     	addUser(username: String!, email: String!, password: String!): Auth
     	login(email: String!, password: String!): Auth
     	removeUser: User
-		addListing(listing: ListingInput!): Listing
+		addListing(listing: listingInput!): Listing
 		removeListing(listingId: ID!): User
-		addOrder(cart: Cart!, orderDetails: OrderInput!): Order
-
+		addOrder(cart: Cart!, orderDetails: orderInput!): Order
+		updateUser(userId: ID!, user: updateUserInput): User
+		saveListing(listingId: ID!, listing: listingInput): Listing
+		favoriteListing(listingId: ID!): [Listing]
+		removeFavoriteListing(listing: ID!): [Listing]
+		addOrder(order: orderInput!): Order
+		removeOrder(orderId: ID!): Order
+		updateOrder(orderId: ID!, order: orderInput): Order
+		createCart(cart: cartInput): Cart
+		removeCart(cartId: ID!): Cart
+		addToCart(cardId: ID!, listingId: ID!): Cart
+		removeFromCart(cardId: ID!, listingId: ID!): Cart
+		addAddress(address: addressInput!): [Address]
+		removeAddress(addressId: ID!): [Address]
+		updateAddress(addressId: ID!, address: addressInput): [Address]
+		addPaymentMethod(payment: paymentInput!): [Payment]
+		removePaymentMethod(paymentId: ID!): [Payment]
+		updatePaymentMethod(paymentId: ID!, payment: paymentInput): [Payment]
+		updateDefaultPaymentMethod(paymentId: ID!): User
+		updateDefaultAddress(addressId: ID!): User
+		addTag(tag: String!): Tag
+		removeTag(tagId: ID!): Tag
+		addCategory(category: String!): Category
+		removeCategory(categoryId: ID!): Category
   	}
 `;
 

@@ -26,21 +26,27 @@ export const LOGIN_USER = gql`
 	}
 `;
 
-// export const ADD_LISTING = gql`
-// 	mutation addListing(
-// 		$title: String!
-// 		$description: String!
-// 		$price: String!
-// 		$categories: [Category!]
-// 		$tags: [Tag]
-// 		$size: String!
-// 		$color: [String!]
-// 		$condition: String!
-// 		$image: String!
-// 		)
-// 		{
-// 			listing{
-// 				_id
-// 			}
+export const ADD_LISTING = gql`
+	mutation ADD_LISTING(
+		$listing:listingInput!
+		)
+		{
+			addListing(listing: $listing){
+				_id
+				title
+				description
+				price
+				categories
+				tags
+				size
+				color
+				condition
+				image
+				seller
+				listing_date
+				edit_status
+				edit_dates
+
+			}
 			
-// 		}`
+		}`

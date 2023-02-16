@@ -137,7 +137,6 @@ const resolvers = {
 			context,
 			info
 		) => {
-			console.log(username, email, password);
 			const user = await User.create({ username, email, password });
 			const token = signToken(user);
 
@@ -213,6 +212,7 @@ const resolvers = {
 
 		addCategory: async (parent, { category, ...args }, context, info) => {
 			const category = await Category.create({ category });
+			return category;
 		},
 		removeCategory: async (
 			parent,

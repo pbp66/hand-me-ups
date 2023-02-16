@@ -27,6 +27,7 @@ const Signup = () => {
 
 	// submit form
 	const handleFormSubmit = async (event) => {
+		event.stopPropagation()
 		event.preventDefault();
 		console.log(formState);
 		console.log(data)

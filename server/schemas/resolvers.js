@@ -75,16 +75,16 @@ const resolvers = {
 				},
 			});
 		},
-		searchListings: async (
-			parent,
-			{ searchTerms, tags, ...args },
-			context,
-			info
-		) => {
-			// TODO: Search listing titles and descriptions. May need aggregate: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
-			// TODO: Create list of matching categories and tags from the tags variable
-			Listing.find({});
-		},
+		// searchListings: async (
+		// 	parent,
+		// 	{ searchTerms, tags, ...args },
+		// 	context,
+		// 	info
+		// ) => {
+		// TODO: Search listing titles and descriptions. May need aggregate: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
+		// TODO: Create list of matching categories and tags from the tags variable
+		// 	Listing.find({});
+		// },
 		allOrders: async (parent, args, context, info) => {
 			return Order.find();
 		},
@@ -92,7 +92,7 @@ const resolvers = {
 			return Order.findOneById(orderId);
 		},
 		userOrders: async (parent, { userId }, context, info) => {
-			const user = await User.findOneById(userId).populate("orders");
+			const user = await User.findOneById(userId).populate("Order");
 			if (!user) {
 				throw new GraphQLError("User does not exist", {
 					extensions: {
@@ -106,7 +106,7 @@ const resolvers = {
 		myOrders: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findOneById(context.user._id).populate(
-					"orders"
+					"order"
 				);
 				return user.orders;
 			}
@@ -118,14 +118,24 @@ const resolvers = {
 			});
 		},
 
-		// TODO...
-		allTags: async (parent, args, context, info) => {},
-		allCategories: async (parent, args, context, info) => {},
+		allTags: async (parent, args, context, info) => {
+			return Tag.find();
+		},
+		allCategories: async (parent, args, context, info) => {
+			return Category.find();
+		},
 
 		userPaymentMethods: async (parent, args, context, info) => {},
 		userAddresses: async (parent, args, context, info) => {},
 
-		myPaymentMethods: async (parent, args, context, info) => {},
+		myPaymentMethods: async (parent, args, context, info) => {
+			if (context.user) {
+				const user = await User.findOneById(context.user._id).populate(
+					"payment"
+				);
+				return user.payment_methods;
+			}
+		},
 		myAddresses: async (parent, args, context, info) => {},
 
 		userCart: async (parent, args, context, info) => {},
@@ -201,7 +211,6 @@ const resolvers = {
 		addAddress: async (parent, args, context, info) => {},
 		removeAddress: async (parent, args, context, info) => {},
 		updateAddress: async (parent, args, context, info) => {},
-		createAddress: async (parent, args, context, info) => {},
 
 		addPaymentMethod: async (parent, args, context, info) => {},
 		removePaymentMethod: async (parent, args, context, info) => {},

@@ -137,6 +137,19 @@ const typeDefs = `
 		myCart: Cart
   	}
 
+	input updateUserInput {
+    	username: String
+    	email: String
+    	password: String
+		listings: [Listing]
+		favorites: [Listing]
+		orders: [Order]
+		payment_methods: [Payment]
+		addresses: [Address]
+		default_address: Address
+		default_payment: Payment
+	}
+
   	type Mutation {
     	addUser(username: String!, email: String!, password: String!): Auth
     	login(email: String!, password: String!): Auth
@@ -144,14 +157,12 @@ const typeDefs = `
 		addListing(listing: ListingInput!): Listing
 		removeListing(listingId: ID!): User
 		addOrder(cart: Cart!, orderDetails: OrderInput!): Order
-		updateUser:
+		updateUser(userId: ID!, user: updateUserInput): User
 
-		addListing:
-		removeListing:
 		saveListing:
 
-		favoriteListing:favorites list
-		removeFavoriteListing:
+		favoriteListing(listingId: ID!): [Listing]
+		removeFavoriteListing(listing: ID!): [Listing]
 
 		addOrder:
 		removeOrder:
@@ -174,11 +185,11 @@ const typeDefs = `
 		updateDefaultPaymentMethod:
 		updateDefaultAddress:
 
-		addTag:
-		removeTag:
+		addTag(tag: String!): Tag
+		removeTag(tagId: ID!): Tag
 
-		addCategory:
-		removeCategory:
+		addCategory(category: String!): Category
+		removeCategory(categoryId: ID!): Category
   	}
 `;
 

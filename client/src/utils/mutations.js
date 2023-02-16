@@ -36,8 +36,14 @@ export const ADD_LISTING = gql`
 				title
 				description
 				price
-				categories
-				tags
+				categories{
+					_id
+					category
+				}
+				tags{
+					_id
+					tag
+				}
 				size
 				color
 				condition
@@ -46,7 +52,6 @@ export const ADD_LISTING = gql`
 				listing_date
 				edit_status
 				edit_dates
-
 			}
 			
 		}`

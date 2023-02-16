@@ -1,5 +1,5 @@
 import { storage } from '../../src/utils/firebase'
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon'
 import slugify from "slugify"
 import { uploadBytes, getDownloadURL, ref } from "firebase/storage";
 import { useState, useMutation } from 'react'
@@ -29,7 +29,7 @@ function AddListing() {
 
 
     const handleInputs = e => {
-        const {value, name} = e.target
+        const { value, name } = e.target
 
         if (!value.length) {
             setErrorMessage(`${name} is required`)
@@ -57,7 +57,7 @@ function AddListing() {
         e.preventDefault()
         let imageUrl = ""
 
-        
+
         for (const file of files) {
             const imagesRef = ref(storage, `images/${file.name}`)
             const snapshot = await uploadBytes(imagesRef, file)
@@ -73,15 +73,10 @@ function AddListing() {
             ...listing,
             image: imageUrl,
             listing_date: DateTime.now()
-
         }
 
         console.log(updatedFormState)
         await setListing(updatedFormState)
-
-
-       
-
     }
     return (
         <form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>

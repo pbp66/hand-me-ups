@@ -211,8 +211,19 @@ const resolvers = {
 		addTag: async (parent, args, context, info) => {},
 		removeTag: async (parent, args, context, info) => {},
 
-		addCategory: async (parent, args, context, info) => {},
-		removeCategory: async (parent, args, context, info) => {},
+		addCategory: async (parent, { category, ...args }, context, info) => {
+			const category = await Category.create({ category });
+		},
+		removeCategory: async (
+			parent,
+			{ categoryId, ...args },
+			context,
+			info
+		) => {
+			const category = await Category.findOneById(categoryId);
+			Category.findByIdAndDelete(categoryId);
+			return category;
+		},
 	},
 };
 

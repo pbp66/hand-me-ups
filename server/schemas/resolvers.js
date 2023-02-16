@@ -207,8 +207,15 @@ const resolvers = {
 		updateDefaultPaymentMethod: async (parent, args, context, info) => {},
 		updateDefaultAddress: async (parent, args, context, info) => {},
 
-		addTag: async (parent, args, context, info) => {},
-		removeTag: async (parent, args, context, info) => {},
+		addTag: async (parent, { tag, ...args }, context, info) => {
+			const newTag = await Tag.create({ tag });
+			return newTag;
+		},
+		removeTag: async (parent, { tagId, ...args }, context, info) => {
+			const tag = await Category.findOneById(tagId);
+			Tag.findByIdAndDelete(tagId);
+			return tag;
+		},
 
 		addCategory: async (parent, { category, ...args }, context, info) => {
 			const newCategory = await Category.create({ category });

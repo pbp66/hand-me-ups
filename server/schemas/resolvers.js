@@ -176,10 +176,31 @@ const resolvers = {
 			}
 			throwUnauthenticatedError();
 		},
-
+		updateMe: async (parent, { user, ...args }, context, info) => {
+			try {
+				const updatedUser = await User.findByIdAndUpdate(
+					context.user._id,
+					{
+						username: user.username,
+						email: user.email,
+						password: user.password,
+					},
+					{ new: true, runValidators: true }
+				);
+				if (!updatedUser) {
+					throw new GraphQLError("User does not exist", {
+						extensions: {
+							code: "USER NOT FOUND",
+							http: { status: 401 },
+						},
+					});
+				}
+				return updatedUser;
+			} catch (err) {
+				console.error(err);
+			}
+		},
 		// TODO...
-		updateMe: async (parent, args, context, info) => {}, // update password, username, etc...
-
 		addListing: async (parent, args, context, info) => {},
 		removeListing: async (parent, args, context, info) => {},
 		saveListing: async (parent, args, context, info) => {}, // update listing

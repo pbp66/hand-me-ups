@@ -121,12 +121,20 @@ const typeDefs = `
     	me: User
 		allListings: [Listing]
 		userListings(userId: ID!): [Listing]
-		favoriteListings(): [Listing]
+		favoriteListings: [Listing]
 		searchListings(searchTerms: [String]!, tags: [Tag]): [Listing]
 		allOrders: [Order]
 		userOrders(userId: ID!): [Order]
 		getOrder(orderId: ID!): Order
-		myOrders(): [Order]
+		myOrders: [Order]
+		allTags: [Tag]
+		allCategories: [Category]
+		userPaymentMethods(userId: ID!): [Payment]
+		userAddresses(userId: ID!): [Address]
+		myPaymentMethods: [Payment]
+		myAddresses: [Address]
+		userCart(userId: ID!): Cart
+		myCart: Cart
   	}
 
   	type Mutation {

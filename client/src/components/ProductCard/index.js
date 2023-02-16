@@ -16,6 +16,9 @@ function ProductCard ({ product }) {
         <div>
             {price}
         </div>
+        <div>
+            {image}
+        </div>
         </>
     )
 }

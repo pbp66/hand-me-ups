@@ -144,7 +144,7 @@ const typeDefs = `
 		userListings(userId: ID!): [Listing]
 		myListings: [Listing]
 		favoriteListings: [Listing]
-		searchListings(searchTerms: [String]!, tags: [Tag]): [Listing]
+		searchListings(searchTerms: [String]!, tags: [ID!]): [Listing]
 		allOrders: [Order]
 		userOrders(userId: ID!): [Order]
 		getOrder(orderId: ID!): Order

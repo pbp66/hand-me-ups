@@ -50,5 +50,4 @@ export const ADD_LISTING = gql`
 				image
 				listing_date
 			}
-			
 		}`

@@ -90,9 +90,7 @@ function AddListing() {
             ...listing,
             // image: image,
             price: parseFloat(listing.price),
-            listing_date: DateTime.now().toLocaleString(DateTime.DATE_MED),
-            edit_status: false,
-            edit_dates: ["not edited"]
+            listing_date: DateTime.now().toLocaleString(DateTime.DATE_MED)
         }
 console.log(updatedFormState)
         try {

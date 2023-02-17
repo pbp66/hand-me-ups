@@ -194,22 +194,23 @@ const resolvers = {
 		updateUser: async (parent, args, context, info) => { }, // update password, username, etc...
 
 		addListing: async (parent, args, context, info) => {
+			console.log(args)
 			//args.listings.tags search for tags with same name
-			const allTagIds =[]
-			const foundTags = await Tag.find({ tag: { $in: args.listing.tags } })
-			console.log(foundTags)
-			if(foundTags){
-				foundTags.forEach(tag => allTagIds.push(tag._id))
-			}
-			//if not found create new tag
-			const tagsToCreate = args.listing.tags.filter(tagName => {
-				return !foundTags.find(foundTag => {
-					return foundTag.tag === tagName
-				})
-			})
-			console.log(allTagIds, tagsToCreate)
-			const listing = await Listing.create(args.listing)
-			return listing
+			// const allTagIds =[]
+			// const foundTags = await Tag.find({ tag: { $in: args.listing.tags } })
+			// console.log(foundTags)
+			// if(foundTags){
+			// 	foundTags.forEach(tag => allTagIds.push(tag._id))
+			// }
+			// //if not found create new tag
+			// const tagsToCreate = args.listing.tags.filter(tagName => {
+			// 	return !foundTags.find(foundTag => {
+			// 		return foundTag.tag === tagName
+			// 	})
+			// })
+			// console.log(allTagIds, tagsToCreate)
+			// const listing = await Listing.create(args.listing)
+			// return listing
 		},
 		removeListing: async (parent, args, context, info) => { },
 		saveListing: async (parent, args, context, info) => { }, // update listing

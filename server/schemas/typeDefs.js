@@ -29,7 +29,7 @@ const typeDefs = `
 		title: String!
 		description: String!
 		price: Float!
-		categories: [Category]
+		categories: Category!
 		tags: [Tag]
 		size: String
 		color: [String]
@@ -53,14 +53,14 @@ const typeDefs = `
 		title: String!
 		description: String!
 		price: Float!
-		categories: [String] # Convert to category schema in resolver
+		categories: String # Convert to category schema in resolver
 		tags: [String] # Convert to tag schema in resolver
 		size: String
 		color: [String]
 		condition: Condition!
 		image: [String] # Link to image in firebase?
 		listing_date: String! # Date represented as a string?
-		edit_status: Boolean!
+		edit_status: Boolean
 		edit_dates: [String] # Date represented as a string?
 	}
 

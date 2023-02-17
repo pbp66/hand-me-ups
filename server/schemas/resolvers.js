@@ -201,7 +201,6 @@ const resolvers = {
 				console.error(err);
 			}
 		},
-		// TODO...
 		addListing: async (
 			parent,
 			{
@@ -269,9 +268,15 @@ const resolvers = {
 				...newListing,
 			});
 		},
-		removeListing: async (parent, args, context, info) => {},
+		removeListing: async (
+			parent,
+			{ listingId, ...args },
+			context,
+			info
+		) => {
+			return await Listing.findByIdAndDelete(listingId);
+		},
 		saveListing: async (parent, args, context, info) => {}, // update listing
-
 		favoriteListing: async (parent, args, context, info) => {}, // save listing to favorites list
 		removeFavoriteListing: async (parent, args, context, info) => {},
 

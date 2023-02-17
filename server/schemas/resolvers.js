@@ -128,7 +128,6 @@ const resolvers = {
 			throwUnauthenticatedError();
 		},
 	},
-
 	Mutation: {
 		addUser: async (
 			parent,
@@ -166,8 +165,7 @@ const resolvers = {
 			const token = signToken(user);
 			return { token, user };
 		},
-
-		// Set up mutation so a logged in user can only remove their user and no one else's
+		//* Set up mutation so a logged in user can only remove their user and no one else's
 		removeUser: async (parent, args, context, info) => {
 			if (context.user) {
 				return User.findOneAndDelete({ _id: context.user._id });
@@ -226,7 +224,6 @@ const resolvers = {
 			newListing["condition"] = condition;
 			newListing["image"] = image;
 			newListing["category"] = await Category.findById(category);
-			newListing["edit_dates"] = [];
 
 			if (size) {
 				newListing["size"] = size;

@@ -359,7 +359,6 @@ const resolvers = {
 				{ new: true, runValidators: true }
 			);
 		},
-
 		addAddress: async (parent, { address, ...args }, context, info) => {
 			const user = await User.findByIdAndUpdate(
 				context.user._id,
@@ -390,8 +389,21 @@ const resolvers = {
 				{ new: true, runValidators: true }
 			);
 		},
-
-		addPaymentMethod: async (parent, args, context, info) => {},
+		addPaymentMethod: async (
+			parent,
+			{ payment, ...args },
+			context,
+			info
+		) => {
+			const user = await User.findByIdAndUpdate(
+				context.user._id,
+				{
+					$push: { payment },
+				},
+				{ new: true, runValidators: true }
+			);
+			return user.payment_methods;
+		},
 		removePaymentMethod: async (
 			parent,
 			{ paymentId, ...args },
@@ -400,7 +412,18 @@ const resolvers = {
 		) => {
 			return await Payment.findByIdAndDelete(paymentId);
 		},
-		updatePaymentMethod: async (parent, args, context, info) => {},
+		updatePaymentMethod: async (
+			parent,
+			{ paymentId, payment, ...args },
+			context,
+			info
+		) => {
+			return await Payment.findByIdAndUpdate(
+				paymentId,
+				{ ...payment },
+				{ new: true, runValidators: true }
+			);
+		},
 
 		updateDefaultPaymentMethod: async (parent, args, context, info) => {},
 		updateDefaultAddress: async (parent, args, context, info) => {},

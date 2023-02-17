@@ -358,11 +358,25 @@ const resolvers = {
 		},
 
 		addAddress: async (parent, args, context, info) => {},
-		removeAddress: async (parent, args, context, info) => {},
+		removeAddress: async (
+			parent,
+			{ addressId, ...args },
+			context,
+			info
+		) => {
+			return await Address.findByIdAndDelete(addressId);
+		},
 		updateAddress: async (parent, args, context, info) => {},
 
 		addPaymentMethod: async (parent, args, context, info) => {},
-		removePaymentMethod: async (parent, args, context, info) => {},
+		removePaymentMethod: async (
+			parent,
+			{ paymentId, ...args },
+			context,
+			info
+		) => {
+			return await Payment.findByIdAndDelete(paymentId);
+		},
 		updatePaymentMethod: async (parent, args, context, info) => {},
 
 		updateDefaultPaymentMethod: async (parent, args, context, info) => {},

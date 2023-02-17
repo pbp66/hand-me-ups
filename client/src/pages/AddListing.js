@@ -9,6 +9,7 @@ import { ADD_LISTING } from "../utils/mutations";
 import { QUERY_ALL_CATEGORIES } from "../utils/queries";
 import auth from "../utils/auth";
 
+
 function AddListing() {
 	const {
 		data,
@@ -16,7 +17,6 @@ function AddListing() {
 		error: categoriesError,
 	} = useQuery(QUERY_ALL_CATEGORIES);
 	const categories = data?.allCategories || [];
-
 	const [listing, setListing] = useState({
 		title: "JNCOS",
 		description: "JNCOS",
@@ -83,7 +83,6 @@ function AddListing() {
 		// } else {
 		//     setDisabled(false)
 		// }
-
 		const updatedFormState = {
 			...listing,
 			// image: image,
@@ -162,7 +161,6 @@ function AddListing() {
 						value={listing.price}
 					/>
 				</div>
-
 				{/* CATEGORIES */}
 				<div className="mb-3">
 					<h5>category</h5>
@@ -340,7 +338,6 @@ function AddListing() {
 						})}
 					</ul>
 				</div>
-
 				{/* detect if mobile to use camera or file upload */}
 				{!isMobile ? (
 					<input

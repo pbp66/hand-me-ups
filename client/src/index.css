@@ -28,6 +28,7 @@ input::file-selector-button {
  * Remove the margin in all browsers.
  */
 body {
+	background-image: url('./assets/groovy-background.png');
 	margin: 0;
 }
 

@@ -1184,6 +1184,7 @@ label form [type="radio"] {
 }
 
 .container.container-fluid {
+	background-image: url("");
 	width: 92%;
 }
 

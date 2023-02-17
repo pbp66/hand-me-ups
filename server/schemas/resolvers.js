@@ -1,4 +1,5 @@
 import { GraphQLError } from "graphql";
+import { DateTime } from "luxon";
 import {
 	User,
 	Listing,
@@ -201,7 +202,80 @@ const resolvers = {
 			}
 		},
 		// TODO...
-		addListing: async (parent, args, context, info) => {},
+		addListing: async (
+			parent,
+			{
+				listing: {
+					title,
+					description,
+					price,
+					condition,
+					image,
+					category,
+				},
+				...args
+			},
+			context,
+			info
+		) => {
+			console.log(listing, args);
+			const newListing = {};
+			newListing["seller"] = await User.findById(context.user._id);
+			newListing["listing_date"] = DateTime.now().toISO();
+			newListing["title"] = title;
+			newListing["description"] = description;
+			newListing["price"] = price;
+			newListing["condition"] = condition;
+			newListing["image"] = image;
+
+			let retrievedCategory = await Category.find({ category });
+			if (!retrievedCategory) {
+				retrievedCategory = await Category.create(category);
+			}
+			newListing["category"] = retrievedCategory;
+
+			if (args.size) {
+				newListing["size"] = args.listing.size;
+			}
+			if (args.color) {
+				newListing["color"] = args.listing.color;
+			}
+
+			// TODO: tags
+			const tags = [];
+			if (args.listing.tags.length > 0) {
+				const foundTags = await Tag.find({
+					tag: { $in: args.listing.tags },
+				});
+				if (args.listing.tags.length !== foundTags.length) {
+					console.log(foundTags);
+
+					const allTagIds = [];
+					if (foundTags) {
+						foundTags.forEach((tag) => allTagIds.push(tag._id));
+					}
+
+					//* Filter all tags and return the tags that do not exist in the database
+					const tagsToCreate = args.listing.tags.filter((tagName) => {
+						//* Return true for any tags NOT found in the foundTags array
+						return !foundTags.find((foundTag) => {
+							//* Verify that the current tagName exists within foundTags array
+							return foundTag.tag === tagName;
+						});
+					});
+
+					console.log(allTagIds, tagsToCreate);
+					tags = tagsToCreate.map(
+						async (tagName) => await Tag.create(tagName)
+					);
+				} else {
+					tags = foundTags;
+				}
+			}
+			newListing["tags"] = tags;
+			console.log(newListing);
+			return await Listing.create(newListing);
+		},
 		removeListing: async (parent, args, context, info) => {},
 		saveListing: async (parent, args, context, info) => {}, // update listing
 

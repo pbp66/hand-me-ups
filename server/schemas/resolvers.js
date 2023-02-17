@@ -360,7 +360,16 @@ const resolvers = {
 			);
 		},
 
-		addAddress: async (parent, args, context, info) => {},
+		addAddress: async (parent, { address, ...args }, context, info) => {
+			const user = await User.findByIdAndUpdate(
+				context.user._id,
+				{
+					$push: { address },
+				},
+				{ new: true, runValidators: true }
+			);
+			return user.addresses;
+		},
 		removeAddress: async (
 			parent,
 			{ addressId, ...args },
@@ -369,7 +378,18 @@ const resolvers = {
 		) => {
 			return await Address.findByIdAndDelete(addressId);
 		},
-		updateAddress: async (parent, args, context, info) => {},
+		updateAddress: async (
+			parent,
+			{ addressId, address, ...args },
+			context,
+			info
+		) => {
+			return await Address.findByIdAndUpdate(
+				addressId,
+				{ ...address },
+				{ new: true, runValidators: true }
+			);
+		},
 
 		addPaymentMethod: async (parent, args, context, info) => {},
 		removePaymentMethod: async (

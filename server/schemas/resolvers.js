@@ -307,7 +307,7 @@ const resolvers = {
 			);
 			return user.favorites;
 		},
-		removeFavoriteListing: async (
+		unFavoriteListing: async (
 			parent,
 			{ listingId, ...args },
 			context,

@@ -26,26 +26,14 @@ const Listing = (props) => {
 
 
     return (
-        
-            
-          
-                    <Card>
-                        <Card.Body>
-                            <Card.Header>{title}</Card.Header>
-                        <Card.Img src={image}></Card.Img>
-                            <Card.Text>{description}</Card.Text>
-                            <Card.Footer>${price}</Card.Footer>
-                        </Card.Body>
-                    </Card>
-              
-       
-        
-
-
-
-
-
-
+        <Card>
+            <Card.Body>
+                <Card.Header>{title}</Card.Header>
+                <Card.Img src={image}></Card.Img>
+                <Card.Text></Card.Text>
+                <Card.Footer>{condition}${price}</Card.Footer>
+            </Card.Body>
+        </Card>
     )
 }
 

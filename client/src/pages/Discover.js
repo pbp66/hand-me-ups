@@ -18,6 +18,7 @@ const Discover = () => {
 		color: ["red", "blue", "green"],
 		condition: "NEW",
 		image: "https://via.placeholder.com/1000 ",
+		seller: "JNCOboi99"
 	})
 	// const [searchedItems, setSearchedItems] = useState([]);
 	// const [searchInput, setSearchInput] = useState("");
@@ -42,11 +43,6 @@ const Discover = () => {
 			</>)
 		})}
 		</Grid>	
-		
-		
-		
-
-
 	</>
 
 	);

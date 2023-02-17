@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../Navbar"
+import image from "../../assets/retro-header.png"
 
 import Auth from "../../utils/auth";
 
@@ -10,7 +11,7 @@ const Header = () => {
 		Auth.logout();
 	};
 	return (
-		<Navbar/>
+		<Navbar style={{ backgroundImage: `url(${image})` }}/>
 		// <header className="bg-info text-dark mb-4 py-3 display-flex align-center">
 		// 	<div className="container flex-column justify-space-between-lg justify-center align-center text-center">
 		// 		<Link

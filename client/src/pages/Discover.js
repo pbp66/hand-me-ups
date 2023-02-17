@@ -1,3 +1,4 @@
+import '../styles/discover.css'
 const Discover = () => {
 	return (
 		<h1>Discover</h1>

@@ -8,7 +8,7 @@ import '../styles/discover.css'
 
 const Discover = () => {
 	// const { loading, data } = useQuery(QUERY_LISTINGS);
-	let listings = Array(16).fill({
+	let listings = Array(25).fill({
 		title: "Listing Title",
 		description: "Listing Description",
 		price: 250,
@@ -32,21 +32,19 @@ const Discover = () => {
 
 	}
 	return (<>
-		<Grid colCount={2} md={6}>	
+	<h1>Discover</h1>
+		<Grid colCount={4} md={3}>	
 		{listings.map(listing => {
 			return (<>
-
 				<Listing
 					listing={listing}>
 				</Listing>
-
 			</>)
 		})}
-		
 		</Grid>	
 		
 		
-		<h1>Discover</h1>
+		
 
 
 	</>

@@ -5,7 +5,7 @@ import auth from '../../utils/auth'
 
 
 const Listing = (props) => {
-    const columnsPerRow = 4;
+
 
     const {
         title,
@@ -27,19 +27,18 @@ const Listing = (props) => {
 
     return (
         
-            <Col md="auto">
-                <Container>
+            
+          
                     <Card>
                         <Card.Body>
-                            <Card.Title>{title}</Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted">{category}</Card.Subtitle>
-                            <Card.Text>
-                                {description}
-                            </Card.Text>
+                            <Card.Header>{title}</Card.Header>
+                        <Card.Img src={image}></Card.Img>
+                            <Card.Text>{description}</Card.Text>
+                            <Card.Footer>${price}</Card.Footer>
                         </Card.Body>
                     </Card>
-                </Container>
-            </Col>
+              
+       
         
 
 

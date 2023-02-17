@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Row, Container } from 'react-bootstrap'
 
 const Grid = ({ colCount, md, children }) => {
-    let rowcount = (children.length / colCount + 1)
+    let rowcount = (children.length / colCount +1)
     let index = 0
 
     const createGrid = () => {
@@ -10,7 +10,6 @@ const Grid = ({ colCount, md, children }) => {
             createRows()
         )
     }
-
     const createRows = () => {
         let rows = []
         for (let row = 0; row < rowcount; row++) {
@@ -24,14 +23,12 @@ const Grid = ({ colCount, md, children }) => {
         }
         return rows
     }
-
-
     const createColumns = () => {
         let columns = []
-        for (let col = 0; col < rowcount; col++) {
+        for (let col = 0; col < colCount; col++) {
             if (index < children.length) {
                 columns.push(
-                    <Col className="Col">
+                    <Col className="Col" md={md}>
                         {children[index]}
                     </Col>
                 )

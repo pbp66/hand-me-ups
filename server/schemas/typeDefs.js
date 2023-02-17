@@ -164,7 +164,7 @@ const typeDefs = `
 		updateMe(userId: ID!, user: updateUserInput): User
 		saveListing(listingId: ID!, listing: listingInput): Listing
 		favoriteListing(listingId: ID!): [Listing]
-		removeFavoriteListing(listing: ID!): [Listing]
+		unFavoriteListing(listing: ID!): [Listing]
 		removeOrder(orderId: ID!): Order
 		updateOrder(orderId: ID!, order: orderInput): Order
 		createCart: Cart

@@ -26,7 +26,6 @@ const resolvers = {
 		allUsers: async (parent, args, context, info) => {
 			return User.find();
 		},
-
 		oneUser: async (parent, { userId }, context, info) => {
 			return User.findOneById(userId);
 		},
@@ -95,7 +94,6 @@ const resolvers = {
 			}
 			throwUnauthenticatedError();
 		},
-
 		allTags: async (parent, args, context, info) => {
 			return Tag.find();
 		},
@@ -156,7 +154,6 @@ const resolvers = {
 			}
 
 			const correctPw = await user.isCorrectPassword(password);
-
 			if (!correctPw) {
 				throw new GraphQLError("Wrong Password", {
 					extensions: {
@@ -201,7 +198,6 @@ const resolvers = {
 				console.error(err);
 			}
 		},
-		// TODO...
 		addListing: async (
 			parent,
 			{
@@ -230,6 +226,7 @@ const resolvers = {
 			newListing["condition"] = condition;
 			newListing["image"] = image;
 			newListing["category"] = await Category.findById(category);
+			newListing["edit_dates"] = [];
 
 			if (size) {
 				newListing["size"] = size;
@@ -269,45 +266,196 @@ const resolvers = {
 				...newListing,
 			});
 		},
-		removeListing: async (parent, args, context, info) => {},
-		saveListing: async (parent, args, context, info) => {}, // update listing
-
-		favoriteListing: async (parent, args, context, info) => {}, // save listing to favorites list
-		removeFavoriteListing: async (parent, args, context, info) => {},
-
+		removeListing: async (
+			parent,
+			{ listingId, ...args },
+			context,
+			info
+		) => {
+			return await Listing.findByIdAndDelete(listingId);
+		},
+		//* update listing
+		saveListing: async (
+			parent,
+			{ listingId, listing, ...args }, // Listing contains title, description, etc...
+			context,
+			info
+		) => {
+			return await Listing.findByIdAndUpdate(
+				listingId,
+				{
+					...listing,
+					edit_status: true,
+					$push: { edit_dates: DateTime.now().toISO() },
+				},
+				{ new: true, runValidators: true }
+			);
+		},
+		//* save listing to favorites list
+		favoriteListing: async (
+			parent,
+			{ listingId, ...args },
+			context,
+			info
+		) => {
+			const user = await User.findByIdAndUpdate(
+				context.user._id,
+				{
+					$push: { favorites: listingId },
+				},
+				{ new: true, runValidators: true }
+			);
+			return user.favorites;
+		},
+		unFavoriteListing: async (
+			parent,
+			{ listingId, ...args },
+			context,
+			info
+		) => {
+			const user = await User.findByIdAndUpdate(
+				context.user._id,
+				{
+					$pull: { favorites: listingId },
+				},
+				{ new: true, runValidators: true }
+			);
+			return user.favorites;
+		},
+		// TODO
 		addOrder: async (parent, args, context, info) => {},
-		removeOrder: async (parent, args, context, info) => {},
+		removeOrder: async (parent, { orderId, ...args }, context, info) => {
+			return await Order.findByIdAndDelete(orderId);
+		},
+		// TODO
 		updateOrder: async (parent, args, context, info) => {},
-
-		createCart: async (parent, args, context, info) => {},
-		removeCart: async (parent, args, context, info) => {},
-		addToCart: async (parent, args, context, info) => {},
-		removeFromCart: async (parent, args, context, info) => {},
-
-		addAddress: async (parent, args, context, info) => {},
-		removeAddress: async (parent, args, context, info) => {},
-		updateAddress: async (parent, args, context, info) => {},
-
-		addPaymentMethod: async (parent, args, context, info) => {},
-		removePaymentMethod: async (parent, args, context, info) => {},
-		updatePaymentMethod: async (parent, args, context, info) => {},
-
-		updateDefaultPaymentMethod: async (parent, args, context, info) => {},
-		updateDefaultAddress: async (parent, args, context, info) => {},
-
+		createCart: async (parent, args, context, info) => {
+			return await Cart.create({ user: context.user, items: [] });
+		},
+		removeCart: async (parent, { cartId, ...args }, context, info) => {
+			return await Cart.findByIdAndDelete(cartId);
+		},
+		addToCart: async (
+			parent,
+			{ cartId, listingId, ...args }, // TODO: Do we need cartId if it is a part of the user object?
+			context,
+			info
+		) => {
+			return await Cart.findByIdAndUpdate(
+				cartId,
+				{ $push: { listingId } },
+				{ new: true, runValidators: true }
+			);
+		},
+		removeFromCart: async (
+			parent,
+			{ cartId, listingId, ...args }, // TODO: Do we need cartId if it is a part of the user object?
+			context,
+			info
+		) => {
+			return await Cart.findByIdAndUpdate(
+				cartId,
+				{ $pull: { listingId } },
+				{ new: true, runValidators: true }
+			);
+		},
+		addAddress: async (parent, { address, ...args }, context, info) => {
+			const user = await User.findByIdAndUpdate(
+				context.user._id,
+				{
+					$push: { address },
+				},
+				{ new: true, runValidators: true }
+			);
+			return user.addresses;
+		},
+		removeAddress: async (
+			parent,
+			{ addressId, ...args },
+			context,
+			info
+		) => {
+			return await Address.findByIdAndDelete(addressId);
+		},
+		updateAddress: async (
+			parent,
+			{ addressId, address, ...args },
+			context,
+			info
+		) => {
+			return await Address.findByIdAndUpdate(
+				addressId,
+				{ ...address },
+				{ new: true, runValidators: true }
+			);
+		},
+		addPaymentMethod: async (
+			parent,
+			{ payment, ...args },
+			context,
+			info
+		) => {
+			const user = await User.findByIdAndUpdate(
+				context.user._id,
+				{
+					$push: { payment },
+				},
+				{ new: true, runValidators: true }
+			);
+			return user.payment_methods;
+		},
+		removePaymentMethod: async (
+			parent,
+			{ paymentId, ...args },
+			context,
+			info
+		) => {
+			return await Payment.findByIdAndDelete(paymentId);
+		},
+		updatePaymentMethod: async (
+			parent,
+			{ paymentId, payment, ...args },
+			context,
+			info
+		) => {
+			return await Payment.findByIdAndUpdate(
+				paymentId,
+				{ ...payment },
+				{ new: true, runValidators: true }
+			);
+		},
+		updateDefaultPaymentMethod: async (
+			parent,
+			{ payment, ...args },
+			context,
+			info
+		) => {
+			return await User.findByIdAndUpdate(
+				context.user._id,
+				{ default_payment: payment },
+				{ new: true, runValidators: true }
+			);
+		},
+		updateDefaultAddress: async (
+			parent,
+			{ address, ...args },
+			context,
+			info
+		) => {
+			return await User.findByIdAndUpdate(
+				context.user._id,
+				{ default_address: address },
+				{ new: true, runValidators: true }
+			);
+		},
 		addTag: async (parent, { tag, ...args }, context, info) => {
-			const newTag = await Tag.create({ tag });
-			return newTag;
+			return await Tag.create({ tag });
 		},
 		removeTag: async (parent, { tagId, ...args }, context, info) => {
-			const tag = await Category.findOneById(tagId);
-			Tag.findByIdAndDelete(tagId);
-			return tag;
+			return await Tag.findByIdAndDelete(tagId);
 		},
-
 		addCategory: async (parent, { category, ...args }, context, info) => {
-			const newCategory = await Category.create({ category });
-			return newCategory;
+			return await Category.create({ category });
 		},
 		removeCategory: async (
 			parent,
@@ -315,9 +463,7 @@ const resolvers = {
 			context,
 			info
 		) => {
-			const category = await Category.findOneById(categoryId);
-			Category.findByIdAndDelete(categoryId);
-			return category;
+			return await Category.findByIdAndDelete(categoryId);
 		},
 	},
 };

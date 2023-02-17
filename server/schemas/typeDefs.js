@@ -60,6 +60,7 @@ const typeDefs = `
 		color: [String]
 		condition: Condition!
 		image: String! # Link to image in firebase?
+
 	}
 
 	type Tag {

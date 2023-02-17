@@ -4,6 +4,7 @@ import userSeeds from "./userSeeds.json" assert { type: "json" };
 
 db.once("open", async () => {
 	try {
+
 		await User.deleteMany({});
 		await Category.deleteMany();
 		await User.create(userSeeds);
@@ -12,10 +13,10 @@ db.once("open", async () => {
 			{ category: "Hat" },
 			{ category: "JNCOS" },
 		]);
-
 		console.log("all done!");
 		process.exit(0);
 	} catch (err) {
 		throw err;
 	}
 });
+

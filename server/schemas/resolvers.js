@@ -100,7 +100,7 @@ const resolvers = {
 			return Tag.find();
 		},
 		allCategories: async (parent, args, context, info) => {
-			return Category.find();
+			return await Category.find();
 		},
 		myPaymentMethods: async (parent, args, context, info) => {
 			if (context.user) {

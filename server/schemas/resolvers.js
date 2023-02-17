@@ -26,7 +26,6 @@ const resolvers = {
 		allUsers: async (parent, args, context, info) => {
 			return User.find();
 		},
-
 		oneUser: async (parent, { userId }, context, info) => {
 			return User.findOneById(userId);
 		},
@@ -95,7 +94,6 @@ const resolvers = {
 			}
 			throwUnauthenticatedError();
 		},
-
 		allTags: async (parent, args, context, info) => {
 			return Tag.find();
 		},
@@ -156,7 +154,6 @@ const resolvers = {
 			}
 
 			const correctPw = await user.isCorrectPassword(password);
-
 			if (!correctPw) {
 				throw new GraphQLError("Wrong Password", {
 					extensions: {
@@ -309,7 +306,6 @@ const resolvers = {
 			Tag.findByIdAndDelete(tagId);
 			return tag;
 		},
-
 		addCategory: async (parent, { category, ...args }, context, info) => {
 			const newCategory = await Category.create({ category });
 			return newCategory;

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Container, Card, CardColumns } from "react-bootstrap"
 import { QUERY_LISTINGS } from "../utils/queries"
 import { useQuery } from "@apollo/client"
+import '../styles/discover.css'
 
 const Discover = () => {
 	const { loading, data } = useQuery(QUERY_LISTINGS);

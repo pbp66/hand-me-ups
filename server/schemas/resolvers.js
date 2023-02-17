@@ -322,15 +322,40 @@ const resolvers = {
 			);
 			return user.favorites;
 		},
-
 		addOrder: async (parent, args, context, info) => {},
-		removeOrder: async (parent, args, context, info) => {},
+		removeOrder: async (parent, { orderId, ...args }, context, info) => {
+			return await Order.findByIdAndDelete(orderId);
+		},
 		updateOrder: async (parent, args, context, info) => {},
 
 		createCart: async (parent, args, context, info) => {},
-		removeCart: async (parent, args, context, info) => {},
-		addToCart: async (parent, args, context, info) => {},
-		removeFromCart: async (parent, args, context, info) => {},
+		removeCart: async (parent, { cartId, ...args }, context, info) => {
+			return await Cart.findByIdAndDelete(cartId);
+		},
+		addToCart: async (
+			parent,
+			{ cartId, listingId, ...args }, // TODO: Do we need cartId if it is a part of the user object?
+			context,
+			info
+		) => {
+			return await Cart.findByIdAndUpdate(
+				cartId,
+				{ $push: { listingId } },
+				{ new: true, runValidators: true }
+			);
+		},
+		removeFromCart: async (
+			parent,
+			{ cartId, listingId, ...args }, // TODO: Do we need cartId if it is a part of the user object?
+			context,
+			info
+		) => {
+			return await Cart.findByIdAndUpdate(
+				cartId,
+				{ $pull: { listingId } },
+				{ new: true, runValidators: true }
+			);
+		},
 
 		addAddress: async (parent, args, context, info) => {},
 		removeAddress: async (parent, args, context, info) => {},

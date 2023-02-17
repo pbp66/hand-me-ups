@@ -1178,7 +1178,6 @@ label form [type="radio"] {
 }
 
 .container {
-	background-image: url("./assets/retro-header.png");
 	width: 85%;
 	max-width: 1200px;
 	margin-left: auto;
@@ -1187,7 +1186,7 @@ label form [type="radio"] {
 
 .container.container-fluid {
 	width: 92%;
-	height: 25%;
+	/* height: 25%; */
 }
 
 /* FLEX CONTENT */

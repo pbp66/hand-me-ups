@@ -224,7 +224,6 @@ const resolvers = {
 			newListing["condition"] = condition;
 			newListing["image"] = image;
 			newListing["category"] = await Category.findById(category);
-			newListing["edit_dates"] = [];
 
 			if (size) {
 				newListing["size"] = size;

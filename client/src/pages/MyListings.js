@@ -11,6 +11,9 @@ const MyListings = () => {
 
 		<>
 			<h1>MyListings populate here</h1>
+			{/* <Listing
+				listing={listing}>
+			</Listing> */}
 
 
 			<center>

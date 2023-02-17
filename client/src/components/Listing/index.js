@@ -1,25 +1,37 @@
-import { Card } from 'react-bootstrap'
+import { Card, Container, Row, Col } from 'react-bootstrap'
+import auth from '../../utils/auth'
 
 
-const Listing = ({ listing }) => {
+
+
+const Listing = (props) => {
+
+
+    const {
+        title,
+        image,
+        description,
+        price,
+        size,
+        color,
+        condition,
+        tags,
+        listing_date,
+        category,
+        seller
+    } = props.listing
+
+    const currentUser = auth.getProfile()
+
 
 
     return (
         <Card>
             <Card.Body>
-                <Card.Title>{listing.title}</Card.Title>
-                <Card.Img>{listing.image}</Card.Img>
-                <Card.Text>
-                    <div>Description: {listing.description}</div>
-                    <div>${listing.price}</div>
-                    <div>Size{listing.size}</div>
-                    <div>Colors: {listing.color}</div>
-                    <div>Condition: {listing.condition}</div>
-                    <div>Tags: {listing.tags}</div>
-                    <div>Listed on: {listing.listing_date}</div>
-                    <div>Categories: {listing.categories}</div>
-                    <div>Seller: {listing.seller}</div>
-                </Card.Text>
+                <Card.Header>{title}</Card.Header>
+                <Card.Img src={image}></Card.Img>
+                <Card.Text></Card.Text>
+                <Card.Footer>{condition}${price}</Card.Footer>
             </Card.Body>
         </Card>
     )

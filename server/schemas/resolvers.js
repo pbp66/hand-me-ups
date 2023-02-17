@@ -122,11 +122,11 @@ const resolvers = {
 			return Tag.find();
 		},
 		allCategories: async (parent, args, context, info) => {
-			return Category.find();
+			return await Category.find();
 		},
 
-		userPaymentMethods: async (parent, args, context, info) => {},
-		userAddresses: async (parent, args, context, info) => {},
+		userPaymentMethods: async (parent, args, context, info) => { },
+		userAddresses: async (parent, args, context, info) => { },
 
 		myPaymentMethods: async (parent, args, context, info) => {
 			if (context.user) {
@@ -136,10 +136,10 @@ const resolvers = {
 				return user.payment_methods;
 			}
 		},
-		myAddresses: async (parent, args, context, info) => {},
+		myAddresses: async (parent, args, context, info) => { },
 
-		userCart: async (parent, args, context, info) => {},
-		myCart: async (parent, args, context, info) => {},
+		userCart: async (parent, args, context, info) => { },
+		myCart: async (parent, args, context, info) => { },
 	},
 
 	Mutation: {
@@ -191,40 +191,57 @@ const resolvers = {
 		},
 
 		// TODO...
-		updateUser: async (parent, args, context, info) => {}, // update password, username, etc...
+		updateUser: async (parent, args, context, info) => { }, // update password, username, etc...
 
-		addListing: async (parent, args, context, info) => {},
-		removeListing: async (parent, args, context, info) => {},
-		saveListing: async (parent, args, context, info) => {}, // update listing
+		addListing: async (parent, args, context, info) => {
+			//args.listings.tags search for tags with same name
+			const allTagIds =[]
+			const foundTags = await Tag.find({ tag: { $in: args.listing.tags } })
+			console.log(foundTags)
+			if(foundTags){
+				foundTags.forEach(tag => allTagIds.push(tag._id))
+			}
+			//if not found create new tag
+			const tagsToCreate = args.listing.tags.filter(tagName => {
+				return !foundTags.find(foundTag => {
+					return foundTag.tag === tagName
+				})
+			})
+			console.log(allTagIds, tagsToCreate)
+			const listing = await Listing.create(args.listing)
+			return listing
+		},
+		removeListing: async (parent, args, context, info) => { },
+		saveListing: async (parent, args, context, info) => { }, // update listing
 
-		favoriteListing: async (parent, args, context, info) => {}, // save listing to favorites list
-		removeFavoriteListing: async (parent, args, context, info) => {},
+		favoriteListing: async (parent, args, context, info) => { }, // save listing to favorites list
+		removeFavoriteListing: async (parent, args, context, info) => { },
 
-		addOrder: async (parent, args, context, info) => {},
-		removeOrder: async (parent, args, context, info) => {},
-		updateOrder: async (parent, args, context, info) => {},
+		addOrder: async (parent, args, context, info) => { },
+		removeOrder: async (parent, args, context, info) => { },
+		updateOrder: async (parent, args, context, info) => { },
 
-		createCart: async (parent, args, context, info) => {},
-		removeCart: async (parent, args, context, info) => {},
-		addToCart: async (parent, args, context, info) => {},
-		removeFromCart: async (parent, args, context, info) => {},
+		createCart: async (parent, args, context, info) => { },
+		removeCart: async (parent, args, context, info) => { },
+		addToCart: async (parent, args, context, info) => { },
+		removeFromCart: async (parent, args, context, info) => { },
 
-		addAddress: async (parent, args, context, info) => {},
-		removeAddress: async (parent, args, context, info) => {},
-		updateAddress: async (parent, args, context, info) => {},
+		addAddress: async (parent, args, context, info) => { },
+		removeAddress: async (parent, args, context, info) => { },
+		updateAddress: async (parent, args, context, info) => { },
 
-		addPaymentMethod: async (parent, args, context, info) => {},
-		removePaymentMethod: async (parent, args, context, info) => {},
-		updatePaymentMethod: async (parent, args, context, info) => {},
+		addPaymentMethod: async (parent, args, context, info) => { },
+		removePaymentMethod: async (parent, args, context, info) => { },
+		updatePaymentMethod: async (parent, args, context, info) => { },
 
-		updateDefaultPaymentMethod: async (parent, args, context, info) => {},
-		updateDefaultAddress: async (parent, args, context, info) => {},
+		updateDefaultPaymentMethod: async (parent, args, context, info) => { },
+		updateDefaultAddress: async (parent, args, context, info) => { },
 
-		addTag: async (parent, args, context, info) => {},
-		removeTag: async (parent, args, context, info) => {},
+		addTag: async (parent, args, context, info) => { },
+		removeTag: async (parent, args, context, info) => { },
 
-		addCategory: async (parent, args, context, info) => {},
-		removeCategory: async (parent, args, context, info) => {},
+		addCategory: async (parent, args, context, info) => { },
+		removeCategory: async (parent, args, context, info) => { },
 	},
 };
 

@@ -48,10 +48,7 @@ export const ADD_LISTING = gql`
 				color
 				condition
 				image
-				seller
 				listing_date
-				edit_status
-				edit_dates
 			}
 			
 		}`

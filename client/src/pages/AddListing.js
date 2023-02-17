@@ -2,24 +2,43 @@ import { storage } from '../../src/utils/firebase'
 import { DateTime } from 'luxon'
 import slugify from "slugify"
 import { uploadBytes, getDownloadURL, ref } from "firebase/storage";
-import { useState, useMutation } from 'react'
+import { useState } from 'react'
+import { useMutation, useQuery } from '@apollo/client'
 import { isMobile } from 'react-device-detect'
 import { ADD_LISTING } from '../utils/mutations';
+import { QUERY_ALL_CATEGORIES } from '../utils/queries'
+import auth from '../utils/auth'
 
 
 function AddListing() {
 
+    const { data, loading: categoriesLoading, error: categoriesError } = useQuery(QUERY_ALL_CATEGORIES)
+    const categories = data?.allCategories || []
+
+    console.log(data)
     const [listing, setListing] = useState({
-        title: "",
-        image: "",
-        description: "",
-        price: 0,
-        category: "",
-        size: "",
-        tags: [],
-        colors: [],
-        condition: "",
+        title: "JNCOS",
+        image: "image.com",
+        description: "JNCOS",
+        price: 250,
+        categories: [],
+        size: "XXL",
+        tags: ["90s", "other"],
+        color: ["red"],
+        condition: "NEW",
     })
+
+    // {
+    //     title: "",
+    //     image: "",
+    //     description: "",
+    //     price: 0,
+    //     categories: [],
+    //     size: "",
+    //     tags: [],
+    //     color: [],
+    //     condition: "",
+    // }
     const [errorMessage, setErrorMessage] = useState("")
     const [disabled, setDisabled] = useState(true)
     const [loading, setLoading] = useState(false)
@@ -27,10 +46,11 @@ function AddListing() {
     const [newColor, setNewColor] = useState("")
     const [files, setFiles] = useState(null)
 
+    const [addListing, { error }] = useMutation(ADD_LISTING)
+
 
     const handleInputs = e => {
         const { value, name } = e.target
-
         if (!value.length) {
             setErrorMessage(`${name} is required`)
             setDisabled(true)
@@ -40,43 +60,51 @@ function AddListing() {
         }
         const updatedFormState = {
             ...listing,
-            [name]: value
+            [name]: value,
         }
         setListing(updatedFormState)
-
-
     }
 
     const handleFileInput = (e) => {
-        console.log(e)
         setFiles(e.target.files)
-
     }
-
+    console.log()
     const handleSubmit = async (e) => {
+     
+
         e.preventDefault()
-        let imageUrl = ""
+        // let image = ""
+        // for (const file of files) {
+        //     const imagesRef = ref(storage, `images/${file.name}`)
+        //     const snapshot = await uploadBytes(imagesRef, file)
+        //     image = await getDownloadURL(snapshot.ref)
+        // }
+        
+        // if (image === "") {
+        //     setDisabled(true)
+        // } else {
+        //     setDisabled(false)
+        // }
 
-
-        for (const file of files) {
-            const imagesRef = ref(storage, `images/${file.name}`)
-            const snapshot = await uploadBytes(imagesRef, file)
-            imageUrl = await getDownloadURL(snapshot.ref)
-        }
-        if (imageUrl === "") {
-            setDisabled(true)
-
-        } else {
-            setDisabled(false)
-        }
         const updatedFormState = {
             ...listing,
-            image: imageUrl,
-            listing_date: DateTime.now()
+            // image: image,
+            price: parseFloat(listing.price),
+            listing_date: DateTime.now().toLocaleString(DateTime.DATE_MED),
+            edit_status: false,
+            edit_dates: ["not edited"]
+        }
+console.log(updatedFormState)
+        try {
+            const { data } = await addListing({
+                variables: { listing: updatedFormState }
+            })
+            setListing(updatedFormState)
+        } catch (err) {
+            console.error(err)
         }
 
-        console.log(updatedFormState)
-        await setListing(updatedFormState)
+
     }
     return (
         <form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
@@ -122,17 +150,24 @@ function AddListing() {
 
                 {/* CATEGORIES */}
                 <div className="mb-3">
-                    <h5>Category</h5>
+                    <h5>categories</h5>
                     <select
-                        name="category"
+                        name="categories"
                         className="form-select"
                         aria-label="Default select example"
                         onChange={handleInputs}
-                        value={listing.category}>
-                        <option selected value> -- select an option -- </option>
-                        <option>Shirt</option>
-                        <option>Hat</option>
-                        <option>JNCOS</option>
+                        value={listing.categories}>
+                        <option value=""> -- select an option -- </option>
+                        {categories.map(({category, _id}) => {
+                            return (
+                                <option
+                                    value={_id}
+                                    key={_id}
+                                >
+                                    {category}
+                                </option>
+                            )
+                        })}
                     </select>
                 </div>
 
@@ -145,7 +180,7 @@ function AddListing() {
                         aria-label="Default select example"
                         onChange={handleInputs}
                         value={listing.size}>
-                        <option selected value> -- select an option -- </option>
+                        <option value=""> -- select an option -- </option>
                         <option>XXXL</option>
                         <option>XXL</option>
                         <option>XL</option>
@@ -165,21 +200,21 @@ function AddListing() {
                         aria-label="Condition Drop-Down"
                         onChange={handleInputs}
                         value={listing.condition}>
-                        <option selected value> -- select an option -- </option>
+                        <option value=""> -- select an option -- </option>
                         <option>NEW</option>
-                        <option>USED - LIKE NEW</option>
-                        <option>USED - GOOD</option>
-                        <option>USED - FAIR</option>
-                        <option>USED - POOR</option>
+                        <option>USED_LIKE_NEW</option>
+                        <option>USED_GOOD</option>
+                        <option>USED_FAIR</option>
+                        <option>USED_POOR</option>
                     </select>
                 </div>
-                {/* COLORS */}
+                {/* color */}
                 <div className="mb-3">
                     <label htmlFor="exampleFormControlTextarea1" className="form-label"><h5>Colors</h5></label>
                     <input
                         className="form-control" id="exampleFormControlTextarea1"
                         rows="1"
-                        placeholder="colors"
+                        placeholder="color"
                         value={newColor}
                         onChange={(e) => setNewColor(e.target.value)}
                     />
@@ -191,7 +226,7 @@ function AddListing() {
                             onClick={() => {
                                 setListing({
                                     ...listing,
-                                    colors: [...listing.colors, slugify(newColor, { lower: true })]
+                                    color: [...listing.color, slugify(newColor, { lower: true })]
                                 })
                                 setNewColor("")
                             }
@@ -203,12 +238,12 @@ function AddListing() {
                 </div>
                 <div className="mb-3">
                     <ul>
-                        {listing.colors.map(tag => {
+                        {listing.color.map(tag => {
                             return <li
                                 onClick={() => {
                                     setListing({
                                         ...listing,
-                                        colors: listing.colors.filter(t => t !== tag)
+                                        color: listing.color.filter(t => t !== tag)
                                     })
                                 }}
                                 key={tag}>

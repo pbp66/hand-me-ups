@@ -424,10 +424,30 @@ const resolvers = {
 				{ new: true, runValidators: true }
 			);
 		},
-
-		updateDefaultPaymentMethod: async (parent, args, context, info) => {},
-		updateDefaultAddress: async (parent, args, context, info) => {},
-
+		updateDefaultPaymentMethod: async (
+			parent,
+			{ payment, ...args },
+			context,
+			info
+		) => {
+			return await User.findByIdAndUpdate(
+				context.user._id,
+				{ default_payment: payment },
+				{ new: true, runValidators: true }
+			);
+		},
+		updateDefaultAddress: async (
+			parent,
+			{ address, ...args },
+			context,
+			info
+		) => {
+			return await User.findByIdAndUpdate(
+				context.user._id,
+				{ default_address: address },
+				{ new: true, runValidators: true }
+			);
+		},
 		addTag: async (parent, { tag, ...args }, context, info) => {
 			return await Tag.create({ tag });
 		},

@@ -218,7 +218,15 @@ const resolvers = {
 			context,
 			info
 		) => {
-			console.log(listing, args);
+			console.log(
+				title,
+				description,
+				price,
+				condition,
+				image,
+				category,
+				args
+			);
 			const newListing = {};
 			newListing["seller"] = await User.findById(context.user._id);
 			newListing["listing_date"] = DateTime.now().toISO();

@@ -1,5 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=ComforterMuli&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Comforter&display=swap');
 
 .navbar-brand {
     font-family: Comforter, serif;
+    font-size: 45px;
 }

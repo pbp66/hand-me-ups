@@ -171,7 +171,7 @@ function AddListing() {
 						className="form-select"
 						aria-label="Default select example"
 						onChange={handleInputs}
-						value={listing.categories}
+						value={listing.category}
 					>
 						<option value=""> -- select an option -- </option>
 						{categories.map(({ category, _id }) => {

@@ -6,9 +6,9 @@ export const ADD_USER = gql`
 			token
 			user {
 				_id
-    			username
-    			email
-    			password
+				username
+				email
+				password
 			}
 		}
 	}
@@ -27,27 +27,25 @@ export const LOGIN_USER = gql`
 `;
 
 export const ADD_LISTING = gql`
-	mutation ADD_LISTING(
-		$listing:listingInput!
-		)
-		{
-			addListing(listing: $listing){
+	mutation ADD_LISTING($listing: listingInput!) {
+		addListing(listing: $listing) {
+			_id
+			title
+			description
+			price
+			category {
 				_id
-				title
-				description
-				price
-				categories{
-					_id
-					category
-				}
-				tags{
-					_id
-					tag
-				}
-				size
-				color
-				condition
-				image
-				listing_date
+				category
 			}
-		}`
+			tags {
+				_id
+				tag
+			}
+			size
+			color
+			condition
+			image
+			listing_date
+		}
+	}
+`;

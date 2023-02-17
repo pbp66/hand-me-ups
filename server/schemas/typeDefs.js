@@ -11,6 +11,7 @@ const typeDefs = `
 		addresses: [Address]
 		default_address: Address
 		default_payment: Payment
+		cart: Cart
   	}
 
 	input updateUserInput {
@@ -29,16 +30,16 @@ const typeDefs = `
 		title: String!
 		description: String!
 		price: Float!
-		categories: Category!
+		category: Category!
 		tags: [Tag]
 		size: String
 		color: [String]
 		condition: Condition!
-		image: String # Link to image in firebase?
-		seller: User
-		listing_date: String! # Date represented as a string?
-		edit_status: Boolean!
-		edit_dates: [String] # Date represented as a string?
+		image: String! # Link to image in firebase?
+		seller: User # Grab from resolver context
+		listing_date: String! # Date represented as a string
+		edit_status: Boolean! # Default of false unless updated through saveListing mutation
+		edit_dates: [String] # Date represented as a string
 	}
 
 	enum Condition {
@@ -53,15 +54,13 @@ const typeDefs = `
 		title: String!
 		description: String!
 		price: Float!
-		categories: String # Convert to category schema in resolver
+		category: String! # Convert to category schema in resolver
 		tags: [String] # Convert to tag schema in resolver
 		size: String
 		color: [String]
 		condition: Condition!
-		image: [String] # Link to image in firebase?
-		listing_date: String! # Date represented as a string?
-		edit_status: Boolean
-		edit_dates: [String] # Date represented as a string?
+		image: String! # Link to image in firebase?
+
 	}
 
 	type Tag {
@@ -146,16 +145,12 @@ const typeDefs = `
 		favoriteListings: [Listing]
 		searchListings(searchTerms: [String]!, tags: [ID!]): [Listing]
 		allOrders: [Order]
-		userOrders(userId: ID!): [Order]
 		getOrder(orderId: ID!): Order
 		myOrders: [Order]
 		allTags: [Tag]
 		allCategories: [Category]
-		userPaymentMethods(userId: ID!): [Payment]
-		userAddresses(userId: ID!): [Address]
 		myPaymentMethods: [Payment]
 		myAddresses: [Address]
-		userCart(userId: ID!): Cart
 		myCart: Cart
   	}
 
@@ -166,7 +161,7 @@ const typeDefs = `
 		addListing(listing: listingInput!): Listing
 		removeListing(listingId: ID!): User
 		addOrder(cartId: ID!, orderDetails: orderInput!): Order
-		updateUser(userId: ID!, user: updateUserInput): User
+		updateMe(userId: ID!, user: updateUserInput): User
 		saveListing(listingId: ID!, listing: listingInput): Listing
 		favoriteListing(listingId: ID!): [Listing]
 		removeFavoriteListing(listing: ID!): [Listing]

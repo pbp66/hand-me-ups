@@ -226,6 +226,7 @@ const resolvers = {
 			newListing["condition"] = condition;
 			newListing["image"] = image;
 			newListing["category"] = await Category.findById(category);
+			newListing["edit_dates"] = [];
 
 			if (size) {
 				newListing["size"] = size;
@@ -273,7 +274,22 @@ const resolvers = {
 		) => {
 			return await Listing.findByIdAndDelete(listingId);
 		},
-		saveListing: async (parent, args, context, info) => {}, // update listing
+		saveListing: async (
+			parent,
+			{ listingId, listing, ...args }, // Listing contains title, description, etc...
+			context,
+			info
+		) => {
+			return await Listing.findByIdAndUpdate(
+				listingId,
+				{
+					...listing,
+					edit_status: true,
+					$push: { edit_dates: DateTime.now().toISO() },
+				},
+				{ new: true, runValidators: true }
+			);
+		}, // update listing
 		favoriteListing: async (parent, args, context, info) => {}, // save listing to favorites list
 		removeFavoriteListing: async (parent, args, context, info) => {},
 
@@ -298,17 +314,13 @@ const resolvers = {
 		updateDefaultAddress: async (parent, args, context, info) => {},
 
 		addTag: async (parent, { tag, ...args }, context, info) => {
-			const newTag = await Tag.create({ tag });
-			return newTag;
+			return await Tag.create({ tag });
 		},
 		removeTag: async (parent, { tagId, ...args }, context, info) => {
-			const tag = await Category.findOneById(tagId);
-			Tag.findByIdAndDelete(tagId);
-			return tag;
+			return await Tag.findByIdAndDelete(tagId);
 		},
 		addCategory: async (parent, { category, ...args }, context, info) => {
-			const newCategory = await Category.create({ category });
-			return newCategory;
+			return await Category.create({ category });
 		},
 		removeCategory: async (
 			parent,
@@ -316,9 +328,7 @@ const resolvers = {
 			context,
 			info
 		) => {
-			const category = await Category.findOneById(categoryId);
-			Category.findByIdAndDelete(categoryId);
-			return category;
+			return await Category.findByIdAndDelete(categoryId);
 		},
 	},
 };

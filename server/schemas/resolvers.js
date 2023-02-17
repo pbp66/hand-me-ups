@@ -274,6 +274,7 @@ const resolvers = {
 		) => {
 			return await Listing.findByIdAndDelete(listingId);
 		},
+		//* update listing
 		saveListing: async (
 			parent,
 			{ listingId, listing, ...args }, // Listing contains title, description, etc...
@@ -289,9 +290,38 @@ const resolvers = {
 				},
 				{ new: true, runValidators: true }
 			);
-		}, // update listing
-		favoriteListing: async (parent, args, context, info) => {}, // save listing to favorites list
-		removeFavoriteListing: async (parent, args, context, info) => {},
+		},
+		//* save listing to favorites list
+		favoriteListing: async (
+			parent,
+			{ listingId, ...args },
+			context,
+			info
+		) => {
+			const user = await User.findByIdAndUpdate(
+				context.user._id,
+				{
+					$push: { favorites: listingId },
+				},
+				{ new: true, runValidators: true }
+			);
+			return user.favorites;
+		},
+		removeFavoriteListing: async (
+			parent,
+			{ listingId, ...args },
+			context,
+			info
+		) => {
+			const user = await User.findByIdAndUpdate(
+				context.user._id,
+				{
+					$pull: { favorites: listingId },
+				},
+				{ new: true, runValidators: true }
+			);
+			return user.favorites;
+		},
 
 		addOrder: async (parent, args, context, info) => {},
 		removeOrder: async (parent, args, context, info) => {},

@@ -322,13 +322,16 @@ const resolvers = {
 			);
 			return user.favorites;
 		},
+		// TODO
 		addOrder: async (parent, args, context, info) => {},
 		removeOrder: async (parent, { orderId, ...args }, context, info) => {
 			return await Order.findByIdAndDelete(orderId);
 		},
+		// TODO
 		updateOrder: async (parent, args, context, info) => {},
-
-		createCart: async (parent, args, context, info) => {},
+		createCart: async (parent, args, context, info) => {
+			return await Cart.create({ user: context.user, items: [] });
+		},
 		removeCart: async (parent, { cartId, ...args }, context, info) => {
 			return await Cart.findByIdAndDelete(cartId);
 		},

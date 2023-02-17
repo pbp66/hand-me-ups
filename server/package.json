@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "server.js",
-	"type":"module",
+	"type": "module",
 	"scripts": {
 		"start": "node --experimental-modules --es-module-specifier-resolution=node server.js",
 		"seed": "node --experimental-modules --es-module-specifier-resolution=node seeds/seed.js",
@@ -19,6 +19,7 @@
 		"express": "^4.18.2",
 		"graphql": "^16.6.0",
 		"jsonwebtoken": "^8.5.1",
+		"luxon": "^3.2.1",
 		"mongoose": "^6.9.1"
 	},
 	"devDependencies": {

@@ -19,13 +19,11 @@ const listingSchema = new Schema(
 			required: true,
 			trim: true,
 		},
-		categories: [
-			{
-				type: Schema.Types.ObjectId,
-				ref: "Category",
-				required: true,
-			},
-		],
+		category: {
+			type: Schema.Types.ObjectId,
+			ref: "Category",
+			required: true,
+		},
 		tags: [
 			{
 				type: Schema.Types.ObjectId,

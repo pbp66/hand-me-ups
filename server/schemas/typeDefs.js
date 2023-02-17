@@ -30,16 +30,16 @@ const typeDefs = `
 		title: String!
 		description: String!
 		price: Float!
-		categories: [Category]
+		category: Category!
 		tags: [Tag]
 		size: String
 		color: [String]
 		condition: Condition!
-		image: String # Link to image in firebase?
-		seller: User
-		listing_date: String! # Date represented as a string?
-		edit_status: Boolean!
-		edit_dates: [String] # Date represented as a string?
+		image: String! # Link to image in firebase?
+		seller: User # Grab from resolver context
+		listing_date: String! # Date represented as a string
+		edit_status: Boolean! # Default of false unless updated through saveListing mutation
+		edit_dates: [String] # Date represented as a string
 	}
 
 	enum Condition {
@@ -54,15 +54,12 @@ const typeDefs = `
 		title: String!
 		description: String!
 		price: Float!
-		categories: [String] # Convert to category schema in resolver
+		category: String! # Convert to category schema in resolver
 		tags: [String] # Convert to tag schema in resolver
 		size: String
 		color: [String]
 		condition: Condition!
-		image: [String] # Link to image in firebase?
-		listing_date: String! # Date represented as a string?
-		edit_status: Boolean!
-		edit_dates: [String] # Date represented as a string?
+		image: String! # Link to image in firebase?
 	}
 
 	type Tag {

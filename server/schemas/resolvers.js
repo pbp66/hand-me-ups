@@ -1,4 +1,5 @@
 import { GraphQLError } from "graphql";
+import { DateTime } from "luxon";
 import {
 	User,
 	Listing,
@@ -201,7 +202,73 @@ const resolvers = {
 			}
 		},
 		// TODO...
-		addListing: async (parent, args, context, info) => {},
+		addListing: async (
+			parent,
+			{
+				listing: {
+					title,
+					description,
+					price,
+					condition,
+					image,
+					category,
+					size,
+					tags,
+					color,
+				},
+				...args
+			},
+			context,
+			info
+		) => {
+			const newListing = {};
+			newListing["seller"] = context.user._id;
+			newListing["listing_date"] = DateTime.now().toISO();
+			newListing["title"] = title;
+			newListing["description"] = description;
+			newListing["price"] = price;
+			newListing["condition"] = condition;
+			newListing["image"] = image;
+			newListing["category"] = await Category.findById(category);
+
+			if (size) {
+				newListing["size"] = size;
+			}
+			if (color) {
+				newListing["color"] = color;
+			}
+
+			let listingTags = [];
+			if (tags.length > 0) {
+				const foundTags = await Tag.find({
+					tag: { $in: tags },
+				});
+				if (tags.length !== foundTags.length) {
+					const allTagIds = [];
+					if (foundTags) {
+						foundTags.forEach((tag) => allTagIds.push(tag._id));
+					}
+
+					//* Filter all tags and return the tags that do not exist in the database
+					const tagsToCreate = tags.filter((tagName) => {
+						//* Return true for any tags NOT found in the foundTags array
+						return !foundTags.find((foundTag) => {
+							//* Verify that the current tagName exists within foundTags array
+							return foundTag.tag === tagName;
+						});
+					});
+					listingTags = await tagsToCreate.map(
+						async (tagName) => await Tag.create({ tagName })
+					);
+				} else {
+					listingTags = foundTags;
+				}
+			}
+			newListing["tags"] = listingTags;
+			return await Listing.create({
+				...newListing,
+			});
+		},
 		removeListing: async (parent, args, context, info) => {},
 		saveListing: async (parent, args, context, info) => {}, // update listing
 

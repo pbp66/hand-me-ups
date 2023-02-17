@@ -4,6 +4,8 @@ import { expressMiddleware } from "@apollo/server/express4";
 import db from "./config/connection";
 import { typeDefs, resolvers } from "./schemas";
 import { authMiddleware } from "./utils/auth";
+import dotenv from "dotenv";
+dotenv.config();
 
 const PORT = process.env.PORT || 3001;
 const app = express();

@@ -1,7 +1,12 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Comforter&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bilbo&display=swap');
 
 .navbar-brand {
-    font-family: Comforter, serif;
+    font-family: 'Comforter', cursive;
     font-size: 45px;
+}
+.nav-item {
+    font-family: 'Bilbo', serif;
+    font-size: 24px;
 }

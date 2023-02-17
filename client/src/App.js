@@ -45,12 +45,16 @@ const client = new ApolloClient({
 });
 
 function App() {
+	const myStyle={
+		backgroundImage:
+		"url('assets/retro-header.png')"
+	}
 	return (
 		<ApolloProvider client={client}>
 			<Router>
 				<div className="flex-column justify-flex-start min-100-vh">
 					<Header />
-					<div className="container">
+					<div className="container" style={myStyle}>
 						<Routes>
 							<Route path="/" element={<Discover />} />
 							<Route path="/SavedItems" element={<SavedItems />} />

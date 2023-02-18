@@ -56,19 +56,19 @@ db.once("open", async () => {
 				seller: mockObjectId('seller')
 			}
 		])
-const allListings = await Listing.find()
-console.log(allListings)
+		let allListings = await Listing.find()
+		allListings = await allListings.map(listing => listing._id)
+		
 		await User.create(userSeeds);
 		await User.create({
 			email: "test@test.com",
 			username: "test",
 			password: "password",
-			listings : allListings.map(listing => {
-				listing._id
-			})
+			listings: allListings
 		})
 
-
+const user = await User.findOne({username: "test"})
+console.log(user)
 		console.log("all done!");
 		process.exit(0);
 	} catch (err) {

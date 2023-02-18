@@ -16,6 +16,7 @@ function AddListing() {
 		loading: categoriesLoading,
 		error: categoriesError,
 	} = useQuery(QUERY_ALL_CATEGORIES);
+	console.log(data)
 	const categories = data?.allCategories || [];
 	const [listing, setListing] = useState({
 		title: "JNCOS",
@@ -64,32 +65,26 @@ function AddListing() {
 		};
 		setListing(updatedFormState);
 	};
-
 	const handleFileInput = (e) => {
 		setFiles(e.target.files);
 	};
-	console.log();
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		// let image = ""
-		// for (const file of files) {
-		//     const imagesRef = ref(storage, `images/${file.name}`)
-		//     const snapshot = await uploadBytes(imagesRef, file)
-		//     image = await getDownloadURL(snapshot.ref)
-		// }
-
-		// if (image === "") {
-		//     setDisabled(true)
-		// } else {
-		//     setDisabled(false)
-		// }
+		let image = ""
+		for (const file of files) {
+			const imagesRef = ref(storage, `images/${file.name}`)
+			const snapshot = await uploadBytes(imagesRef, file)
+			image = await getDownloadURL(snapshot.ref)
+		}
+		if (image === "") {
+			setDisabled(true)
+		} else {
+			setDisabled(false)
+		}
 		const updatedFormState = {
 			...listing,
-			// image: image,
+			image: image,
 			price: parseFloat(listing.price),
-			// listing_date: DateTime.now().toLocaleString(DateTime.DATE_MED),
-			// edit_status: false,
-			// edit_dates: ["not edited"],
 		};
 		try {
 			console.log(updatedFormState);

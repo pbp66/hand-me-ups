@@ -146,6 +146,9 @@ export const QUERY_USER_LISTINGS = gql`
       tags {
         tag
       }
+	  seller {
+		_id
+	  }
       size
       color
       condition

@@ -1,19 +1,27 @@
 import { Card, Button, Container, Row, Col, Modal } from 'react-bootstrap'
-import auth from '../../utils/auth'
+import { Link } from "react-router-dom"
+import { useStoreContext } from '../../ctx/storeContext'
+import { ADD_TO_CART, UPDATE_CART_QUANTITY } from '../../ctx/actions'
+import { idbPromise } from "../../utils/helpers"
+import Auth from '../../utils/auth'
 import { useState } from 'react'
 
 
 
 
 const Listing = (props) => {
+    // const [state, dispatch]= useStoreContext()
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
 
-
+    if (Auth.loggedIn()) {
+        console.log(Auth.getProfile())
+    }
 
 
     const {
+        _id,
         title,
         image,
         description,
@@ -27,42 +35,54 @@ const Listing = (props) => {
         seller
     } = props.listing
 
-    // const currentUser = auth.getProfile()
+    // const { cart } = state
 
+    const addToCart = () => {
+        //use add to cart
+        console.log('added to cart')
+    }
 
-    // const showModal = (e) => {
-    //     return (<>
-    //         <Button onClick={handleShow}>Add New Listing</Button>
-    //         <Modal show={show} onHide={handleClose}>
-    //             <Modal.Header closeButton>
-    //                 <Modal.Title>Add Listing</Modal.Title>
-    //             </Modal.Header>
-    //             <Modal.Body>
+    const saveItem = () => {
+        console.log('item saved')
 
-    //             </Modal.Body>
-    //         </Modal>
-    //     </>
-    //     )
-    // }
+    }
+
 
 
     return (
         <>
-            <a className="card-block stretched-link text-decoration-none" href>
+            <Link to={`/listings/${_id}`}>
                 <Card>
                     <Card.Body>
                         <Card.Header>{title}</Card.Header>
                         <Card.Img src={image}></Card.Img>
                         <Card.Text>seed userID  {description}</Card.Text>
                         <Card.Footer>{condition}${price}
-                        {/* <Button
-							onClick={() => { }}>
-							Add to Cart 
-						</Button> */}
                         </Card.Footer>
                     </Card.Body>
                 </Card>
-            </a>
+            </Link>
+            {Auth.loggedIn() ?
+                <><Container>
+                    <Row>
+                    <Col>
+                        <Button
+                            onClick={addToCart}>
+                            Add to Cart
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button
+                            onClick={saveItem}>
+                            Save to favorites
+                        </Button>
+                    </Col>
+                    </Row>
+                </Container>
+                </>
+                : <></>
+            }
+
         </>
     )
 }

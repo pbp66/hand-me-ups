@@ -19,13 +19,12 @@ console.log(id)
 		}
 	  });
 	const myListings = data || [];
-	console.log(myListings)
 	const [show, setShow] = useState(false)
 	const handleClose = () => setShow(false)
 	const handleShow = () => setShow(true)
 
-	if (loading) return <p>loading...</p>
-	if (error) return <p>error {error.message} </p>
+	// if (loading) return <p>loading...</p>
+	// if (error) return <p>error {error.message} </p>
 	return (
 		<>
 			{ }

@@ -1,40 +1,37 @@
 import { useState, useEffect } from "react"
-import { Container, Card, CardColumns } from "react-bootstrap"
+import { Container, Card, CardColumns, Row, Col, Button } from "react-bootstrap"
 import { QUERY_LISTINGS } from "../utils/queries"
 import { useQuery } from "@apollo/client"
+import Grid from "../components/Grid"
+import Listing from '../components/Listing'
 import '../styles/discover.css'
 
 const Discover = () => {
-	const { loading, data } = useQuery(QUERY_LISTINGS);
-	console.log(data)
+	const {
+		data,
+		loading,
+		error
+	} = useQuery(QUERY_LISTINGS);
 
-	const [searchedItems, setSearchedItems] = useState([]);
-	const [searchInput, setSearchInput] = useState("");
+ if (loading) return <p>loading</p>
+ if (error) return<p>error {error.message} </p>
+	const {allListings} = data || [];
+	// const handleFormSubmit = async (event) => {
+	// 	event.preventDefault();
+	// }
+	return (<>
+		<h1>Discover</h1>
+		<Grid colCount={4} md={3}>
+			{allListings.map(listing => {
+				return (<>
+					<Listing
+						listing={listing}>					
+					</Listing>
+				</>)
+			})}
+		</Grid>
+	</>
 
-	const handleFormSubmit = async (event) => {
-		event.preventDefault();
-
-		if (!searchInput) {
-			return false;
-		}
-
-
-	}
-	return (
-		<Container>
-			<h1>Discover</h1>
-			<CardColumns>
-				{/* map listings here */}
-				<Card>
-					<Card.Body>
-						<Card.Title></Card.Title>
-						<p>Price: </p>
-						<p>Size: </p>
-					</Card.Body>
-				</Card>
-			</CardColumns>
-
-		</Container>
 	);
 };
 

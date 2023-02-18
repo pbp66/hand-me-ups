@@ -12,6 +12,11 @@ html {
 	-webkit-text-size-adjust: 100%;
 	/* 2 */
 }
+.card-img-top {
+    width: 25%;
+    height: 25%;
+    object-fit: cover;
+}
 
 input::file-selector-button {
 	

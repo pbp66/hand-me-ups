@@ -48,6 +48,9 @@ const Listing = (props) => {
     }
 
 
+console.log(seller._id)
+const sellerId = seller._id
+console.log(Auth.getProfile().data._id)
 
     return (
         <>
@@ -62,7 +65,7 @@ const Listing = (props) => {
                     </Card.Body>
                 </Card>
             </Link>
-            {Auth.loggedIn() ?
+            {Auth.loggedIn() && Auth.getProfile().data._id !== sellerId ?
                 <><Container>
                     <Row>
                     <Col>

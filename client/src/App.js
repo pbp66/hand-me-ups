@@ -59,7 +59,7 @@ function App() {
 						<Routes>
 							<Route path="/" element={<Discover />} />
 							<Route path="/SavedItems" element={<SavedItems />} />
-							<Route path="/MyListings" element={<MyListings />}  />
+							<Route path="/MyListings/:id" element={<MyListings />}  />
 							<Route path="/Cart" element={<Cart />} />
 							<Route path="/Login" element={<Login />} />
 							<Route path="/PurchaseHistory" element={<PurchaseHistory />} />

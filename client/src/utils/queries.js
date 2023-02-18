@@ -132,3 +132,27 @@ export const QUERY_USER_LISTINGS = gql`
 	}
   }
   `
+
+  export const QUERY_MY_LISTINGS = gql`
+  query QUERY_MY_LISTINGS {
+    myListings {
+      _id
+      title
+      description
+      price
+      category {
+        category
+      }
+      tags {
+        tag
+      }
+      size
+      color
+      condition
+      image
+      listing_date
+      edit_status
+      edit_dates
+    }
+  }
+  `

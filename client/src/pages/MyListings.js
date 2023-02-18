@@ -4,27 +4,23 @@ import AddListing from "./AddListing";
 import Listing from '../components/Listing';
 import { useState } from 'react'
 import { useQuery } from '@apollo/client'
-import { QUERY_USER_LISTINGS } from '../utils/queries';
+import { QUERY_MY_LISTINGS } from '../utils/queries';
 
 const MyListings = () => {
-const {id} = useParams()
-console.log(id)
+
 	const {
 		data,
 		loading,
 		error
-	} = useQuery(QUERY_USER_LISTINGS,{
-		variables: {
-		  _id: id
-		}
-	  });
-	const myListings = data || [];
+	} = useQuery(QUERY_MY_LISTINGS);
+	const myListings = data?.myListings || [];
 	const [show, setShow] = useState(false)
 	const handleClose = () => setShow(false)
 	const handleShow = () => setShow(true)
 
 	// if (loading) return <p>loading...</p>
 	// if (error) return <p>error {error.message} </p>
+
 	return (
 		<>
 			{ }

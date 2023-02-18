@@ -13,9 +13,9 @@ const Discover = () => {
 		error
 	} = useQuery(QUERY_LISTINGS);
 
- if (loading) return <p>loading</p>
- if (error) return<p>error {error.message} </p>
-	const {allListings} = data || [];
+	if (loading) return <p>loading</p>
+	if (error) return <p>error {error.message} </p>
+	const { allListings } = data || [];
 	// const handleFormSubmit = async (event) => {
 	// 	event.preventDefault();
 	// }
@@ -25,7 +25,8 @@ const Discover = () => {
 			{allListings.map(listing => {
 				return (<>
 					<Listing
-						listing={listing}>					
+						listing={listing}
+					>
 					</Listing>
 				</>)
 			})}

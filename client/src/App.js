@@ -16,6 +16,7 @@ import Login from "./pages/Login";
 import PurchaseHistory from "./pages/PurchaseHistory"
 import Signup from "./pages/Signup";
 import Checkout from "./pages/Checkout"
+import Detail from "./pages/Detail"
 import Auth from './utils/auth'
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -58,11 +59,12 @@ function App() {
 						<Routes>
 							<Route path="/" element={<Discover />} />
 							<Route path="/SavedItems" element={<SavedItems />} />
-							<Route path="/MyListings/:id" element={<MyListings />}  />
-							{/* <Route path="/Cart" element={<Cart />} /> */}
+							<Route path="/MyListings" element={<MyListings />}  />
+							<Route path="/Cart" element={<Cart />} />
 							<Route path="/Login" element={<Login />} />
 							<Route path="/PurchaseHistory" element={<PurchaseHistory />} />
 							<Route path="/Signup" element={<Signup />} />
+							<Route path="/listings/:id" element={<Detail />} />
 							{/* <Route path="/Checkout" element={<Checkout />} /> */}
 						</Routes>
 					</div>

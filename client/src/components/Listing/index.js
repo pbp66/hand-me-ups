@@ -27,23 +27,23 @@ const Listing = (props) => {
         seller
     } = props.listing
 
-    const currentUser = auth.getProfile()
+    // const currentUser = auth.getProfile()
 
 
-    const showModal = (e) => {
-        return (<>
-            <Button onClick={handleShow}>Add New Listing</Button>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add Listing</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
+    // const showModal = (e) => {
+    //     return (<>
+    //         <Button onClick={handleShow}>Add New Listing</Button>
+    //         <Modal show={show} onHide={handleClose}>
+    //             <Modal.Header closeButton>
+    //                 <Modal.Title>Add Listing</Modal.Title>
+    //             </Modal.Header>
+    //             <Modal.Body>
 
-                </Modal.Body>
-            </Modal>
-        </>
-        )
-    }
+    //             </Modal.Body>
+    //         </Modal>
+    //     </>
+    //     )
+    // }
 
 
     return (
@@ -55,10 +55,10 @@ const Listing = (props) => {
                         <Card.Img src={image}></Card.Img>
                         <Card.Text>seed userID  {description}</Card.Text>
                         <Card.Footer>{condition}${price}
-                        <Button
+                        {/* <Button
 							onClick={() => { }}>
 							Add to Cart 
-						</Button>
+						</Button> */}
                         </Card.Footer>
                     </Card.Body>
                 </Card>

@@ -5,7 +5,6 @@ import { uploadBytes, getDownloadURL, ref } from "firebase/storage";
 import { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { isMobile } from "react-device-detect";
-import { useStoreContext } from "../ctx/storeContext";
 import { ADD_LISTING } from "../utils/mutations";
 import { QUERY_ALL_CATEGORIES } from "../utils/queries";
 import auth from "../utils/auth";

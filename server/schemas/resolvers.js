@@ -39,6 +39,9 @@ const resolvers = {
 		allListings: async (parent, args, context, info) => {
 			return Listing.find();
 		},
+		oneListing: async (parent, {listingId}, context, info) => {
+			return Listing.findById(listingId)
+		},
 		userListings: async (parent, { userId }, context, info) => {
 			const user = await User.findById(userId).populate("listings");
 			if (!user) {

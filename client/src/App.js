@@ -20,7 +20,7 @@ import Detail from "./pages/Detail"
 import Auth from './utils/auth'
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { StoreProvider } from "./ctx/storeContext";
+
 
 
 
@@ -55,7 +55,6 @@ function App() {
 		<ApolloProvider client={client}>
 			<Router>
 				<div className="flex-column justify-flex-start min-100-vh">
-					<StoreProvider>
 						<Header />
 						<div className="container" style={myStyle}>
 							<Routes>
@@ -71,7 +70,6 @@ function App() {
 							</Routes>
 						</div>
 						<Footer />
-					</StoreProvider>
 				</div>
 			</Router>
 		</ApolloProvider>

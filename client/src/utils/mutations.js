@@ -49,3 +49,27 @@ export const ADD_LISTING = gql`
 		}
 	}
 `;
+
+export const ADD_TO_CART = gql`
+mutation ADD_TO_CART($cartId: ID!, $listingId: ID!) {
+	addToCart(cartId: $cartId, listingId: $listingId) {
+	  _id
+	  items {
+		_id
+		title
+		description
+		price
+		size
+		color
+		condition
+		image
+		seller {
+		  _id
+		}
+		listing_date
+		edit_status
+		edit_dates
+	  }
+	}
+  }
+`

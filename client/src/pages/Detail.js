@@ -1,17 +1,20 @@
-
+import { useParams } from "react-router-dom"
 import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { QUERY_ONE_LISTING } from "../utils/queries"
+import { useQuery } from "@apollo/client"
+import Listing from "../components/Listing"
+
 const Detail = () => {
-    const location = useLocation()
-console.log(location)
-    // console.log(from)
-
-
-
-
+    let { id } = useParams()
+    const { data, loading, error } = useQuery(QUERY_ONE_LISTING, { variables: { listingId: id } });
+    const oneListing = data?.oneListing || {}
     return (
         <>
-            <h1>Detail of Listing</h1>
+            <h1>{oneListing.title}</h1>
+            <Listing
+                listing={oneListing}
+            >
+            </Listing>
         </>
     )
 }

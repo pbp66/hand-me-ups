@@ -9,7 +9,7 @@ import { useState } from 'react'
 const Listing = (props) => {
 
 
-     const [show, setShow] = useState(false)
+    const [show, setShow] = useState(false)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
 
@@ -29,7 +29,7 @@ const Listing = (props) => {
     } = props.listing
 
     // const { cart } = state
-console.log(_id)
+
     const addToCart = () => {
         //use add to cart
         //refresh getcart query
@@ -44,7 +44,8 @@ console.log(_id)
 
     return (
         <>
-            <Link to={`/listings/${_id}`}>
+            <Link
+                to={`/listings/${_id}`}>
                 <Card>
                     <Card.Body>
                         <Card.Header>{title}</Card.Header>
@@ -58,18 +59,18 @@ console.log(_id)
             {Auth.loggedIn() && Auth.getProfile().data._id !== seller._id ?
                 <><Container>
                     <Row>
-                    <Col>
-                        <Button
-                            onClick={addToCart}>
-                            Add to Cart
-                        </Button>
-                    </Col>
-                    <Col>
-                        <Button
-                            onClick={saveItem}>
-                            Save to favorites
-                        </Button>
-                    </Col>
+                        <Col>
+                            <Button
+                                onClick={addToCart}>
+                                Add to Cart
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button
+                                onClick={saveItem}>
+                                Save to favorites
+                            </Button>
+                        </Col>
                     </Row>
                 </Container>
                 </>

@@ -1,8 +1,5 @@
 import { Card, Button, Container, Row, Col, Modal } from 'react-bootstrap'
 import { Link } from "react-router-dom"
-import { useStoreContext } from '../../ctx/storeContext'
-import { ADD_TO_CART, UPDATE_CART_QUANTITY } from '../../ctx/actions'
-import { idbPromise } from "../../utils/helpers"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
 
@@ -10,8 +7,9 @@ import { useState } from 'react'
 
 
 const Listing = (props) => {
-    
-    const [show, setShow] = useState(false)
+
+
+     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
 
@@ -34,6 +32,7 @@ const Listing = (props) => {
 
     const addToCart = () => {
         //use add to cart
+        //refresh getcart query
         console.log('added to cart')
     }
 

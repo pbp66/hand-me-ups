@@ -5,12 +5,9 @@ import Listing from '../components/Listing';
 import { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { QUERY_MY_LISTINGS } from '../utils/queries';
-import { useStoreContext  } from '../ctx/storeContext';
+
 
 const MyListings = () => {
-	const[state, dispath] = useStoreContext()
-
-
 	const {
 		data,
 		loading,

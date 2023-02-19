@@ -44,7 +44,7 @@ db.once("open", async () => {
 			},
 			{
 				title: "JNCOS2",
-				description: `${mockObjectId('id')}`,
+				description: `${mockObjectId('id2')}`,
 				price: 120,
 				category: mockObjectId('category'),
 				tags: [mockObjectId('tag'), mockObjectId('tag2')],

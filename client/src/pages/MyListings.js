@@ -5,8 +5,11 @@ import Listing from '../components/Listing';
 import { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { QUERY_MY_LISTINGS } from '../utils/queries';
+import { useStoreContext  } from '../ctx/storeContext';
 
 const MyListings = () => {
+	const[state, dispath] = useStoreContext()
+
 
 	const {
 		data,
@@ -27,6 +30,7 @@ const MyListings = () => {
 			{myListings.map(listing => {
 				return (
 					<Listing
+					key={listing._id}
 						listing={listing}>
 					</Listing>
 				)
@@ -36,7 +40,10 @@ const MyListings = () => {
 
 			<center>
 				<Button onClick={handleShow}>Add New Listing</Button>
-				<Modal show={show} onHide={handleClose}>
+				<Modal
+				animation={false} 
+				show={show} 
+				onHide={handleClose}>
 					<Modal.Header closeButton>
 						<Modal.Title>Add Listing</Modal.Title>
 					</Modal.Header>

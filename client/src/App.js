@@ -20,6 +20,7 @@ import Detail from "./pages/Detail"
 import Auth from './utils/auth'
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { StoreProvider } from "./ctx/storeContext";
 
 
 
@@ -46,29 +47,31 @@ const client = new ApolloClient({
 });
 
 function App() {
-	const myStyle={
+	const myStyle = {
 		backgroundImage:
-		"url('assets/retro-header.png')"
+			"url('assets/retro-header.png')"
 	}
 	return (
 		<ApolloProvider client={client}>
 			<Router>
 				<div className="flex-column justify-flex-start min-100-vh">
-					<Header />
-					<div className="container" style={myStyle}>
-						<Routes>
-							<Route path="/" element={<Discover />} />
-							<Route path="/SavedItems" element={<SavedItems />} />
-							<Route path="/MyListings/:id" element={<MyListings />}  />
-							<Route path="/Cart" element={<Cart />} />
-							<Route path="/Login" element={<Login />} />
-							<Route path="/PurchaseHistory" element={<PurchaseHistory />} />
-							<Route path="/Signup" element={<Signup />} />
-							<Route path="/listings/:id" element={<Detail />} />
-							{/* <Route path="/Checkout" element={<Checkout />} /> */}
-						</Routes>
-					</div>
-					<Footer />
+					<StoreProvider>
+						<Header />
+						<div className="container" style={myStyle}>
+							<Routes>
+								<Route path="/" element={<Discover />} />
+								<Route path="/SavedItems" element={<SavedItems />} />
+								<Route path="/MyListings/:id" element={<MyListings />} />
+								<Route path="/Cart" element={<Cart />} />
+								<Route path="/Login" element={<Login />} />
+								<Route path="/PurchaseHistory" element={<PurchaseHistory />} />
+								<Route path="/Signup" element={<Signup />} />
+								<Route path="/listings/:id" element={<Detail />} />
+								{/* <Route path="/Checkout" element={<Checkout />} /> */}
+							</Routes>
+						</div>
+						<Footer />
+					</StoreProvider>
 				</div>
 			</Router>
 		</ApolloProvider>

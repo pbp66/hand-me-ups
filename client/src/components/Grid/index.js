@@ -14,7 +14,8 @@ const Grid = ({ colCount, md, children }) => {
         let rows = []
         for (let row = 0; row < rowcount; row++) {
             rows.push(
-                <Row className="='Row">
+                <Row className="Row"
+                key={row}>
                     {
                         createColumns()
                     }
@@ -28,7 +29,8 @@ const Grid = ({ colCount, md, children }) => {
         for (let col = 0; col < colCount; col++) {
             if (index < children.length) {
                 columns.push(
-                    <Col className="Col" md={md}>
+                    <Col className="Col" md={md}
+                    key={col}>
                         {children[index]}
                     </Col>
                 )

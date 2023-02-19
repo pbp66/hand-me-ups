@@ -140,6 +140,7 @@ const typeDefs = `
     	# Because we have the context functionality in place to check a JWT and decode its data, we can use a query that will always find and return the logged in user's data
     	me: User
 		allListings: [Listing]
+		oneListing(listingId: ID!): Listing
 		userListings(userId: ID!): [Listing]
 		myListings: [Listing]
 		favoriteListings: [Listing]
@@ -169,8 +170,8 @@ const typeDefs = `
 		updateOrder(orderId: ID!, order: orderInput): Order
 		createCart: Cart
 		removeCart(cartId: ID!): Cart
-		addToCart(cardId: ID!, listingId: ID!): Cart
-		removeFromCart(cardId: ID!, listingId: ID!): Cart
+		addToCart(cartId: ID!, listingId: ID!): Cart
+		removeFromCart(cartId: ID!, listingId: ID!): Cart
 		addAddress(address: addressInput!): [Address]
 		removeAddress(addressId: ID!): [Address]
 		updateAddress(addressId: ID!, address: addressInput): [Address]

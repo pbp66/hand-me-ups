@@ -1,7 +1,12 @@
-import { useParams } from "react-router-dom"
-import { useState } from 'react'
 
+import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 const Detail = () => {
+    const location = useLocation()
+console.log(location)
+    // console.log(from)
+
+
 
 
     return (

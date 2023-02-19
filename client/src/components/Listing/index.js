@@ -29,7 +29,7 @@ const Listing = (props) => {
     } = props.listing
 
     // const { cart } = state
-
+console.log(_id)
     const addToCart = () => {
         //use add to cart
         //refresh getcart query

@@ -133,7 +133,7 @@ export const QUERY_USER_LISTINGS = gql`
   }
   `
 
-  export const QUERY_MY_LISTINGS = gql`
+export const QUERY_MY_LISTINGS = gql`
   query QUERY_MY_LISTINGS {
     myListings {
       _id
@@ -159,3 +159,23 @@ export const QUERY_USER_LISTINGS = gql`
     }
   }
   `
+export const QUERY_ONE_LISTING = gql`	
+query QUERY_ONE_LISTING($listingId : ID!) {
+	oneListing(listingId: $listingId) {
+	  _id
+	  title
+	  description
+	  price
+	  size
+	  color
+	  condition
+	  image
+	  seller {
+	   _id
+	  }
+	  listing_date
+	  edit_status
+	  edit_dates
+	}
+  }
+`

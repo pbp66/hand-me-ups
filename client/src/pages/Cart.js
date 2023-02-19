@@ -1,16 +1,16 @@
-// import React, { useEffect } from 'react';
-// // import { loadStripe } from '@stripe/stripe-js';
-// import { useLazyQuery } from '@apollo/client';
-// import { QUERY_CHECKOUT } from '../utils/queries';
-// import CartItem from '../pages/CartItem';
-// import Auth from '../utils/auth';
-// import { useStoreContext } from '../ctx/storeContext';
-// import { TOGGLE_CART, ADD_MULTIPLE_TO_CART } from '../ctx/actions';
+import React, { useEffect } from 'react';
+// import { loadStripe } from '@stripe/stripe-js';
+import { useLazyQuery } from '@apollo/client';
+import { QUERY_CHECKOUT } from '../utils/queries';
+import CartItem from '../pages/CartItem';
+import Auth from '../utils/auth';
+import { useStoreContext } from '../ctx/storeContext';
+import { TOGGLE_CART, ADD_MULTIPLE_TO_CART } from '../ctx/actions';
 
 
 // // const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 
-// const Cart = () => {
+const Cart = () => {
 //   const [state, dispatch] = useStoreContext();
 //   const [getCheckout, { data }] = useLazyQuery(QUERY_CHECKOUT);
 
@@ -102,5 +102,5 @@
 //     </div>
 //   );
 // };
-
-// export default Cart;
+}
+export default Cart;

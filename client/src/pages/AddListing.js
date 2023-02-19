@@ -5,6 +5,7 @@ import { uploadBytes, getDownloadURL, ref } from "firebase/storage";
 import { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { isMobile } from "react-device-detect";
+import { useStoreContext } from "../ctx/storeContext";
 import { ADD_LISTING } from "../utils/mutations";
 import { QUERY_ALL_CATEGORIES } from "../utils/queries";
 import auth from "../utils/auth";
@@ -18,29 +19,31 @@ function AddListing() {
 	} = useQuery(QUERY_ALL_CATEGORIES);
 	console.log(data)
 	const categories = data?.allCategories || [];
-	const [listing, setListing] = useState({
-		title: "JNCOS",
-		description: "JNCOS",
-		price: 250.25,
-		category: "Shirt",
-		tags: ["90s", "other"],
-		size: "XXL",
-		color: ["red"],
-		condition: "NEW",
-		image: "image.com",
-	});
+	const [listing, setListing] = useState(
+		{
+			title: "",
+			image: "",
+			description: "",
+			price: 0,
+			categories: [],
+			size: "",
+			tags: [],
+			color: [],
+			condition: "",
+		});
 
 	// {
-	//     title: "",
-	//     image: "",
-	//     description: "",
-	//     price: 0,
-	//     categories: [],
-	//     size: "",
-	//     tags: [],
-	//     color: [],
-	//     condition: "",
+	// 	title: "JNCOS",
+	// 		description: "JNCOS",
+	// 			price: 250.25,
+	// 				category: "Shirt",
+	// 					tags: ["90s", "other"],
+	// 						size: "XXL",
+	// 							color: ["red"],
+	// 								condition: "NEW",
+	// 									image: "image.com",
 	// }
+
 	const [errorMessage, setErrorMessage] = useState("");
 	const [disabled, setDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);

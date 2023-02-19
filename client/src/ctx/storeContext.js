@@ -4,9 +4,21 @@ import { useProductReducer } from './reducer'
 const StoreContext = createContext();
 const { Provider } = StoreContext;
 
+// const defaultListing = {
+//   title: "",
+//   image: "",
+//   description: "",
+//   price: 0,
+//   categories: [],
+//   size: "",
+//   tags: [],
+//   color: [],
+//   condition: "",
+// }
+
 const StoreProvider = ({ value = [], ...props }) => {
   const [state, dispatch] = useProductReducer({
-    products: [],
+    listings: [],
     cart: [],
     cartOpen: false,
     categories: [],

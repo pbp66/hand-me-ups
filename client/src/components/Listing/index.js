@@ -10,15 +10,10 @@ import { useState } from 'react'
 
 
 const Listing = (props) => {
-    // const [state, dispatch]= useStoreContext()
+    
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
-
-    if (Auth.loggedIn()) {
-        console.log(Auth.getProfile())
-    }
-
 
     const {
         _id,
@@ -48,10 +43,6 @@ const Listing = (props) => {
     }
 
 
-console.log(seller._id)
-const sellerId = seller._id
-console.log(Auth.getProfile().data._id)
-
     return (
         <>
             <Link to={`/listings/${_id}`}>
@@ -65,7 +56,7 @@ console.log(Auth.getProfile().data._id)
                     </Card.Body>
                 </Card>
             </Link>
-            {Auth.loggedIn() && Auth.getProfile().data._id !== sellerId ?
+            {Auth.loggedIn() && Auth.getProfile().data._id !== seller._id ?
                 <><Container>
                     <Row>
                     <Col>

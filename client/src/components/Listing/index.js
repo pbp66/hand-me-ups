@@ -46,14 +46,24 @@ const Listing = (props) => {
         <>
             <Link
                 to={`/listings/${_id}`}>
-                <Card>
-                    <Card.Body>
-                        <Card.Header>{title}</Card.Header>
-                        <Card.Img src={image}></Card.Img>
-                        <Card.Text>seed userID  {description}</Card.Text>
-                        <Card.Footer>{condition}${price}
-                        </Card.Footer>
-                    </Card.Body>
+                <Card
+                    onMouseEnter={() => setShow(true)}
+                    onMouseLeave={() => setShow(false)}
+                >
+                    {show ?
+                        <>
+                            <Card.Body>
+                                <Card.Img src={image}></Card.Img>
+                                <Card.Header>{title}</Card.Header>
+                                <Card.Text>seed userID  {description}</Card.Text>
+                                <Card.Footer>{condition}${price}
+                                </Card.Footer>
+                            </Card.Body>
+                        </>
+                        : <Card.Body>
+                            <Card.Img src={image}></Card.Img>
+                        </Card.Body>
+                    }
                 </Card>
             </Link>
             {Auth.loggedIn() && Auth.getProfile().data._id !== seller._id ?
@@ -73,6 +83,7 @@ const Listing = (props) => {
                         </Col>
                     </Row>
                 </Container>
+                    <br />
                 </>
                 : <></>
             }

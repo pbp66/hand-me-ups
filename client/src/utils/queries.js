@@ -160,7 +160,7 @@ export const QUERY_MY_LISTINGS = gql`
   }
   `
 export const QUERY_ONE_LISTING = gql`	
-query QUERY_ONE_LISTING($listingId : ID!) {
+query QUERY_ONE_LISTING($listingId: ID!) {
 	oneListing(listingId: $listingId) {
 	  _id
 	  title
@@ -171,7 +171,7 @@ query QUERY_ONE_LISTING($listingId : ID!) {
 	  condition
 	  image
 	  seller {
-	   _id
+		_id
 	  }
 	  listing_date
 	  edit_status

@@ -76,7 +76,7 @@ export const QUERY_ALL_CATEGORIES = gql`
 `;
 
 export const QUERY_MY_CART = gql`
-query QUERY_MY_CART {
+query QUERY_MY_CART($userId: ID!) {
 	myCart {
 	  _id
 	  items {

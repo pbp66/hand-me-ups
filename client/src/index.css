@@ -1030,10 +1030,12 @@ a:hover {
 .btn.btn-primary {
 	background-color: #2d3e50;
 	color: #d9e9e8;
+	margin: 30px;
 }
 
 .btn.btn-primary:hover {
 	background-color: #57779a;
+	border-color: white;
 }
 
 .btn.btn-danger {

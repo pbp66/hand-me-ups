@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react"
-import { Container, Card, CardColumns, Row, Col, Button } from "react-bootstrap"
+
 import { QUERY_LISTINGS } from "../utils/queries"
 import { useQuery } from "@apollo/client"
 import Grid from "../components/Grid"

@@ -352,33 +352,32 @@ const resolvers = {
 		updateOrder: async (parent, args, context, info) => {},
 
 		//only when user is deleted will we delete a cart
-		removeCart: async (parent, { cartId, ...args }, context, info) => {
-			return await Cart.findByIdAndDelete(cartId);
+		removeCart: async (parent, args, context, info) => {
+			return await Cart.findByIdAndDelete(context.user._id);
 		},
 
 		// Carts are created when User is created. cart_id = user_id
 		addToCart: async (
 			parent,
-			{ cartId, listingId, ...args }, // TODO: Do we need cartId if it is a part of the user object?
+			{listingId, ...args }, 
 			context,
 			info
 		) => {
 			return await Cart.findByIdAndUpdate(
-				cartId,
-				{ $push: { listingId } },
+				context.user._id,
+				{ $push: { items: listingId } },
 				{ new: true, runValidators: true }
 			);
 		},
 		removeFromCart: async (
 			parent,
-			{ cartId, listingId, ...args }, // TODO: Do we need cartId if it is a part of the user object?
-			
+			{listingId, ...args },
 			context,
 			info
 		) => {
 			return await Cart.findByIdAndUpdate(
-				cartId,
-				{ $pull: { listingId } },
+				context.user._id,
+				{ $pull: { items: listingId } },
 				{ new: true, runValidators: true }
 			);
 		},

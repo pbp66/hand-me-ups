@@ -77,7 +77,7 @@ export const QUERY_ALL_CATEGORIES = gql`
 
 export const QUERY_MY_CART = gql`
 query QUERY_MY_CART($userId: ID!) {
-	myCart {
+	myCart (userId: $userId){
 	  _id
 	  items {
 		_id
@@ -179,5 +179,6 @@ query QUERY_ONE_LISTING($listingId: ID!) {
 	}
   }
 `
+
 
 

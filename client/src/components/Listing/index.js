@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
 import { REMOVE_LISTING, ADD_TO_CART } from '../../utils/mutations'
+import { QUERY_USER_LISTINGS } from '../../utils/queries'
 
 
 const Listing = (props) => {
@@ -13,8 +14,7 @@ const Listing = (props) => {
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
-    // Finish this
-    const [removeListing, { data, loading }] = useMutation(REMOVE_LISTING)
+    
 
     const {
         _id,
@@ -42,7 +42,16 @@ const Listing = (props) => {
     }
     );
  
-
+    // Work in progress... refetch not working yet.
+    const [removeListing, { error: removeError }] = useMutation(REMOVE_LISTING, {
+        variables: {
+            listingId: _id,
+        },
+        // refetchQueries: [
+        //     {query: QUERY_USER_LISTINGS},
+        //     "QUERY_USER_LISTINGS"
+        // ],
+    });
 
 
 
@@ -53,10 +62,6 @@ const Listing = (props) => {
 
     }
 
-    const removeItem = () => {
-        
-        console.log("Deleted")
-    }
 
 
     return (

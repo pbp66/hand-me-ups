@@ -50,14 +50,6 @@ export const ADD_LISTING = gql`
 	}
 `;
 
-export const REMOVE_LISTING = gql`
-mutation REMOVE_LISTING($listingId: ID!) {
-	removeListing(listingId: $listingId) {
-	  _id
-	}
-  }
-`
-
 export const ADD_TO_CART = gql`
 mutation ADD_TO_CART($cartId: ID!, $listingId: ID!) {
 	addToCart(cartId: $cartId, listingId: $listingId) {
@@ -75,9 +67,14 @@ mutation ADD_TO_CART($cartId: ID!, $listingId: ID!) {
 		  _id
 		}
 		listing_date
-		edit_status
-		edit_dates
 	  }
 	}
   }
 `
+
+export const REMOVE_FROM_CART = gql`
+mutation REMOVE_FROM_CART($cartId: ID!, $listingId: ID!) {
+	removeFromCart(cartId: $cartID, listingId: $listingId){
+		_id
+	}
+}`

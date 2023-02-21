@@ -3,18 +3,19 @@ import { useMutation } from "@apollo/client"
 import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
-import { REMOVE_LISTING, ADD_TO_CART } from '../../utils/mutations'
-import { QUERY_MY_LISTINGS } from '../../utils/queries'
+
+import { REMOVE_LISTING, ADD_TO_CART, REMOVE_FROM_CART, FAVORITE_LISTING } from '../../utils/mutations'
+import { QUERY_USER_LISTINGS } from '../../utils/queries'
+
+
 
 
 const Listing = (props) => {
-// currentUserId = Auth.getProfile().data?._id
-// console.log(currentUserId)
-
+    const [favorite, setFavorite] = useState(false)
+    const [inCart, setInCart] = useState(false)
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
-
 
     const {
         _id,
@@ -31,16 +32,20 @@ const Listing = (props) => {
         seller
     } = props.listing
 
-    // const { cart } = state
-
-
-    const [addToCart, { error }] = useMutation(ADD_TO_CART, {
+    const [addToCart] = useMutation(ADD_TO_CART, {
         variables: {
             cartId: Auth.getProfile().data?._id,
             listingId: _id,
         }
     }
     );
+
+    const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
+        variables: {
+            cartId: Auth.getProfile().data?._id,
+            listingId: _id,
+        }
+    })
  
     const [removeListing, { error: removeError }] = useMutation(REMOVE_LISTING, {
         variables: {
@@ -52,20 +57,33 @@ const Listing = (props) => {
         ],
     });
 
+    const [favoriteListing] = useMutation(FAVORITE_LISTING, {
+        variables: {
+            listingId: _id
+        }
+    })
 
 
 
-
-    const saveItem = () => {
-        console.log('item saved')
-
-    }
 
 
 
     const removeItem = () => {
 
         console.log("Deleted")
+    }
+    const toggleFavorite =() => {
+        //change favorite button style to show added to favorites
+        setFavorite(!favorite)
+        favoriteListing()
+        if(favorite){
+            console.log('added to cart')
+        }
+    }
+
+    const toggleInCart = () => {
+
+
     }
 
 
@@ -98,14 +116,15 @@ const Listing = (props) => {
                     <Container>
                         <Row>
                             <Col>
+                            {/* if item is in cart already, change button to remove from cart */}
                                 <Button
-                                    onClick={addToCart}>
+                                    onClick={toggleInCart}>
                                     Add to Cart
                                 </Button>
                             </Col>
                             <Col>
                                 <Button
-                                    onClick={saveItem}>
+                                    onClick={toggleFavorite}>
                                     Save to favorites
                                 </Button>
                             </Col>

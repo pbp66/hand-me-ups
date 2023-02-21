@@ -6,15 +6,6 @@
 
 
 
-  // const removeFromCart = item => {
-   
-  // };
-
-  // const onChange = (e) => {
-  //   const value = e.target.value;
-  //   if (value === '0') {
-  //     //remove from cart
-
 //     } else {
 //       dispatch({
 //         //update cart

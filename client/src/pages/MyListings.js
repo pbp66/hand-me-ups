@@ -19,8 +19,7 @@ const MyListings = () => {
 	const handleClose = () => setShow(false)
 	const handleShow = () => setShow(true)
 
-	// if (loading) return <p>loading...</p>
-	// if (error) return <p>error {error.message} </p>
+
 
 	return (
 		<>

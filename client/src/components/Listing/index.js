@@ -68,15 +68,19 @@ const Listing = (props) => {
 
     const removeItem = () => {
 
+        console.log("Deleted")
     }
     const toggleFavorite =() => {
         //change favorite button style to show added to favorites
         setFavorite(!favorite)
         favoriteListing()
-        console.log("added to favorites")
+        if(favorite){
+            console.log('added to cart')
+        }
     }
 
     const toggleInCart = () => {
+
 
     }
 

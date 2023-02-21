@@ -12,7 +12,7 @@ import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/qu
 
 const Listing = (props) => {
     const [favorite, setFavorite] = useState(false)
-    // const [inCart, setInCart] = useState(false)
+    const [inCart, setInCart] = useState(false)
     const [show, setShow] = useState(false)
     // const handleClose = () => setShow(false)
     // const handleShow = () => setShow(true)
@@ -34,7 +34,6 @@ const Listing = (props) => {
 
     const [addToCart] = useMutation(ADD_TO_CART, {
         variables: {
-            cartId: Auth.getProfile().data?._id,
             listingId: _id,
         },
         refetchQueries: [
@@ -46,7 +45,7 @@ const Listing = (props) => {
 
     // const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
     //     variables: {
-    //         cartId: Auth.getProfile().data?._id,
+    //   
     //         listingId: _id,
     //     }
     // })
@@ -80,16 +79,16 @@ const Listing = (props) => {
     }
 
     const toggleInCart = () => {
+            addToCart()
+        
 
-        //if not in cart
-        addToCart()
         //if already in cart
         //removeFromCart()
 
     }
 
 
-    console.log(Auth.getToken())
+    console.log(`Token for graphql header ${Auth.getToken()}`)
     return (
         <>
             <Link

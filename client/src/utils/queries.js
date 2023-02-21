@@ -76,30 +76,17 @@ export const QUERY_ALL_CATEGORIES = gql`
 `;
 
 export const QUERY_MY_CART = gql`
-query QUERY_MY_CART($userId: ID!) {
-	myCart (userId: $userId){
+query MY_CART{
+	myCart {
 	  _id
 	  items {
 		_id
 		title
-		description
 		price
-		category {
-		  category
-		}
-		tags {
-		  tag
-		}
-		size
-		color
-		condition
 		image
 		seller {
-		  username
+		  _id
 		}
-		listing_date
-		edit_status
-		edit_dates
 	  }
 	}
   }`

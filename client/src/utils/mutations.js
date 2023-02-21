@@ -73,20 +73,6 @@ export const ADD_TO_CART = gql`
 mutation ADD_TO_CART($listingId: ID!) {
 	addToCart(listingId: $listingId) {
 	  _id
-	  items {
-		_id
-		title
-		description
-		price
-		size
-		color
-		condition
-		image
-		seller {
-		  _id
-		}
-		listing_date
-	  }
 	}
   }
 `

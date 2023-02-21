@@ -135,10 +135,10 @@ const resolvers = {
 		},
 		myCart: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"cart"
+				const cart = await Cart.findById(context.user._id).populate(
+					"items"
 				);
-				return user.cart;
+				return cart;
 			}
 			throwUnauthenticatedError();
 		},
@@ -363,9 +363,9 @@ const resolvers = {
 			context,
 			info
 		) => {
-			return await Cart.findByIdAndUpdate(
+			return Cart.findByIdAndUpdate(
 				context.user._id,
-				{ $push: { items: listingId } },
+				{ $push: { items: listingId}},
 				{ new: true, runValidators: true }
 			);
 		},

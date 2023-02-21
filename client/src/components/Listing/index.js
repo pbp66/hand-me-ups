@@ -1,9 +1,8 @@
 import { Card, Button, Container, Row, Col, Modal } from 'react-bootstrap'
+import { useMutation } from "@apollo/client"
 import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
-import { useMutation } from '@apollo/client'
-// import {ADD_TO_CART, REMOVE_FROM_CART, REMOVE_CART} from '../utils/mutations'
 
 
 
@@ -11,9 +10,11 @@ import { useMutation } from '@apollo/client'
 const Listing = (props) => {
 
 
-    const [show, setShow] = useState(true)
+    const [show, setShow] = useState(false)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
+    // Finish this
+    const [removeListing, { data, loading }] = useMutation(REMOVE_LISTING)
 
     const {
         _id,
@@ -30,7 +31,7 @@ const Listing = (props) => {
         seller
     } = props.listing
 
-
+    // const { cart } = state
 
     const addToCart = () => {
         //use add to cart
@@ -39,57 +40,51 @@ const Listing = (props) => {
     }
 
     const saveItem = () => {
-    
+        console.log('item saved')
 
     }
-    console.log(seller)
+
+
+    const removeItem = () => {
+
+        console.log("Deleted")
+    }
+
 
     return (
         <>
             <Link
                 to={`/listings/${_id}`}>
-                <Card
-                onMouseEnter={() => setShow(true)}
-                onMouseLeave={() => setShow(false)}
-                >
-                    {show ?
-                        <Card.Body>
-                            <Card.Img src={image}></Card.Img>
-                            <Card.Header>{title}</Card.Header>
-                            <Card.Text>seed userID  {description}</Card.Text>
-                            <Card.Footer>{condition}${price}
-                            </Card.Footer>
-                        </Card.Body>
-                        :
-                        <Card.Body>
-                            <Card.Img src={image}></Card.Img>
-                        </Card.Body>
-                    }
+                <Card>
+                    <Card.Body>
+                        <Card.Header>{title}</Card.Header>
+                        <Card.Img src={image}></Card.Img>
+                        <Card.Text>seed userID  {description}</Card.Text>
+                        <Card.Footer>{condition}${price}
+                        </Card.Footer>
+                    </Card.Body>
                 </Card>
             </Link>
-            {Auth.loggedIn() && Auth.getProfile().data._id !== seller?._id ?
-                <>
-                    <Container>
-                        <Row>
-                            <Col>
-                                <Button
-                                    onClick={addToCart}>
-                                    Add to Cart
-                                </Button>
-                            </Col>
-                            <Col>
-                                <Button
-                                    onClick={saveItem}>
-                                    Save to favorites
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Container>
-                    <br />
+            {Auth.loggedIn() && Auth.getProfile().data._id !== seller._id ?
+                <><Container>
+                    <Row>
+                        <Col>
+                            <Button
+                                onClick={addToCart}>
+                                Add to Cart
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button
+                                onClick={saveItem}>
+                                Save to favorites
+                            </Button>
+                        </Col>
+                    </Row>
+                </Container>
                 </>
                 : <></>
             }
-
         </>
     )
 }

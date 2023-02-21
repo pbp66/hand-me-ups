@@ -16,7 +16,7 @@ function AddListing() {
 		loading: categoriesLoading,
 		error: categoriesError,
 	} = useQuery(QUERY_ALL_CATEGORIES);
-	console.log(data)
+	
 	const categories = data?.allCategories || [];
 	const [listing, setListing] = useState(
 		{
@@ -30,18 +30,6 @@ function AddListing() {
 			color: [],
 			condition: "",
 		});
-
-	// {
-	// 	title: "JNCOS",
-	// 		description: "JNCOS",
-	// 			price: 250.25,
-	// 				category: "Shirt",
-	// 					tags: ["90s", "other"],
-	// 						size: "XXL",
-	// 							color: ["red"],
-	// 								condition: "NEW",
-	// 									image: "image.com",
-	// }
 
 	const [errorMessage, setErrorMessage] = useState("");
 	const [disabled, setDisabled] = useState(true);

@@ -2,6 +2,7 @@ import { Button, Modal } from 'react-bootstrap'
 import { useParams } from "react-router-dom"
 import AddListing from "./AddListing";
 import Listing from '../components/Listing';
+import Grid from "../components/Grid"
 import { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { QUERY_MY_LISTINGS } from '../utils/queries';
@@ -23,15 +24,16 @@ const MyListings = () => {
 
 	return (
 		<>
-			{ }
-			{myListings.map(listing => {
-				return (
-					<Listing
-					key={listing._id}
-						listing={listing}>
-					</Listing>
-				)
-			})}
+			<Grid colCount={4} md={3}>
+				{myListings.map(listing => {
+					return (
+						<Listing
+						key={listing._id}
+							listing={listing}>
+						</Listing>
+					)
+				})}
+			</Grid>
 
 
 

@@ -15,7 +15,7 @@ const Cart = () => {
 //cant redirect from back end
 // make rediretc happen from getCheckout
 //re
- //QUERY ADDRESS AND BUYER SELLER INFO?
+ 
 
 
 

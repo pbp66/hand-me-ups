@@ -13,8 +13,7 @@ const Listing = (props) => {
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
-    // Finish this
-    const [removeListing, { data, loading }] = useMutation(REMOVE_LISTING)
+    
 
     const {
         _id,
@@ -42,7 +41,11 @@ const Listing = (props) => {
     }
     );
  
-
+    const [removeListing, { error: removeError }] = useMutation(REMOVE_LISTING, {
+        variables: {
+            listingId: _id,
+        }
+    });
 
 
 
@@ -53,10 +56,6 @@ const Listing = (props) => {
 
     }
 
-    const removeItem = () => {
-        
-        console.log("Deleted")
-    }
 
 
     return (

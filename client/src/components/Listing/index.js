@@ -1,11 +1,10 @@
 import { Card, Button, Container, Row, Col, Modal } from 'react-bootstrap'
+import { useMutation } from "@apollo/client"
 import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
+import { REMOVE_LISTING, ADD_TO_CART } from '../../utils/mutations'
 import { useMutation } from '@apollo/client'
-import { ADD_TO_CART } from '../../utils/mutations'
-
-
 
 
 const Listing = (props) => {
@@ -15,6 +14,8 @@ const Listing = (props) => {
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
+    // Finish this
+    const [removeListing, { data, loading, error }] = useMutation(REMOVE_LISTING)
 
     const {
         _id,
@@ -51,6 +52,11 @@ const Listing = (props) => {
     const saveItem = () => {
         console.log('item saved')
 
+    }
+
+    const removeItem = () => {
+        
+        console.log("Deleted")
     }
 
 
@@ -97,7 +103,18 @@ const Listing = (props) => {
                     </Container>
                     <br />
                 </>
-                : <></>
+                : 
+                <>
+                    <Container>
+                        <Row>
+                            <Col>
+                                <Button onClick={removeListing}>
+                                    Remove Listing
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Container>
+                </>
             }
 
         </>

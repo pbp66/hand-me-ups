@@ -15,7 +15,6 @@ const Listing = (props) => {
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
 
-    const [removeListing, { data, loading }] = useMutation(REMOVE_LISTING)
 
     const {
         _id,

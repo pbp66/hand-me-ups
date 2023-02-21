@@ -347,9 +347,8 @@ const resolvers = {
 		},
 		// TODO
 		updateOrder: async (parent, args, context, info) => {},
-		createCart: async (parent, args, context, info) => {
-			return await Cart.create({ user: context.user, items: [] });
-		},
+
+		//only when user is deleted will we delete a cart
 		removeCart: async (parent, { cartId, ...args }, context, info) => {
 			return await Cart.findByIdAndDelete(cartId);
 		},

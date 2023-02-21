@@ -31,18 +31,6 @@ function AddListing() {
 			condition: "",
 		});
 
-	// {
-	// 	title: "JNCOS",
-	// 		description: "JNCOS",
-	// 			price: 250.25,
-	// 				category: "Shirt",
-	// 					tags: ["90s", "other"],
-	// 						size: "XXL",
-	// 							color: ["red"],
-	// 								condition: "NEW",
-	// 									image: "image.com",
-	// }
-
 	const [errorMessage, setErrorMessage] = useState("");
 	const [disabled, setDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);

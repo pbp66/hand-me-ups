@@ -8,14 +8,19 @@ const Detail = () => {
 
     const { data, loading, error } = useQuery(QUERY_ONE_LISTING, { variables: { listingId: id } });
     const oneListing = data?.oneListing || {}
-
-    return (
+    console.log(oneListing)
+    return oneListing ? (
         <>
+            test
             <h1>{oneListing.title}</h1>
             <Listing
                 listing={oneListing}
             >
             </Listing>
+        </>
+    ) : (
+        <>
+        <h1>Loading...</h1>
         </>
     )
 }

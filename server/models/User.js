@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const model = mongoose.model;
 import bcrypt from "bcrypt";
+import Cart from "./Cart";
 
 const userSchema = new Schema(
 	{
@@ -61,6 +62,10 @@ const userSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: "Address",
 		},
+		cart: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
+		}
 	},
 	{
 		toJSON: {
@@ -92,14 +97,26 @@ userSchema.virtual("paymentMethodCount").get(function () {
 
 // set up pre-save middleware to create password
 userSchema.pre("save", async function (next) {
+	this.wasNew = this.isNew
 	if (this.isNew || this.isModified("password")) {
 		const saltRounds = 10;
 		this.password = await bcrypt.hash(this.password, saltRounds);
+		//create cart make same id as user_id
 	}
 
 	next();
 });
 
+userSchema.post("save", async function (doc) {
+	if (doc.wasNew) {
+		const cart = new Cart({
+			user: doc._id,
+			_id: doc._id
+		})
+		await cart.save()
+		await User.findByIdAndUpdate(doc._id, {cart : cart._id})
+	} 
+})
 // compare the incoming password with the hashed password
 userSchema.methods.isCorrectPassword = async function (password) {
 	return bcrypt.compare(password, this.password);

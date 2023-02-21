@@ -166,7 +166,6 @@ query QUERY_ONE_LISTING($listingId: ID!) {
 	  title
 	  description
 	  price
-	  
 	  size
 	  color
 	  condition

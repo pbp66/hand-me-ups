@@ -40,6 +40,7 @@ const resolvers = {
 			return Listing.find();
 		},
 		oneListing: async (parent, {listingId}, context, info) => {
+			console.log(listingId)
 			return Listing.findById(listingId)
 		},
 		userListings: async (parent, { userId }, context, info) => {

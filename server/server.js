@@ -1,7 +1,7 @@
 import express from "express";
 import { ApolloServer } from "@apollo/server";
-import { addMocksToSchema } from '@graphql-tools/mock'
-import { makeExecutableSchema} from '@graphql-tools/schema'
+// import { addMocksToSchema } from '@graphql-tools/mock'
+// import { makeExecutableSchema} from '@graphql-tools/schema'
 import { expressMiddleware } from "@apollo/server/express4";
 import db from "./config/connection";
 import { typeDefs, resolvers } from "./schemas";

@@ -27,20 +27,24 @@ const resolvers = {
 			return User.find();
 		},
 		oneUser: async (parent, { userId }, context, info) => {
-			return User.findOneById(userId);
+			return User.findById(userId);
 		},
 		// By adding context to our query, we can retrieve the logged in user without specifically searching for them
 		me: async (parent, args, context, info) => {
 			if (context.user) {
-				return User.findOneById(context.user._id);
+				return User.findById(context.user._id);
 			}
 			throwUnauthenticatedError();
 		},
 		allListings: async (parent, args, context, info) => {
 			return Listing.find();
 		},
+		oneListing: async (parent, {listingId}, context, info) => {
+			console.log(listingId)
+			return Listing.findById(listingId)
+		},
 		userListings: async (parent, { userId }, context, info) => {
-			const user = await User.findOneById(userId).populate("listings");
+			const user = await User.findById(userId).populate("listings");
 			if (!user) {
 				throw new GraphQLError("User does not exist", {
 					extensions: {
@@ -53,16 +57,27 @@ const resolvers = {
 		},
 		myListings: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findOneById(context.user._id).populate(
+				const user = await User.findById(context.user._id).populate(
 					"listings"
 				);
-				return user.listings;
+				const updatedListings = []
+				for (const listing of user.listings) {
+					if (listing.category) {
+						const category = await Category.findById(listing.category)
+						if (category) {
+							listing.category = category
+						}
+					}
+					updatedListings.push(listing)
+				}
+				
+				return updatedListings;
 			}
 			throwUnauthenticatedError();
 		},
 		favoriteListings: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findOneById(context.user._id).populate(
+				const user = await User.findById(context.user._id).populate(
 					"saved_items"
 				);
 				return user.saved_items;
@@ -83,11 +98,11 @@ const resolvers = {
 			return Order.find();
 		},
 		getOrder: async (parent, { orderId }, context, info) => {
-			return Order.findOneById(orderId);
+			return Order.findById(orderId);
 		},
 		myOrders: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findOneById(context.user._id).populate(
+				const user = await User.findById(context.user._id).populate(
 					"order"
 				);
 				return user.orders;
@@ -102,7 +117,7 @@ const resolvers = {
 		},
 		myPaymentMethods: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findOneById(context.user._id).populate(
+				const user = await User.findById(context.user._id).populate(
 					"payment_methods"
 				);
 				return user.payment_methods;
@@ -111,7 +126,7 @@ const resolvers = {
 		},
 		myAddresses: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findOneById(context.user._id).populate(
+				const user = await User.findById(context.user._id).populate(
 					"addresses"
 				);
 				return user.addresses;
@@ -120,7 +135,7 @@ const resolvers = {
 		},
 		myCart: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findOneById(context.user._id).populate(
+				const user = await User.findById(context.user._id).populate(
 					"cart"
 				);
 				return user.cart;
@@ -225,6 +240,8 @@ const resolvers = {
 			newListing["image"] = image;
 			newListing["category"] = await Category.findById(category);
 
+			console.log(context)
+
 			if (size) {
 				newListing["size"] = size;
 			}
@@ -259,9 +276,14 @@ const resolvers = {
 				}
 			}
 			newListing["tags"] = listingTags;
-			return await Listing.create({
+			const listing = await Listing.create({
 				...newListing,
 			});
+
+			await User.findByIdAndUpdate(context.user._id, {$push: {listings: listing._id}})
+			//todo: add _id to listing._id, push in listing array
+
+			return listing
 		},
 		removeListing: async (
 			parent,

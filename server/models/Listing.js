@@ -28,7 +28,7 @@ const listingSchema = new Schema(
 			{
 				type: Schema.Types.ObjectId,
 				ref: "Tag",
-				required: true,
+				// required: true,
 			},
 		],
 		size: {

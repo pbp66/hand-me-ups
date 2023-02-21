@@ -1,48 +1,40 @@
 import { useState, useEffect } from "react"
-import { Container, Card, CardColumns, Row, Col } from "react-bootstrap"
+import { Container, Card, CardColumns, Row, Col, Button } from "react-bootstrap"
 import { QUERY_LISTINGS } from "../utils/queries"
 import { useQuery } from "@apollo/client"
 import Grid from "../components/Grid"
 import Listing from '../components/Listing'
 import '../styles/discover.css'
 
+
 const Discover = () => {
-	// const { loading, data } = useQuery(QUERY_LISTINGS);
-	let listings = Array(25).fill({
-		title: "Listing Title",
-		description: "Listing Description",
-		price: 250,
-		category: "Listing Category",
-		tags: ["90s", "other"],
-		size: "XXL",
-		color: ["red", "blue", "green"],
-		condition: "NEW",
-		image: "https://via.placeholder.com/1000 ",
-		seller: "JNCOboi99"
-	})
-	// const [searchedItems, setSearchedItems] = useState([]);
-	// const [searchInput, setSearchInput] = useState("");
-
-	const handleFormSubmit = async (event) => {
-		event.preventDefault();
-
-		// if (!searchInput) {
-		// 	return false;
-		// }
 
 
-	}
+	const { data, loading, error } = useQuery(QUERY_LISTINGS);
+
+
+
+
+	if (loading) return <p>loading</p>
+	if (error) return <p>error {error.message} </p>
+	const { allListings } = data || [];
+	// const handleFormSubmit = async (event) => {
+	// 	event.preventDefault();
+	// }
+
 	return (<>
-	<h1>Discover</h1>
-		<Grid colCount={4} md={3}>	
-		{listings.map(listing => {
-			return (<>
-				<Listing
-					listing={listing}>
-				</Listing>
-			</>)
-		})}
-		</Grid>	
+		<h1>Discover</h1>
+		<Grid colCount={4} md={3}>
+			{allListings.map(listing => {
+				return (<>
+					<Listing
+						key={listing._id}
+						listing={listing}
+					>
+					</Listing>
+				</>)
+			})}
+		</Grid>
 	</>
 
 	);

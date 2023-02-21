@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
-// import {CREATE_CART, ADD_TO_CART, REMOVE_FROM_CART, REMOVE_CART} from '../utils/mutations'
+// import {ADD_TO_CART, REMOVE_FROM_CART, REMOVE_CART} from '../utils/mutations'
 
 
 
@@ -39,7 +39,7 @@ const Listing = (props) => {
     }
 
     const saveItem = () => {
-        console.log('item saved')
+    
 
     }
     console.log(seller)

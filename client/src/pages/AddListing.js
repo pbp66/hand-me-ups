@@ -24,7 +24,7 @@ function AddListing() {
 			image: "",
 			description: "",
 			price: 0,
-			categories: [],
+			category: [],
 			size: "",
 			tags: [],
 			color: [],

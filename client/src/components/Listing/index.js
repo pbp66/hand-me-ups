@@ -3,18 +3,16 @@ import { useMutation } from "@apollo/client"
 import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
-
-
+import { REMOVE_LISTING, ADD_TO_CART, REMOVE_FROM_CART, FAVORITE_LISTING } from '../../utils/mutations'
+import { QUERY_USER_LISTINGS } from '../../utils/queries'
 
 
 const Listing = (props) => {
-
-
+    const [favorite, setFavorite] = useState(false)
+    const [inCart, setInCart] = useState(false)
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
-    // Finish this
-    const [removeListing, { data, loading }] = useMutation(REMOVE_LISTING)
 
     const {
         _id,
@@ -31,59 +29,115 @@ const Listing = (props) => {
         seller
     } = props.listing
 
-    // const { cart } = state
-
-    const addToCart = () => {
-        //use add to cart
-        //refresh getcart query
-        console.log('added to cart')
+    const [addToCart] = useMutation(ADD_TO_CART, {
+        variables: {
+            cartId: Auth.getProfile().data?._id,
+            listingId: _id,
+        }
     }
+    );
 
-    const saveItem = () => {
-        console.log('item saved')
+    const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
+        variables: {
+            cartId: Auth.getProfile().data?._id,
+            listingId: _id,
+        }
+    })
+ 
+    // Work in progress... refetch not working yet.
+    const [removeListing, { error: removeError }] = useMutation(REMOVE_LISTING, {
+        variables: {
+            listingId: _id,
+        },
+        // refetchQueries: [
+        //     {query: QUERY_USER_LISTINGS},
+        //     "QUERY_USER_LISTINGS"
+        // ],
+    });
 
-    }
+    const [favoriteListing] = useMutation(FAVORITE_LISTING, {
+        variables: {
+            listingId: _id
+        }
+    })
+
+
+
+
 
 
     const removeItem = () => {
 
-        console.log("Deleted")
     }
+    const toggleFavorite =() => {
+        //change favorite button style to show added to favorites
+        setFavorite(!favorite)
+        favoriteListing()
+        console.log("added to favorites")
+    }
+
+    const toggleInCart = () => {
+
+    }
+
 
 
     return (
         <>
             <Link
                 to={`/listings/${_id}`}>
-                <Card>
-                    <Card.Body>
-                        <Card.Header>{title}</Card.Header>
-                        <Card.Img src={image}></Card.Img>
-                        <Card.Text>seed userID  {description}</Card.Text>
-                        <Card.Footer>{condition}${price}
-                        </Card.Footer>
-                    </Card.Body>
+                <Card
+                onMouseEnter={() => setShow(true)}
+                onMouseLeave={() => setShow(false)}
+                >
+                    {show ?
+                        <Card.Body>
+                            <Card.Img src={image}></Card.Img>
+                            <Card.Header>{title}</Card.Header>
+                            <Card.Text>seed userID  {description}</Card.Text>
+                            <Card.Footer>{condition}${price}
+                            </Card.Footer>
+                        </Card.Body>
+                        :
+                        <Card.Body>
+                            <Card.Img src={image}></Card.Img>
+                        </Card.Body>
+                    }
                 </Card>
             </Link>
-            {Auth.loggedIn() && Auth.getProfile().data._id !== seller._id ?
-                <><Container>
-                    <Row>
-                        <Col>
-                            <Button
-                                onClick={addToCart}>
-                                Add to Cart
-                            </Button>
-                        </Col>
-                        <Col>
-                            <Button
-                                onClick={saveItem}>
-                                Save to favorites
-                            </Button>
-                        </Col>
-                    </Row>
-                </Container>
+            {Auth.loggedIn() && Auth.getProfile().data?._id !== seller?._id ?
+                <>
+                    <Container>
+                        <Row>
+                            <Col>
+                            {/* if item is in cart already, change button to remove from cart */}
+                                <Button
+                                    onClick={toggleInCart}>
+                                    Add to Cart
+                                </Button>
+                            </Col>
+                            <Col>
+                                <Button
+                                    onClick={toggleFavorite}>
+                                    Save to favorites
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Container>
+                    <br />
                 </>
-                : <></>
+                : 
+                <>
+                    <Container>
+                        <Row>
+                            <Col>
+                                <Button onClick={removeListing}>
+                                    Remove Listing
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Container>
+                </>
             }
         </>
     )

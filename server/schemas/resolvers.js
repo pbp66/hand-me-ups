@@ -294,6 +294,8 @@ const resolvers = {
 			return await Listing.findByIdAndDelete(listingId);
 		},
 		//* update listing
+
+		//do we need both save listing and favorite listing?
 		saveListing: async (
 			parent,
 			{ listingId, listing, ...args }, // Listing contains title, description, etc...
@@ -353,6 +355,8 @@ const resolvers = {
 		removeCart: async (parent, { cartId, ...args }, context, info) => {
 			return await Cart.findByIdAndDelete(cartId);
 		},
+
+		// Carts are created when User is created. cart_id = user_id
 		addToCart: async (
 			parent,
 			{ cartId, listingId, ...args }, // TODO: Do we need cartId if it is a part of the user object?
@@ -368,6 +372,7 @@ const resolvers = {
 		removeFromCart: async (
 			parent,
 			{ cartId, listingId, ...args }, // TODO: Do we need cartId if it is a part of the user object?
+			
 			context,
 			info
 		) => {

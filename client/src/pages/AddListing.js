@@ -16,7 +16,7 @@ function AddListing() {
 		loading: categoriesLoading,
 		error: categoriesError,
 	} = useQuery(QUERY_ALL_CATEGORIES);
-	console.log(data)
+	
 	const categories = data?.allCategories || [];
 	const [listing, setListing] = useState(
 		{
@@ -24,7 +24,7 @@ function AddListing() {
 			image: "",
 			description: "",
 			price: 0,
-			categories: [],
+			category: [],
 			size: "",
 			tags: [],
 			color: [],

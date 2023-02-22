@@ -23,18 +23,22 @@ db.once("open", async () => {
 	try {
 		await User.deleteMany();
 		await Category.deleteMany();
-		await Listing.deleteMany();
 		await Tag.deleteMany();
+		await Listing.deleteMany();
 
-		const categories = await Category.insertMany([
-			{ category: "Shirt" },
-			{ category: "Hat" },
-			{ category: "JNCOS" },
-		]);
-		const tags = await Tag.insertMany([
-			{ tag: "testTag1" },
-			{ tag: "testTag2" },
-		]);
+		// const categories = await Category.insertMany([
+		// 	{ category: "Shirt" },
+		// 	{ category: "Hat" },
+		// 	{ category: "JNCOS" },
+		// ]);
+		// const tags = await Tag.insertMany([
+		// 	{ tag: "testTag1" },
+		// 	{ tag: "testTag2" },
+		// ]);
+
+		await Category.create(categorySeeds);
+		await tags.create(tagSeeds);
+
 		await Listing.insertMany([
 			{
 				title: "JNCOS",

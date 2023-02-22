@@ -20,6 +20,16 @@ export const QUERY_SINGLE_USER = gql`
 	}
 `;
 
+export const QUERY_USER_FROM_USERNAME = gql`
+	query USER_FROM_USERNAME($username: String!) {
+		findUserByUsername(username: $username) {
+			_id
+			username
+			email
+		}
+	}
+`;
+
 export const QUERY_ME = gql`
 	query ME {
 		me {

@@ -40,6 +40,7 @@ const typeDefs = `
 		listing_date: String! # Date represented as a string
 		edit_status: Boolean! # Default of false unless updated through saveListing mutation
 		edit_dates: [String] # Date represented as a string
+		purchase_status: Boolean!
 	}
 
 	enum Condition {
@@ -60,7 +61,6 @@ const typeDefs = `
 		color: [String]
 		condition: Condition!
 		image: String! # Link to image in firebase?
-
 	}
 
 	type Tag {
@@ -89,6 +89,7 @@ const typeDefs = `
 	}
 
 	input orderInput {
+		cart: [cartInput]
 		payment_method: paymentInput
 		billing_address: addressInput
 		shipping_address: addressInput
@@ -134,9 +135,20 @@ const typeDefs = `
 		items: [Listing]
 	}
 
+	input cartInput { # Identical to Listing, but input types require scalars or other inputs...
+		title: String
+		description: String
+		price: Float
+		size: String
+		color: [String]
+		image: String # Link to image in firebase?
+		seller_username: String
+	}
+
   	type Query {
     	allUsers: [User]
     	oneUser(userId: ID!): User
+		findUserByUsername(username: String!): User
     	# Because we have the context functionality in place to check a JWT and decode its data, we can use a query that will always find and return the logged in user's data
     	me: User
 		allListings: [Listing]

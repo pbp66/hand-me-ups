@@ -79,13 +79,24 @@ export const REMOVE_LISTING = gql`
 	}
 `;
 
-// TODO ADD_ORDER
-// export const ADD_ORDER = gql`
-// 	mutation ADD_ORDER() {
-// 		addOrder() {
-
-// 		}
-// 	}`;
+export const ADD_ORDER = gql`
+	mutation ADD_ORDER($orderInput: orderInput!) {
+		addOrder(orderDetails: $orderInput) {
+			_id
+			date_purchased
+			purchased_listings
+			billing_address
+			shipping_address
+			purchaser
+			payment_method
+			subtotal
+			shipping_handling
+			pretax_total
+			estimated_tax
+			order_total
+		}
+	}
+`;
 
 // TODO UPDATE_ME
 // export const UPDATE_ME = gql`
@@ -127,13 +138,38 @@ export const UNFAVORITE_LISTING = gql`
 // 		}
 // 	}`;
 
-// TODO REMOVE_CART
-// export const REMOVE_CART = gql`
-// 	mutation REMOVE_CART() {
-// 		removeCart() {
-
-// 		}
-// 	}`;
+export const REMOVE_CART = gql`
+	mutation REMOVE_CART {
+		removeCart {
+			_id
+			items {
+				_id
+				title
+				description
+				price
+				category {
+					_id
+					category
+				}
+				tags {
+					_id
+					tag
+				}
+				size
+				color
+				condition
+				image
+				seller {
+					_id
+					username
+					email
+				}
+				listing_date
+				purchase_status
+			}
+		}
+	}
+`;
 
 export const ADD_TO_CART = gql`
 	mutation ADD_TO_CART($listingId: ID!) {

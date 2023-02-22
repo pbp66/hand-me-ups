@@ -99,6 +99,8 @@ db.once("open", async () => {
 			listingSeeds[i]["seller"] = mockObjectId("seller");
 		}
 
+		await Listing.create(listingSeeds);
+
 		let allListings = await Listing.find();
 		allListings = allListings.map((listing) => listing._id);
 

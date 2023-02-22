@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_USERS = gql`
-	query allUsers {
+	query ALL_USERS {
 		users {
 			_id
 			username
@@ -11,7 +11,7 @@ export const QUERY_USERS = gql`
 `;
 
 export const QUERY_SINGLE_USER = gql`
-	query singleUser($userId: ID!) {
+	query SINGLE_USER($userId: ID!) {
 		user(userId: $userId) {
 			_id
 			username
@@ -21,7 +21,7 @@ export const QUERY_SINGLE_USER = gql`
 `;
 
 export const QUERY_ME = gql`
-	query me {
+	query ME {
 		me {
 			_id
 			username
@@ -39,7 +39,7 @@ export const QUERY_ME = gql`
 `;
 
 export const QUERY_LISTINGS = gql`
-	query QUERY_LISTINGS {
+	query ALL_LISTINGS {
 		allListings {
 			_id
 			title
@@ -68,7 +68,7 @@ export const QUERY_LISTINGS = gql`
 `;
 
 export const QUERY_ONE_LISTING = gql`
-	query QUERY_ONE_LISTING($listingId: ID!) {
+	query ONE_LISTING($listingId: ID!) {
 		oneListing(listingId: $listingId) {
 			_id
 			title
@@ -88,8 +88,9 @@ export const QUERY_ONE_LISTING = gql`
 	}
 `;
 
+// TODO: Define what's going on here? We don't have a checkout query in the typeDefs or resolvers...
 export const QUERY_CHECKOUT = gql`
-	query getCheckout($products: [ID]!) {
+	query GET_CHECKOUT($products: [ID]!) {
 		checkout(products: $products) {
 			session
 		}
@@ -97,7 +98,7 @@ export const QUERY_CHECKOUT = gql`
 `;
 
 export const QUERY_USER_LISTINGS = gql`
-	query QUERY_USER_LISTINGS($userId: ID!) {
+	query USER_LISTINGS($userId: ID!) {
 		userListings(userId: $userId) {
 			_id
 			title
@@ -126,7 +127,7 @@ export const QUERY_USER_LISTINGS = gql`
 `;
 
 export const QUERY_MY_LISTINGS = gql`
-	query QUERY_MY_LISTINGS {
+	query MY_LISTINGS {
 		myListings {
 			_id
 			title
@@ -153,7 +154,7 @@ export const QUERY_MY_LISTINGS = gql`
 `;
 
 export const QUERY_FAVORITE_LISTINGS = gql`
-	query QUERY_FAVORITE_LISTINGS {
+	query FAVORITE_LISTINGS {
 		favoriteListings {
 			_id
 			title
@@ -186,7 +187,7 @@ export const QUERY_ALL_ORDERS = gql`
 `;
 
 export const QUERY_GET_ONE_ORDER = gql`
-	query QUERY_GET_ONE_ORDER($orderId: ID!) {
+	query GET_ONE_ORDER($orderId: ID!) {
 		getOrder(orderId: $orderId) {
 			_id
 			date_purchased
@@ -205,7 +206,7 @@ export const QUERY_GET_ONE_ORDER = gql`
 `;
 
 export const QUERY_MY_ORDERS = gql`
-	query QUERY_MY_ORDERS {
+	query MY_ORDERS {
 		myOrder {
 			_id
 			date_purchased
@@ -236,7 +237,18 @@ export const QUERY_ALL_CATEGORIES = gql`
 
 // TODO MY_PAYMENT_METHODS
 
-// TODO MY_ADDRESSES
+export const QUERY_MY_ADDRESSES = gql`
+	query MY_ADDRESSES {
+		myAddresses {
+			_id
+			building_number
+			street
+			city
+			state
+			zip_code
+		}
+	}
+`;
 
 export const QUERY_MY_CART = gql`
 	query MY_CART {

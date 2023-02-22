@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
 
-import { REMOVE_LISTING, ADD_TO_CART, FAVORITE_LISTING } from '../../utils/mutations'
+import { REMOVE_LISTING, ADD_TO_CART, FAVORITE_LISTING, REMOVE_FROM_CART } from '../../utils/mutations'
 import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/queries'
 
 
@@ -37,28 +37,28 @@ const Listing = (props) => {
             listingId: _id,
         },
         refetchQueries: [
-            {query: QUERY_MY_CART},
+            { query: QUERY_MY_CART },
             "QUERY_MY_CART"
         ],
     }
     );
 
-    // const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
-    //     variables: {
-    //   
-    //         listingId: _id,
-    //     }
-    // })
- 
+    const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
+        variables: {
+      
+            listingId: _id,
+        }
+    })
+
     //move this to my Listings since we wont show the users listings on discover page
     const [removeListing] = useMutation(REMOVE_LISTING, {
         variables: {
             listingId: _id,
         },
         refetchQueries: [
-            {query: QUERY_MY_LISTINGS},
+            { query: QUERY_MY_LISTINGS },
             "QUERY_MY_LISTINGS",
-            {query: QUERY_LISTINGS},
+            { query: QUERY_LISTINGS },
             "QUERY_LISTINGS"
         ],
     });
@@ -69,23 +69,20 @@ const Listing = (props) => {
         }
     })
 
-    const toggleFavorite =() => {
+    const toggleFavorite = () => {
         //change favorite button style to show added to favorites
         setFavorite(!favorite)
         favoriteListing()
-        if(favorite){
+        if (favorite) {
             console.log('added to cart')
         }
     }
 
     const toggleInCart = () => {
-            addToCart()
-        
-
-        //if already in cart
-        //removeFromCart()
-
+        setInCart(!inCart)
+        console.log(inCart)
     }
+
 
 
     console.log(`Token for graphql header ${Auth.getToken()}`)
@@ -94,8 +91,8 @@ const Listing = (props) => {
             <Link
                 to={`/listings/${_id}`}>
                 <Card
-                onMouseEnter={() => setShow(true)}
-                onMouseLeave={() => setShow(false)}
+                    onMouseEnter={() => setShow(true)}
+                    onMouseLeave={() => setShow(false)}
                 >
                     {show ?
                         <Card.Body>
@@ -117,11 +114,22 @@ const Listing = (props) => {
                     <Container>
                         <Row>
                             <Col>
-                            {/* if item is in cart already, change button to remove from cart */}
-                                <Button
-                                    onClick={toggleInCart}>
-                                    Add to Cart
-                                </Button>
+                                {!inCart ?
+                                    <>
+                                        <Button
+                                            onClick={() => { toggleInCart(); addToCart(); }}>
+                                            Add to Cart
+                                        </Button>
+                                    </> 
+                                    :
+                                    <>
+                                    <Button
+                                        onClick={() => { toggleInCart(); removeFromCart(); }}>
+                                        Remove From Cart
+                                    </Button>
+                                </> 
+                        }
+
                             </Col>
                             <Col>
                                 <Button
@@ -133,7 +141,7 @@ const Listing = (props) => {
                     </Container>
                     <br />
                 </>
-                : 
+                :
                 <>
                     <Container>
                         <Row>

@@ -33,7 +33,6 @@ function AddListing() {
 
 	const [errorMessage, setErrorMessage] = useState("");
 	const [disabled, setDisabled] = useState(true);
-	const [loading, setLoading] = useState(false);
 	const [newTag, setNewTag] = useState("");
 	const [newColor, setNewColor] = useState("");
 	const [files, setFiles] = useState(null);
@@ -44,7 +43,7 @@ function AddListing() {
 			"QUERY_MY_LISTINGS"
 		],
 	});
-
+console.log(error)
 	const handleInputs = (e) => {
 		const { value, name } = e.target;
 		if (!value.length) {

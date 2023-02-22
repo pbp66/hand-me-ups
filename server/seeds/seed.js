@@ -45,48 +45,10 @@ db.once("open", async () => {
 		await Category.deleteMany();
 		await Tag.deleteMany();
 		await Listing.deleteMany();
-
-		// const categories = await Category.insertMany([
-		// 	{ category: "Shirt" },
-		// 	{ category: "Hat" },
-		// 	{ category: "JNCOS" },
-		// ]);
-		// const tags = await Tag.insertMany([
-		// 	{ tag: "testTag1" },
-		// 	{ tag: "testTag2" },
-		// ]);
-
 		await Category.create(categorySeeds);
 		await Tag.create(tagSeeds);
 
-		// await Listing.insertMany([
-		// 	{
-		// 		title: "JNCOS",
-		// 		description: `${mockObjectId("id")}`,
-		// 		price: 120,
-		// 		category: categories[0]._id,
-		// 		tags: [tags[0]._id, tags[1]._id],
-		// 		size: "XXL",
-		// 		color: ["red"],
-		// 		condition: "NEW",
-		// 		image: "https://via.placeholder.com/1000",
-		// 		listing_date: "listed today",
-		// 		seller: mockObjectId("seller"),
-		// 	},
-		// 	{
-		// 		title: "JNCOS2",
-		// 		description: `${mockObjectId("id2")}`,
-		// 		price: 120,
-		// 		category: categories[0]._id,
-		// 		tags: [tags[0]._id, tags[1]._id],
-		// 		size: "XXXL",
-		// 		color: ["red", "green", "blue"],
-		// 		condition: "NEW",
-		// 		image: "https://via.placeholder.com/1000",
-		// 		listing_date: "listed today",
-		// 		seller: mockObjectId("seller"),
-		// 	},
-		// ]);
+
 
 		const allCategories = await Category.find();
 		const allTags = await Tag.find();
@@ -107,7 +69,6 @@ db.once("open", async () => {
 			email: "test@test.com",
 			username: "test",
 			password: "password",
-			//listings: allListings,
 		});
 
 		const user = await User.findOne({ username: "test" });

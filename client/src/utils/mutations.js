@@ -151,10 +151,28 @@ export const REMOVE_FROM_CART = gql`
 `;
 
 // TODO ADD_ADDRESS
+// export const ADD_ADDRESS = gql`
+// 	mutation ADD_ADDRESS() {
+// 		addAddress() {
+
+// 		}
+// 	}`;
 
 // TODO REMOVE_ADDRESS
+// export const REMOVE_ADDRESS = gql`
+// 	mutation REMOVE_ADDRESS() {
+// 		removeAddress() {
+
+// 		}
+// 	}`;
 
 // TODO UPDATE_ADDRESS
+// export const UPDATE_ADDRESS = gql`
+// 	mutation UPDATE_ADDRESS() {
+// 		updateAddress() {
+
+// 		}
+// 	}`;
 
 // TODO ADD_PAYMENT_METHOD
 

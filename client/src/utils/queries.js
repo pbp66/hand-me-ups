@@ -183,7 +183,7 @@ export const QUERY_FAVORITE_LISTINGS = gql`
 
 export const QUERY_SEARCH_LISTINGS = gql`
 	query SEARCH_LISTINGS($searchString: String!) {
-		searchListing(searchTerms: $searchString) {
+		searchListing(searchString: $searchString) {
 			_id
 			title
 			description

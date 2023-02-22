@@ -142,7 +142,7 @@ const typeDefs = `
 		size: String
 		color: [String]
 		image: String # Link to image in firebase?
-		seller-username: String
+		seller_username: String
 	}
 
   	type Query {

@@ -28,7 +28,7 @@ export const LOGIN_USER = gql`
 
 export const REMOVE_USER = gql`
 	mutation REMOVE_USER {
-		removeUser() {
+		removeUser {
 			_id
 			username
 			email
@@ -36,7 +36,8 @@ export const REMOVE_USER = gql`
 			favorites
 			orders
 		}
-	}`;
+	}
+`;
 
 export const ADD_LISTING = gql`
 	mutation ADD_LISTING($listing: listingInput!) {

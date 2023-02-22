@@ -4,8 +4,8 @@ export const QUERY_USERS = gql`
 	query allUsers {
 		users {
 			_id
-			name
-			skills
+			username
+			email
 		}
 	}
 `;
@@ -14,8 +14,8 @@ export const QUERY_SINGLE_USER = gql`
 	query singleUser($userId: ID!) {
 		user(userId: $userId) {
 			_id
-			name
-			skills
+			username
+			email
 		}
 	}
 `;
@@ -24,8 +24,16 @@ export const QUERY_ME = gql`
 	query me {
 		me {
 			_id
-			name
-			skills
+			username
+			email
+			listings
+			favorites
+			orders
+			payment_methods
+			addresses
+			default_address
+			default_payment
+			cart
 		}
 	}
 `;
@@ -39,9 +47,11 @@ export const QUERY_LISTINGS = gql`
 			price
 			category {
 				_id
+				description
 			}
 			tags {
 				_id
+				tag
 			}
 			size
 			color

@@ -24,27 +24,39 @@ function throwUnauthenticatedError() {
 const resolvers = {
 	Query: {
 		allUsers: async (parent, args, context, info) => {
-			return User.find();
+			return await User.find();
 		},
 		oneUser: async (parent, { userId }, context, info) => {
-			return User.findById(userId);
+			return await User.findById(userId);
 		},
 		// By adding context to our query, we can retrieve the logged in user without specifically searching for them
 		me: async (parent, args, context, info) => {
 			if (context.user) {
-				return User.findById(context.user._id);
+				return await User.findById(context.user._id)
+					.populate("listings")
+					.populate("favorites")
+					.populate("orders")
+					.populate("payment_methods")
+					.populate("addresses")
+					.populate("default_address")
+					.populate("default_payment")
+					.populate("cart");
 			}
 			throwUnauthenticatedError();
 		},
 		allListings: async (parent, args, context, info) => {
-			return Listing.find();
+			const listings = await Listing.find()
+				.populate("category")
+				.populate("tags");
+			return listings;
 		},
 		oneListing: async (parent, { listingId }, context, info) => {
-			console.log(listingId);
-			return Listing.findById(listingId);
+			return await Listing.findById(listingId);
 		},
 		userListings: async (parent, { userId }, context, info) => {
-			const user = await User.findById(userId).populate("listings");
+			const user = await User.findById(userId)
+				.populate("category")
+				.populate("tags");
 			if (!user) {
 				throw new GraphQLError("User does not exist", {
 					extensions: {
@@ -475,13 +487,13 @@ const resolvers = {
 			);
 		},
 		addTag: async (parent, { tag, ...args }, context, info) => {
-			return await Tag.create({ tag });
+			return await Tag.create({ tag: tag });
 		},
 		removeTag: async (parent, { tagId, ...args }, context, info) => {
 			return await Tag.findByIdAndDelete(tagId);
 		},
 		addCategory: async (parent, { category, ...args }, context, info) => {
-			return await Category.create({ category });
+			return await Category.create({ description: category });
 		},
 		removeCategory: async (
 			parent,

@@ -224,7 +224,14 @@ export const QUERY_MY_ORDERS = gql`
 	}
 `;
 
-// TODO ALL_TAGS
+export const QUERY_ALL_TAGS = gql`
+	query ALL_TAGS {
+		allTags {
+			_id
+			tag
+		}
+	}
+`;
 
 export const QUERY_ALL_CATEGORIES = gql`
 	query ALL_CATEGORIES {

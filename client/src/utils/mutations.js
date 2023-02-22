@@ -78,6 +78,52 @@ export const REMOVE_LISTING = gql`
 	}
 `;
 
+// TODO ADD_ORDER
+// export const ADD_ORDER = gql`
+// 	mutation ADD_ORDER() {
+// 		addOrder() {
+
+// 		}
+// 	}`;
+
+// TODO UPDATE_ME
+// export const UPDATE_ME = gql`
+// 	mutation UPDATE_ME() {
+// 		updateMe() {
+
+// 		}
+// 	}`;
+
+// TODO SAVE_LISTING
+// export const SAVE_LISTING = gql`
+// 	mutation SAVE_LISTING() {
+// 		saveListing() {
+
+// 		}
+// 	}`;
+
+// TODO UNFAVORITE_LISTING
+export const UNFAVORITE_LISTING = gql`
+	mutation UNFAVORITE_LISTING($listingId: ID!) {
+		unFavoriteListing(listing: $listingId) {
+		_id
+		title
+		description
+		price
+		category
+		tags
+		size
+		color
+		condition
+		image
+		listing_date
+		}
+	}`
+	
+		removeOrder(orderId: ID!): Order
+		updateOrder(orderId: ID!, order: orderInput): Order
+		removeCart: Cart
+
 export const ADD_TO_CART = gql`
 	mutation ADD_TO_CART($listingId: ID!) {
 		addToCart(listingId: $listingId) {

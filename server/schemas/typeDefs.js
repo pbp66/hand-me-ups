@@ -160,11 +160,11 @@ const typeDefs = `
     	login(email: String!, password: String!): Auth
     	removeUser: User
 		addListing(listing: listingInput!): Listing
+		favoriteListing(listingId: ID!): [Listing]
 		removeListing(listingId: ID!): User
 		addOrder(orderDetails: orderInput!): Order
 		updateMe(userId: ID!, user: updateUserInput): User
 		saveListing(listingId: ID!, listing: listingInput): Listing
-		favoriteListing(listingId: ID!): [Listing]
 		unFavoriteListing(listing: ID!): [Listing]
 		removeOrder(orderId: ID!): Order
 		updateOrder(orderId: ID!, order: orderInput): Order

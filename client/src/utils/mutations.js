@@ -139,12 +139,38 @@ export const UNFAVORITE_LISTING = gql`
 // 	}`;
 
 // TODO REMOVE_CART
-// export const REMOVE_CART = gql`
-// 	mutation REMOVE_CART() {
-// 		removeCart() {
-
-// 		}
-// 	}`;
+export const REMOVE_CART = gql`
+	mutation REMOVE_CART {
+		removeCart {
+			_id
+			items {
+				_id
+				title
+				description
+				price
+				category {
+					_id
+					category
+				}
+				tags {
+					_id
+					tag
+				}
+				size
+				color
+				condition
+				image
+				seller {
+					_id
+					username
+					email
+				}
+				listing_date
+				purchase_status
+			}
+		}
+	}
+`;
 
 export const ADD_TO_CART = gql`
 	mutation ADD_TO_CART($listingId: ID!) {

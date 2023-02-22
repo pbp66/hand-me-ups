@@ -94,9 +94,9 @@ const resolvers = {
 		favoriteListings: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findById(context.user._id).populate(
-					"saved_items"
+					"favorites"
 				);
-				return user.saved_items;
+				return user.favorites;
 			}
 			throwUnauthenticatedError();
 		},
@@ -111,16 +111,29 @@ const resolvers = {
 		// 	Listing.find({});
 		// },
 		allOrders: async (parent, args, context, info) => {
-			return Order.find();
+			return Order.find()
+				.populate("purchased_listings")
+				.populate("billing_address")
+				.populate("shipping_address")
+				.populate("purchaser")
+				.populate("payment_method");
 		},
 		getOrder: async (parent, { orderId }, context, info) => {
-			return Order.findById(orderId);
+			return Order.findById(orderId)
+				.populate("purchased_listings")
+				.populate("billing_address")
+				.populate("shipping_address")
+				.populate("purchaser")
+				.populate("payment_method");
 		},
 		myOrders: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"order"
-				);
+				const user = await User.findById(context.user._id)
+					.populate("purchased_listings")
+					.populate("billing_address")
+					.populate("shipping_address")
+					.populate("purchaser")
+					.populate("payment_method");
 				return user.orders;
 			}
 			throwUnauthenticatedError();
@@ -134,7 +147,7 @@ const resolvers = {
 		myPaymentMethods: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findById(context.user._id).populate(
-					"payment_methods"
+					"user"
 				);
 				return user.payment_methods;
 			}
@@ -143,7 +156,7 @@ const resolvers = {
 		myAddresses: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findById(context.user._id).populate(
-					"addresses"
+					"user"
 				);
 				return user.addresses;
 			}
@@ -151,9 +164,9 @@ const resolvers = {
 		},
 		myCart: async (parent, args, context, info) => {
 			if (context.user) {
-				const cart = await Cart.findById(context.user._id).populate(
-					"items"
-				);
+				const cart = await Cart.findById(context.user._id)
+					.populate("user")
+					.populate("items");
 				return cart;
 			}
 			throwUnauthenticatedError();

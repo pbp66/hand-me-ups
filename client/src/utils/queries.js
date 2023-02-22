@@ -1,69 +1,236 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_USERS = gql`
-	query allUsers {
+	query ALL_USERS {
 		users {
 			_id
-			name
-			skills
+			username
+			email
 		}
 	}
 `;
 
 export const QUERY_SINGLE_USER = gql`
-	query singleUser($userId: ID!) {
+	query SINGLE_USER($userId: ID!) {
 		user(userId: $userId) {
 			_id
-			name
-			skills
+			username
+			email
 		}
 	}
 `;
 
 export const QUERY_ME = gql`
-	query me {
+	query ME {
 		me {
 			_id
-			name
-			skills
+			username
+			email
+			listings
+			favorites
+			orders
+			payment_methods
+			addresses
+			default_address
+			default_payment
+			cart
 		}
 	}
 `;
 
+export const QUERY_LISTINGS = gql`
+	query ALL_LISTINGS {
+		allListings {
+			_id
+			title
+			description
+			price
+			category {
+				_id
+				category
+			}
+			tags {
+				_id
+				tag
+			}
+			size
+			color
+			condition
+			image
+			seller {
+				_id
+			}
+			listing_date
+			edit_status
+			edit_dates
+		}
+	}
+`;
+
+export const QUERY_ONE_LISTING = gql`
+	query ONE_LISTING($listingId: ID!) {
+		oneListing(listingId: $listingId) {
+			_id
+			title
+			description
+			price
+			size
+			color
+			condition
+			image
+			seller {
+				_id
+			}
+			listing_date
+			edit_status
+			edit_dates
+		}
+	}
+`;
+
+// TODO: Define what's going on here? We don't have a checkout query in the typeDefs or resolvers...
 export const QUERY_CHECKOUT = gql`
-	query getCheckout($products: [ID]!) {
+	query GET_CHECKOUT($products: [ID]!) {
 		checkout(products: $products) {
 			session
 		}
 	}
 `;
 
-export const QUERY_LISTINGS = gql`
-query QUERY_LISTINGS {
-	allListings {
-	  _id
-	  title
-	  description
-	  price
-	  category {
-		_id
-	  }
-	  tags {
-		_id
-	  }
-	  size
-	  color
-	  condition
-	  image
-	  seller {
-		_id
-	  }
-	  listing_date
-	  edit_status
-	  edit_dates
+export const QUERY_USER_LISTINGS = gql`
+	query USER_LISTINGS($userId: ID!) {
+		userListings(userId: $userId) {
+			_id
+			title
+			description
+			price
+			category {
+				_id
+				category
+			}
+			tags {
+				_id
+				tag
+			}
+			size
+			color
+			condition
+			image
+			seller {
+				_id
+			}
+			listing_date
+			edit_status
+			edit_dates
+		}
 	}
-  }
-  
+`;
+
+export const QUERY_MY_LISTINGS = gql`
+	query MY_LISTINGS {
+		myListings {
+			_id
+			title
+			description
+			price
+			category {
+				category
+			}
+			tags {
+				tag
+			}
+			seller {
+				_id
+			}
+			size
+			color
+			condition
+			image
+			listing_date
+			edit_status
+			edit_dates
+		}
+	}
+`;
+
+export const QUERY_FAVORITE_LISTINGS = gql`
+	query FAVORITE_LISTINGS {
+		favoriteListings {
+			_id
+			title
+			descriptions
+			price
+			image
+		}
+	}
+`;
+
+// TODO SEARCH_LISTINGS
+
+export const QUERY_ALL_ORDERS = gql`
+	query QUERY_ALL_ORDERS {
+		allOrders {
+			_id
+			date_purchased
+			purchased_listings
+			billing_address
+			shipping_address
+			purchaser
+			payment_method
+			subtotal
+			shipping_handling
+			pretax_total
+			estimated_tax
+			order_total
+		}
+	}
+`;
+
+export const QUERY_GET_ONE_ORDER = gql`
+	query GET_ONE_ORDER($orderId: ID!) {
+		getOrder(orderId: $orderId) {
+			_id
+			date_purchased
+			purchased_listings
+			billing_address
+			shipping_address
+			purchaser
+			payment_method
+			subtotal
+			shipping_handling
+			pretax_total
+			estimated_tax
+			order_total
+		}
+	}
+`;
+
+export const QUERY_MY_ORDERS = gql`
+	query MY_ORDERS {
+		myOrder {
+			_id
+			date_purchased
+			purchased_listings
+			billing_address
+			shipping_address
+			purchaser
+			payment_method
+			subtotal
+			shipping_handling
+			pretax_total
+			estimated_tax
+			order_total
+		}
+	}
+`;
+
+export const QUERY_ALL_TAGS = gql`
+	query ALL_TAGS {
+		allTags {
+			_id
+			tag
+		}
+	}
 `;
 
 export const QUERY_ALL_CATEGORIES = gql`
@@ -75,109 +242,44 @@ export const QUERY_ALL_CATEGORIES = gql`
 	}
 `;
 
+export const QUERY_MY_PAYMENT_METHODS = gql`
+	query MY_PAYMENT_METHODS {
+		myPaymentMethods {
+			_id
+			card_number
+			card_brand
+			expiration_date
+			security_code
+		}
+	}
+`;
+
+export const QUERY_MY_ADDRESSES = gql`
+	query MY_ADDRESSES {
+		myAddresses {
+			_id
+			building_number
+			street
+			city
+			state
+			zip_code
+		}
+	}
+`;
+
 export const QUERY_MY_CART = gql`
-query QUERY_MY_CART {
-	myCart {
-	  _id
-	  items {
-		_id
-		title
-		description
-		price
-		category {
-		  category
+	query MY_CART {
+		myCart {
+			_id
+			items {
+				_id
+				title
+				price
+				image
+				seller {
+					_id
+				}
+			}
 		}
-		tags {
-		  tag
-		}
-		size
-		color
-		condition
-		image
-		seller {
-		  username
-		}
-		listing_date
-		edit_status
-		edit_dates
-	  }
 	}
-  }`
-
-export const QUERY_USER_LISTINGS = gql`
-  query QUERY_USER_LISTINGS($userId: ID!) {
-	userListings(userId: $userId) {
-	  _id
-	  title
-	  description
-	  price
-	  category {
-		_id
-		category
-	  }
-	  tags {
-		_id
-		tag
-	  }
-	  size
-	  color
-	  condition
-	  image
-	  seller {
-		_id
-	  }
-	  listing_date
-	  edit_status
-	  edit_dates
-	}
-  }
-  `
-
-export const QUERY_MY_LISTINGS = gql`
-  query QUERY_MY_LISTINGS {
-    myListings {
-      _id
-      title
-      description
-      price
-      category {
-        category
-      }
-      tags {
-        tag
-      }
-	  seller {
-		_id
-	  }
-      size
-      color
-      condition
-      image
-      listing_date
-      edit_status
-      edit_dates
-    }
-  }
-  `
-export const QUERY_ONE_LISTING = gql`	
-query QUERY_ONE_LISTING($listingId: ID!) {
-	oneListing(listingId: $listingId) {
-	  _id
-	  title
-	  description
-	  price
-	  size
-	  color
-	  condition
-	  image
-	  seller {
-		_id
-	  }
-	  listing_date
-	  edit_status
-	  edit_dates
-	}
-  }
-`
-
-
+`;

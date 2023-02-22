@@ -24,27 +24,41 @@ function throwUnauthenticatedError() {
 const resolvers = {
 	Query: {
 		allUsers: async (parent, args, context, info) => {
-			return User.find();
+			return await User.find();
 		},
 		oneUser: async (parent, { userId }, context, info) => {
-			return User.findById(userId);
+			return await User.findById(userId);
 		},
 		// By adding context to our query, we can retrieve the logged in user without specifically searching for them
 		me: async (parent, args, context, info) => {
 			if (context.user) {
-				return User.findById(context.user._id);
+				return await User.findById(context.user._id)
+					.populate("listings")
+					.populate("favorites")
+					.populate("orders")
+					.populate("payment_methods")
+					.populate("addresses")
+					.populate("default_address")
+					.populate("default_payment")
+					.populate("cart");
 			}
 			throwUnauthenticatedError();
 		},
 		allListings: async (parent, args, context, info) => {
-			return Listing.find();
+			const listings = await Listing.find()
+				.populate("category")
+				.populate("tags");
+			return listings;
 		},
-		oneListing: async (parent, {listingId}, context, info) => {
-			console.log(listingId)
-			return Listing.findById(listingId)
+		oneListing: async (parent, { listingId }, context, info) => {
+			return await Listing.findById(listingId)
+				.populate("category")
+				.populate("tags");
 		},
 		userListings: async (parent, { userId }, context, info) => {
-			const user = await User.findById(userId).populate("listings");
+			const user = await User.findById(userId)
+				.populate("category")
+				.populate("tags");
 			if (!user) {
 				throw new GraphQLError("User does not exist", {
 					extensions: {
@@ -57,20 +71,22 @@ const resolvers = {
 		},
 		myListings: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"listings"
-				);
-				const updatedListings = []
+				const user = await User.findById(context.user._id)
+					.populate("category")
+					.populate("tags");
+				const updatedListings = [];
 				for (const listing of user.listings) {
 					if (listing.category) {
-						const category = await Category.findById(listing.category)
+						const category = await Category.findById(
+							listing.category
+						);
 						if (category) {
-							listing.category = category
+							listing.category = category;
 						}
 					}
-					updatedListings.push(listing)
+					updatedListings.push(listing);
 				}
-				
+
 				return updatedListings;
 			}
 			throwUnauthenticatedError();
@@ -78,9 +94,9 @@ const resolvers = {
 		favoriteListings: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findById(context.user._id).populate(
-					"saved_items"
+					"favorites"
 				);
-				return user.saved_items;
+				return user.favorites;
 			}
 			throwUnauthenticatedError();
 		},
@@ -95,16 +111,29 @@ const resolvers = {
 		// 	Listing.find({});
 		// },
 		allOrders: async (parent, args, context, info) => {
-			return Order.find();
+			return Order.find()
+				.populate("purchased_listings")
+				.populate("billing_address")
+				.populate("shipping_address")
+				.populate("purchaser")
+				.populate("payment_method");
 		},
 		getOrder: async (parent, { orderId }, context, info) => {
-			return Order.findById(orderId);
+			return Order.findById(orderId)
+				.populate("purchased_listings")
+				.populate("billing_address")
+				.populate("shipping_address")
+				.populate("purchaser")
+				.populate("payment_method");
 		},
 		myOrders: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"order"
-				);
+				const user = await User.findById(context.user._id)
+					.populate("purchased_listings")
+					.populate("billing_address")
+					.populate("shipping_address")
+					.populate("purchaser")
+					.populate("payment_method");
 				return user.orders;
 			}
 			throwUnauthenticatedError();
@@ -117,28 +146,24 @@ const resolvers = {
 		},
 		myPaymentMethods: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"payment_methods"
-				);
+				const user = await User.findById(context.user._id);
 				return user.payment_methods;
 			}
 			throwUnauthenticatedError();
 		},
 		myAddresses: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"addresses"
-				);
+				const user = await User.findById(context.user._id);
 				return user.addresses;
 			}
 			throwUnauthenticatedError();
 		},
 		myCart: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"cart"
-				);
-				return user.cart;
+				const cart = await Cart.findById(context.user._id)
+					.populate("user")
+					.populate("items");
+				return cart;
 			}
 			throwUnauthenticatedError();
 		},
@@ -183,7 +208,12 @@ const resolvers = {
 		//* Set up mutation so a logged in user can only remove their user and no one else's
 		removeUser: async (parent, args, context, info) => {
 			if (context.user) {
-				return User.findOneAndDelete({ _id: context.user._id });
+				Listing.deleteMany({ seller: context.user._id });
+				Order.deleteMany({ purchaser: context.user._id });
+				Payment.deleteMany({ user: context.user._id });
+				Address.deleteMany({ user: context.user._id });
+				Cart.deleteMany({ user: context.user._id });
+				return await User.findByIdAndDelete(context.user._id);
 			}
 			throwUnauthenticatedError();
 		},
@@ -240,7 +270,7 @@ const resolvers = {
 			newListing["image"] = image;
 			newListing["category"] = await Category.findById(category);
 
-			console.log(context)
+			console.log(context);
 
 			if (size) {
 				newListing["size"] = size;
@@ -280,10 +310,12 @@ const resolvers = {
 				...newListing,
 			});
 
-			await User.findByIdAndUpdate(context.user._id, {$push: {listings: listing._id}})
+			await User.findByIdAndUpdate(context.user._id, {
+				$push: { listings: listing._id },
+			});
 			//todo: add _id to listing._id, push in listing array
 
-			return listing
+			return listing;
 		},
 		removeListing: async (
 			parent,
@@ -294,6 +326,8 @@ const resolvers = {
 			return await Listing.findByIdAndDelete(listingId);
 		},
 		//* update listing
+
+		//do we need both save listing and favorite listing?
 		saveListing: async (
 			parent,
 			{ listingId, listing, ...args }, // Listing contains title, description, etc...
@@ -348,33 +382,29 @@ const resolvers = {
 		},
 		// TODO
 		updateOrder: async (parent, args, context, info) => {},
-		createCart: async (parent, args, context, info) => {
-			return await Cart.create({ user: context.user, items: [] });
+
+		//only when user is deleted will we delete a cart
+		removeCart: async (parent, args, context, info) => {
+			return await Cart.findByIdAndDelete(context.user._id);
 		},
-		removeCart: async (parent, { cartId, ...args }, context, info) => {
-			return await Cart.findByIdAndDelete(cartId);
-		},
-		addToCart: async (
-			parent,
-			{ cartId, listingId, ...args }, // TODO: Do we need cartId if it is a part of the user object?
-			context,
-			info
-		) => {
-			return await Cart.findByIdAndUpdate(
-				cartId,
-				{ $push: { listingId } },
+
+		// Carts are created when User is created. cart_id = user_id
+		addToCart: async (parent, { listingId, ...args }, context, info) => {
+			return Cart.findByIdAndUpdate(
+				context.user._id,
+				{ $push: { items: listingId } },
 				{ new: true, runValidators: true }
 			);
 		},
 		removeFromCart: async (
 			parent,
-			{ cartId, listingId, ...args }, // TODO: Do we need cartId if it is a part of the user object?
+			{ listingId, ...args },
 			context,
 			info
 		) => {
 			return await Cart.findByIdAndUpdate(
-				cartId,
-				{ $pull: { listingId } },
+				context.user._id,
+				{ $pull: { items: listingId } },
 				{ new: true, runValidators: true }
 			);
 		},
@@ -468,13 +498,13 @@ const resolvers = {
 			);
 		},
 		addTag: async (parent, { tag, ...args }, context, info) => {
-			return await Tag.create({ tag });
+			return await Tag.create({ tag: tag });
 		},
 		removeTag: async (parent, { tagId, ...args }, context, info) => {
 			return await Tag.findByIdAndDelete(tagId);
 		},
 		addCategory: async (parent, { category, ...args }, context, info) => {
-			return await Category.create({ category });
+			return await Category.create({ description: category });
 		},
 		removeCategory: async (
 			parent,

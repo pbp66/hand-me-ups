@@ -1,19 +1,21 @@
-import { Card, Button, Container, Row, Col, Modal } from 'react-bootstrap'
+import { Card, Button, Container, Row, Col } from 'react-bootstrap'
+import { useMutation } from "@apollo/client"
 import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
-import { useMutation } from '@apollo/client'
-// import {CREATE_CART, ADD_TO_CART, REMOVE_FROM_CART, REMOVE_CART} from '../utils/mutations'
+
+import { REMOVE_LISTING, ADD_TO_CART, FAVORITE_LISTING } from '../../utils/mutations'
+import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/queries'
 
 
 
 
 const Listing = (props) => {
-
-
-    const [show, setShow] = useState(true)
-    const handleClose = () => setShow(false)
-    const handleShow = () => setShow(true)
+    const [favorite, setFavorite] = useState(false)
+    const [inCart, setInCart] = useState(false)
+    const [show, setShow] = useState(false)
+    // const handleClose = () => setShow(false)
+    // const handleShow = () => setShow(true)
 
     const {
         _id,
@@ -21,29 +23,72 @@ const Listing = (props) => {
         image,
         description,
         price,
-        size,
-        color,
+        // size,
+        // color,
         condition,
-        tags,
-        listing_date,
-        category,
+        // tags,
+        // listing_date,
+        // category,
         seller
     } = props.listing
 
+    const [addToCart] = useMutation(ADD_TO_CART, {
+        variables: {
+            listingId: _id,
+        },
+        refetchQueries: [
+            {query: QUERY_MY_CART},
+            "QUERY_MY_CART"
+        ],
+    }
+    );
 
+    // const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
+    //     variables: {
+    //   
+    //         listingId: _id,
+    //     }
+    // })
+ 
+    //move this to my Listings since we wont show the users listings on discover page
+    const [removeListing] = useMutation(REMOVE_LISTING, {
+        variables: {
+            listingId: _id,
+        },
+        refetchQueries: [
+            {query: QUERY_MY_LISTINGS},
+            "QUERY_MY_LISTINGS",
+            {query: QUERY_LISTINGS},
+            "QUERY_LISTINGS"
+        ],
+    });
 
-    const addToCart = () => {
-        //use add to cart
-        //refresh getcart query
-        console.log('added to cart')
+    const [favoriteListing] = useMutation(FAVORITE_LISTING, {
+        variables: {
+            listingId: _id
+        }
+    })
+
+    const toggleFavorite =() => {
+        //change favorite button style to show added to favorites
+        setFavorite(!favorite)
+        favoriteListing()
+        if(favorite){
+            console.log('added to cart')
+        }
     }
 
-    const saveItem = () => {
-        console.log('item saved')
+    const toggleInCart = () => {
+            addToCart()
+        
+
+        //if already in cart
+        //removeFromCart()
 
     }
-    console.log(seller)
 
+
+    console.log(`Token for graphql header ${Auth.getToken()}`)
     return (
         <>
             <Link
@@ -67,19 +112,20 @@ const Listing = (props) => {
                     }
                 </Card>
             </Link>
-            {Auth.loggedIn() && Auth.getProfile().data._id !== seller?._id ?
+            {Auth.loggedIn() && Auth.getProfile().data?._id !== seller?._id ?
                 <>
                     <Container>
                         <Row>
                             <Col>
+                            {/* if item is in cart already, change button to remove from cart */}
                                 <Button
-                                    onClick={addToCart}>
+                                    onClick={toggleInCart}>
                                     Add to Cart
                                 </Button>
                             </Col>
                             <Col>
                                 <Button
-                                    onClick={saveItem}>
+                                    onClick={toggleFavorite}>
                                     Save to favorites
                                 </Button>
                             </Col>
@@ -87,9 +133,19 @@ const Listing = (props) => {
                     </Container>
                     <br />
                 </>
-                : <></>
+                : 
+                <>
+                    <Container>
+                        <Row>
+                            <Col>
+                                <Button onClick={removeListing}>
+                                    Remove Listing
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Container>
+                </>
             }
-
         </>
     )
 }

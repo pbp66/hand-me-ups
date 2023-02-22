@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { isMobile } from "react-device-detect";
 import { ADD_LISTING } from "../utils/mutations";
-import { QUERY_ALL_CATEGORIES } from "../utils/queries";
+import { QUERY_ALL_CATEGORIES, QUERY_MY_LISTINGS } from "../utils/queries";
 import auth from "../utils/auth";
 
 
@@ -16,7 +16,7 @@ function AddListing() {
 		loading: categoriesLoading,
 		error: categoriesError,
 	} = useQuery(QUERY_ALL_CATEGORIES);
-	console.log(data)
+	
 	const categories = data?.allCategories || [];
 	const [listing, setListing] = useState(
 		{
@@ -24,24 +24,12 @@ function AddListing() {
 			image: "",
 			description: "",
 			price: 0,
-			categories: [],
+			category: [],
 			size: "",
 			tags: [],
 			color: [],
 			condition: "",
 		});
-
-	// {
-	// 	title: "JNCOS",
-	// 		description: "JNCOS",
-	// 			price: 250.25,
-	// 				category: "Shirt",
-	// 					tags: ["90s", "other"],
-	// 						size: "XXL",
-	// 							color: ["red"],
-	// 								condition: "NEW",
-	// 									image: "image.com",
-	// }
 
 	const [errorMessage, setErrorMessage] = useState("");
 	const [disabled, setDisabled] = useState(true);
@@ -50,7 +38,12 @@ function AddListing() {
 	const [newColor, setNewColor] = useState("");
 	const [files, setFiles] = useState(null);
 
-	const [addListing, { error }] = useMutation(ADD_LISTING);
+	const [addListing, { error }] = useMutation(ADD_LISTING, {
+		refetchQueries: [
+			{query: QUERY_MY_LISTINGS},
+			"QUERY_MY_LISTINGS"
+		],
+	});
 
 	const handleInputs = (e) => {
 		const { value, name } = e.target;

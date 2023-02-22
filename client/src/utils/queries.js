@@ -166,7 +166,24 @@ export const QUERY_FAVORITE_LISTINGS = gql`
 
 // TODO SEARCH_LISTINGS
 
-// TODO ALL_ORDERS
+export const QUERY_ALL_ORDERS = gql`
+	query QUERY_ALL_ORDERS {
+		allOrders {
+			_id
+			date_purchased
+			purchased_listings
+			billing_address
+			shipping_address
+			purchaser
+			payment_method
+			subtotal
+			shipping_handling
+			pretax_total
+			estimated_tax
+			order_total
+		}
+	}
+`;
 
 // TODO GET_ORDER
 

@@ -151,7 +151,18 @@ export const QUERY_MY_LISTINGS = gql`
 		}
 	}
 `;
-// TODO FAVORITE_LISTINGS
+
+export const QUERY_FAVORITE_LISTINGS = gql`
+	query QUERY_FAVORITE_LISTINGS {
+		favoriteListings {
+			_id
+			title
+			descriptions
+			price
+			image
+		}
+	}
+`;
 
 // TODO SEARCH_LISTINGS
 

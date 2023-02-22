@@ -175,10 +175,28 @@ export const REMOVE_FROM_CART = gql`
 // 	}`;
 
 // TODO ADD_PAYMENT_METHOD
+// export const ADD_PAYMENT_METHOD = gql`
+// 	mutation ADD_PAYMENT_METHOD() {
+// 		addPaymentMethod() {
+
+// 		}
+// 	}`;
 
 // TODO REMOVE_PAYMENT_METHOD
+// export const REMOVE_PAYMENT_METHOD = gql`
+// 	mutation REMOVE_PAYMENT_METHOD() {
+// 		removePaymentMethod() {
+
+// 		}
+// 	}`;
 
 // TODO UPDATE_PAYMENT_METHOD
+// export const UPDATE_PAYMENT_METHOD = gql`
+// 	mutation UPDATE_PAYMENT_METHOD() {
+// 		updatePaymentMethod() {
+
+// 		}
+// 	}`;
 
 // TODO UPDATE_DEFAULT_PAYMENT
 

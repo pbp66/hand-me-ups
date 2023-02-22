@@ -39,7 +39,7 @@ const resolvers = {
 		allListings: async (parent, args, context, info) => {
 			return Listing.find();
 		},
-		oneListing: async (parent, {listingId}, context, info) => {
+		oneListing: async (parent, { listingId }, context, info) => {
 			console.log(listingId)
 			return Listing.findById(listingId)
 		},
@@ -70,7 +70,7 @@ const resolvers = {
 					}
 					updatedListings.push(listing)
 				}
-				
+
 				return updatedListings;
 			}
 			throwUnauthenticatedError();
@@ -142,6 +142,47 @@ const resolvers = {
 			}
 			throwUnauthenticatedError();
 		},
+		checkout: async (parent, args, context) => {
+			//get context url
+			const url = new URL(context.headers.referer).origin;
+			//create new order from listings in cart
+			const order = new Order({ listings: args.listings });
+	console.log(order)
+			const line_items = [];
+			//pull the listings out of the order
+			const { listings } = await order.populate('listing');
+		
+				//create new stripeProducts from listings
+			for (let i = 0; i < listings.length; i++) {
+				const product = await stripe.products.create({
+					name: listings[i].name,
+					description: listings[i].description,
+					images: listings[i].image
+				});
+				console.log(product)
+				//create stripe prices
+				const price = await stripe.prices.create({
+					product: product.id,
+					unit_amount: listings[i].price * 100,
+					currency: 'usd',
+				});
+				//
+				line_items.push({
+					price: price.id,
+					quantity: 1
+				});
+			}
+
+			const session = await stripe.checkout.sessions.create({
+				payment_method_types: ['card'],
+				line_items,
+				mode: 'payment',
+				success_url: `${url}/success?session_id={CHECKOUT_SESSION_ID}`,
+				cancel_url: `${url}/`
+			});
+
+			return { session: session.id };
+		}
 	},
 	Mutation: {
 		addUser: async (
@@ -280,7 +321,7 @@ const resolvers = {
 				...newListing,
 			});
 
-			await User.findByIdAndUpdate(context.user._id, {$push: {listings: listing._id}})
+			await User.findByIdAndUpdate(context.user._id, { $push: { listings: listing._id } })
 			//todo: add _id to listing._id, push in listing array
 
 			return listing
@@ -344,12 +385,12 @@ const resolvers = {
 			return user.favorites;
 		},
 		// TODO
-		addOrder: async (parent, args, context, info) => {},
+		addOrder: async (parent, args, context, info) => { },
 		removeOrder: async (parent, { orderId, ...args }, context, info) => {
 			return await Order.findByIdAndDelete(orderId);
 		},
 		// TODO
-		updateOrder: async (parent, args, context, info) => {},
+		updateOrder: async (parent, args, context, info) => { },
 
 		//only when user is deleted will we delete a cart
 		removeCart: async (parent, args, context, info) => {
@@ -359,19 +400,19 @@ const resolvers = {
 		// Carts are created when User is created. cart_id = user_id
 		addToCart: async (
 			parent,
-			{listingId, ...args }, 
+			{ listingId, ...args },
 			context,
 			info
 		) => {
 			return Cart.findByIdAndUpdate(
 				context.user._id,
-				{ $push: { items: listingId}},
+				{ $push: { items: listingId } },
 				{ new: true, runValidators: true }
 			);
 		},
 		removeFromCart: async (
 			parent,
-			{listingId, ...args },
+			{ listingId, ...args },
 			context,
 			info
 		) => {

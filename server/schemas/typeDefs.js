@@ -133,6 +133,10 @@ const typeDefs = `
 		user: User!
 		items: [Listing]
 	}
+	
+	type Checkout {
+		session: ID
+	  }
 
   	type Query {
     	allUsers: [User]
@@ -153,6 +157,7 @@ const typeDefs = `
 		myPaymentMethods: [Payment]
 		myAddresses: [Address]
 		myCart: Cart
+		checkout(listing: [ID]!): Checkout
   	}
 
   	type Mutation {

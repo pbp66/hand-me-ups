@@ -175,7 +175,13 @@ export const ADD_TAG = gql`
 	}
 `;
 
-// TODO REMOVE_TAG
+export const REMOVE_TAG = gql`
+	mutation REMOVE_TAG($tagId: ID!)` {
+		removeTag(tagId: $tagId) {
+			_id
+			tag
+		}
+	}
 
 // TODO ADD_CATEGORY
 

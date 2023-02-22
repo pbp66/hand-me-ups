@@ -1,9 +1,11 @@
+import mongoose from "mongoose";
+import RandomGenerator from "random-seed-generator";
 import db from "../config/connection";
 import { Category, Listing, Tag, User } from "../models";
 import userSeeds from "./userSeeds.json" assert { type: "json" };
-import mongoose from "mongoose";
-import RandomGenerator from "random-seed-generator";
-const Schema = mongoose.Schema;
+import categorySeeds from "./categories.json" assert { type: "json" };
+import tagSeeds from "./tags.json" assert { type: "json" };
+import listingSeeds from "./listings.json" assert { type: "json" };
 
 const mockIt = (modifier = Math.random()) => {
 	let mock = RandomGenerator.createWithSeeds("Mock" + modifier).hexString(24);

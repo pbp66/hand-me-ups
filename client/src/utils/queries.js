@@ -128,6 +128,8 @@ export const QUERY_USER_LISTINGS = gql`
 			image
 			seller {
 				_id
+				username
+				email
 			}
 			listing_date
 			edit_status
@@ -144,18 +146,22 @@ export const QUERY_MY_LISTINGS = gql`
 			description
 			price
 			category {
+				_id
 				category
 			}
 			tags {
-				tag
-			}
-			seller {
 				_id
+				tag
 			}
 			size
 			color
 			condition
 			image
+			seller {
+				_id
+				username
+				email
+			}
 			listing_date
 			edit_status
 			edit_dates
@@ -175,7 +181,36 @@ export const QUERY_FAVORITE_LISTINGS = gql`
 	}
 `;
 
-// TODO SEARCH_LISTINGS
+export const QUERY_SEARCH_LISTINGS = gql`
+	query SEARCH_LISTINGS($searchString: String!) {
+		searchListing(searchString: $searchString) {
+			_id
+			title
+			description
+			price
+			category {
+				_id
+				category
+			}
+			tags {
+				_id
+				tag
+			}
+			size
+			color
+			condition
+			image
+			seller {
+				_id
+				username
+				email
+			}
+			listing_date
+			edit_status
+			edit_dates
+		}
+	}
+`;
 
 export const QUERY_ALL_ORDERS = gql`
 	query QUERY_ALL_ORDERS {

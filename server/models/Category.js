@@ -4,7 +4,7 @@ const model = mongoose.model;
 
 const categorySchema = new Schema(
 	{
-		description: {
+		category: {
 			type: String,
 			minLength: 1,
 			trim: true,

@@ -25,9 +25,9 @@ db.once("open", async () => {
 		await Tag.deleteMany();
 
 		const categories = await Category.insertMany([
-			{ description: "Shirt" },
-			{ description: "Hat" },
-			{ description: "JNCOS" },
+			{ category: "Shirt" },
+			{ category: "Hat" },
+			{ category: "JNCOS" },
 		]);
 		const tags = await Tag.insertMany([
 			{ tag: "testTag1" },

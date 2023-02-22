@@ -47,7 +47,7 @@ export const QUERY_LISTINGS = gql`
 			price
 			category {
 				_id
-				description
+				category
 			}
 			tags {
 				_id

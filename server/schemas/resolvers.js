@@ -51,7 +51,9 @@ const resolvers = {
 			return listings;
 		},
 		oneListing: async (parent, { listingId }, context, info) => {
-			return await Listing.findById(listingId);
+			return await Listing.findById(listingId)
+				.populate("category")
+				.populate("tags");
 		},
 		userListings: async (parent, { userId }, context, info) => {
 			const user = await User.findById(userId)
@@ -69,9 +71,9 @@ const resolvers = {
 		},
 		myListings: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"listings"
-				);
+				const user = await User.findById(context.user._id)
+					.populate("category")
+					.populate("tags");
 				const updatedListings = [];
 				for (const listing of user.listings) {
 					if (listing.category) {

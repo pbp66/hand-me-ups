@@ -70,7 +70,7 @@ const typeDefs = `
 
 	type Category {
 		_id: ID!
-		description: String!
+		category: String!
 	}
 
 	type Order { # TODO: Ensure listings is the default item to save/link. Otherwise, Id can be used. 

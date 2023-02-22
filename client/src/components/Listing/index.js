@@ -1,11 +1,11 @@
-import { Card, Button, Container, Row, Col, Modal } from 'react-bootstrap'
+import { Card, Button, Container, Row, Col } from 'react-bootstrap'
 import { useMutation } from "@apollo/client"
 import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
 
-import { REMOVE_LISTING, ADD_TO_CART, REMOVE_FROM_CART, FAVORITE_LISTING } from '../../utils/mutations'
-import { QUERY_USER_LISTINGS } from '../../utils/queries'
+import { REMOVE_LISTING, ADD_TO_CART, FAVORITE_LISTING } from '../../utils/mutations'
+import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/queries'
 
 
 
@@ -14,8 +14,8 @@ const Listing = (props) => {
     const [favorite, setFavorite] = useState(false)
     const [inCart, setInCart] = useState(false)
     const [show, setShow] = useState(false)
-    const handleClose = () => setShow(false)
-    const handleShow = () => setShow(true)
+    // const handleClose = () => setShow(false)
+    // const handleShow = () => setShow(true)
 
     const {
         _id,
@@ -23,37 +23,43 @@ const Listing = (props) => {
         image,
         description,
         price,
-        size,
-        color,
+        // size,
+        // color,
         condition,
-        tags,
-        listing_date,
-        category,
+        // tags,
+        // listing_date,
+        // category,
         seller
     } = props.listing
 
     const [addToCart] = useMutation(ADD_TO_CART, {
         variables: {
-            cartId: Auth.getProfile().data?._id,
             listingId: _id,
-        }
+        },
+        refetchQueries: [
+            {query: QUERY_MY_CART},
+            "QUERY_MY_CART"
+        ],
     }
     );
 
-    const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
-        variables: {
-            cartId: Auth.getProfile().data?._id,
-            listingId: _id,
-        }
-    })
+    // const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
+    //     variables: {
+    //   
+    //         listingId: _id,
+    //     }
+    // })
  
-    const [removeListing, { error: removeError }] = useMutation(REMOVE_LISTING, {
+    //move this to my Listings since we wont show the users listings on discover page
+    const [removeListing] = useMutation(REMOVE_LISTING, {
         variables: {
             listingId: _id,
         },
         refetchQueries: [
             {query: QUERY_MY_LISTINGS},
-            "QUERY_MY_LISTINGS"
+            "QUERY_MY_LISTINGS",
+            {query: QUERY_LISTINGS},
+            "QUERY_LISTINGS"
         ],
     });
 
@@ -63,15 +69,6 @@ const Listing = (props) => {
         }
     })
 
-
-
-
-
-
-    const removeItem = () => {
-
-        console.log("Deleted")
-    }
     const toggleFavorite =() => {
         //change favorite button style to show added to favorites
         setFavorite(!favorite)
@@ -82,12 +79,16 @@ const Listing = (props) => {
     }
 
     const toggleInCart = () => {
+            addToCart()
+        
 
+        //if already in cart
+        //removeFromCart()
 
     }
 
 
-
+    console.log(`Token for graphql header ${Auth.getToken()}`)
     return (
         <>
             <Link

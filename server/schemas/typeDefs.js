@@ -134,6 +134,10 @@ const typeDefs = `
 		user: User!
 		items: [Listing]
 	}
+	
+	type Checkout {
+		session: ID
+	  }
 
 	input cartInput { # Identical to Listing, but input types require scalars or other inputs...
 		title: String
@@ -165,6 +169,7 @@ const typeDefs = `
 		myPaymentMethods: [Payment]
 		myAddresses: [Address]
 		myCart: Cart
+		checkout(listing: [ID]!): Checkout
   	}
 
   	type Mutation {

@@ -102,27 +102,37 @@ export const REMOVE_LISTING = gql`
 // 		}
 // 	}`;
 
-// TODO UNFAVORITE_LISTING
 export const UNFAVORITE_LISTING = gql`
 	mutation UNFAVORITE_LISTING($listingId: ID!) {
 		unFavoriteListing(listing: $listingId) {
-		_id
-		title
-		description
-		price
-		category
-		tags
-		size
-		color
-		condition
-		image
-		listing_date
+			_id
 		}
-	}`
-	
-		removeOrder(orderId: ID!): Order
-		updateOrder(orderId: ID!, order: orderInput): Order
-		removeCart: Cart
+	}
+`;
+
+// TODO REMOVE_ORDER
+// export const REMOVE_ORDER = gql`
+// 	mutation REMOVE_ORDER() {
+// 		removeOrder() {
+
+// 		}
+// 	}`;
+
+// TODO UPDATE_ORDER
+// export const UPDATE_ORDER = gql`
+// 	mutation UPDATE_ORDER() {
+// 		updateOrder() {
+
+// 		}
+// 	}`;
+
+// TODO REMOVE_CART
+// export const REMOVE_CART = gql`
+// 	mutation REMOVE_CART() {
+// 		removeCart() {
+
+// 		}
+// 	}`;
 
 export const ADD_TO_CART = gql`
 	mutation ADD_TO_CART($listingId: ID!) {

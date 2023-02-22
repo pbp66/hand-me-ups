@@ -199,8 +199,20 @@ export const REMOVE_FROM_CART = gql`
 // 	}`;
 
 // TODO UPDATE_DEFAULT_PAYMENT
+// export const UPDATE_DEFAULT_PAYMENT = gql`
+// 	mutation UPDATE_DEFAULT_PAYMENT() {
+// 		updateDefaultPaymentMethod() {
+
+// 		}
+// 	}`;
 
 // TODO UPDATE_DEFAULT_ADDRESS
+// export const UPDATE_DEFAULT_ADDRESS = gql`
+// 	mutation UPDATE_DEFAULT_ADDRESS() {
+// 		updateDefaultAddress() {
+
+// 		}
+// 	}`;
 
 export const ADD_TAG = gql`
 	mutation ADD_TAG($tag: String) {

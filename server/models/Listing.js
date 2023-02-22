@@ -75,6 +75,11 @@ const listingSchema = new Schema(
 			type: String,
 			trim: true,
 		},
+		purchased_status: {
+			type: Boolean,
+			required: true,
+			default: false,
+		},
 	},
 	{
 		toJSON: {

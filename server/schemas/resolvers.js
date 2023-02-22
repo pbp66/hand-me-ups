@@ -29,6 +29,9 @@ const resolvers = {
 		oneUser: async (parent, { userId }, context, info) => {
 			return await User.findById(userId);
 		},
+		findUserByUsername: async (parent, { username }, context, info) => {
+			return await User.findOne({ username: username });
+		},
 		// By adding context to our query, we can retrieve the logged in user without specifically searching for them
 		me: async (parent, args, context, info) => {
 			if (context.user) {
@@ -45,7 +48,9 @@ const resolvers = {
 			throwUnauthenticatedError();
 		},
 		allListings: async (parent, args, context, info) => {
-			const listings = await Listing.find()
+			const listings = await Listing.find({
+				purchased_status: { $not: { $eq: true } }, // If a listing is purchased, we don't want to list it
+			})
 				.populate("category")
 				.populate("tags");
 			return listings;

@@ -80,12 +80,12 @@ export const REMOVE_LISTING = gql`
 `;
 
 // TODO ADD_ORDER
-// export const ADD_ORDER = gql`
-// 	mutation ADD_ORDER() {
-// 		addOrder() {
+export const ADD_ORDER = gql`
+	mutation ADD_ORDER() {
+		addOrder() {
 
-// 		}
-// 	}`;
+		}
+	}`;
 
 // TODO UPDATE_ME
 // export const UPDATE_ME = gql`

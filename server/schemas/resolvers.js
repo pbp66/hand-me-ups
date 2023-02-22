@@ -39,9 +39,9 @@ const resolvers = {
 		allListings: async (parent, args, context, info) => {
 			return Listing.find();
 		},
-		oneListing: async (parent, {listingId}, context, info) => {
-			console.log(listingId)
-			return Listing.findById(listingId)
+		oneListing: async (parent, { listingId }, context, info) => {
+			console.log(listingId);
+			return Listing.findById(listingId);
 		},
 		userListings: async (parent, { userId }, context, info) => {
 			const user = await User.findById(userId).populate("listings");
@@ -60,17 +60,19 @@ const resolvers = {
 				const user = await User.findById(context.user._id).populate(
 					"listings"
 				);
-				const updatedListings = []
+				const updatedListings = [];
 				for (const listing of user.listings) {
 					if (listing.category) {
-						const category = await Category.findById(listing.category)
+						const category = await Category.findById(
+							listing.category
+						);
 						if (category) {
-							listing.category = category
+							listing.category = category;
 						}
 					}
-					updatedListings.push(listing)
+					updatedListings.push(listing);
 				}
-				
+
 				return updatedListings;
 			}
 			throwUnauthenticatedError();
@@ -183,7 +185,12 @@ const resolvers = {
 		//* Set up mutation so a logged in user can only remove their user and no one else's
 		removeUser: async (parent, args, context, info) => {
 			if (context.user) {
-				return User.findOneAndDelete({ _id: context.user._id });
+				Listing.deleteMany({ seller: context.user._id });
+				Order.deleteMany({ purchaser: context.user._id });
+				Payment.deleteMany({ user: context.user._id });
+				Address.deleteMany({ user: context.user._id });
+				Cart.deleteMany({ user: context.user._id });
+				return await User.findByIdAndDelete(context.user._id);
 			}
 			throwUnauthenticatedError();
 		},
@@ -240,7 +247,7 @@ const resolvers = {
 			newListing["image"] = image;
 			newListing["category"] = await Category.findById(category);
 
-			console.log(context)
+			console.log(context);
 
 			if (size) {
 				newListing["size"] = size;
@@ -280,10 +287,12 @@ const resolvers = {
 				...newListing,
 			});
 
-			await User.findByIdAndUpdate(context.user._id, {$push: {listings: listing._id}})
+			await User.findByIdAndUpdate(context.user._id, {
+				$push: { listings: listing._id },
+			});
 			//todo: add _id to listing._id, push in listing array
 
-			return listing
+			return listing;
 		},
 		removeListing: async (
 			parent,
@@ -357,21 +366,16 @@ const resolvers = {
 		},
 
 		// Carts are created when User is created. cart_id = user_id
-		addToCart: async (
-			parent,
-			{listingId, ...args }, 
-			context,
-			info
-		) => {
+		addToCart: async (parent, { listingId, ...args }, context, info) => {
 			return Cart.findByIdAndUpdate(
 				context.user._id,
-				{ $push: { items: listingId}},
+				{ $push: { items: listingId } },
 				{ new: true, runValidators: true }
 			);
 		},
 		removeFromCart: async (
 			parent,
-			{listingId, ...args },
+			{ listingId, ...args },
 			context,
 			info
 		) => {

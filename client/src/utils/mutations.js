@@ -79,13 +79,24 @@ export const REMOVE_LISTING = gql`
 	}
 `;
 
-// TODO ADD_ORDER
 export const ADD_ORDER = gql`
-	mutation ADD_ORDER() {
-		addOrder() {
-
+	mutation ADD_ORDER($orderInput: orderInput!) {
+		addOrder(orderDetails: $orderInput) {
+			_id
+			date_purchased
+			purchased_listings
+			billing_address
+			shipping_address
+			purchaser
+			payment_method
+			subtotal
+			shipping_handling
+			pretax_total
+			estimated_tax
+			order_total
 		}
-	}`;
+	}
+`;
 
 // TODO UPDATE_ME
 // export const UPDATE_ME = gql`

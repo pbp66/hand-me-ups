@@ -136,13 +136,13 @@ const typeDefs = `
 	}
 
 	input cartInput { # Identical to Listing, but input types require scalars or other inputs...
-		title: String!
-		description: String!
-		price: Float!
+		title: String
+		description: String
+		price: Float
 		size: String
 		color: [String]
-		image: String! # Link to image in firebase?
-		seller-username: String!
+		image: String # Link to image in firebase?
+		seller-username: String
 	}
 
   	type Query {

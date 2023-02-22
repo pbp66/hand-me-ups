@@ -176,13 +176,22 @@ export const ADD_TAG = gql`
 `;
 
 export const REMOVE_TAG = gql`
-	mutation REMOVE_TAG($tagId: ID!)` {
+	mutation REMOVE_TAG($tagId: ID!) {
 		removeTag(tagId: $tagId) {
 			_id
 			tag
 		}
 	}
+`;
 
-// TODO ADD_CATEGORY
+export const ADD_CATEGORY = gql`
+	mutation ADD_CATEGORY($category: String!) {
+		addCategory(category: $category)
+	}
+`;
 
-// TODO REMOVE_CATEGORY
+export const REMOVE_CATEGORY = gql`
+	mutation REMOVE_CATEGORY($categoryId: ID!) {
+		removeCategory(categoryId: $categoryId)
+	}
+`;

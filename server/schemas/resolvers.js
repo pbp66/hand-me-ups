@@ -126,7 +126,7 @@ const resolvers = {
 				searchConditions.push({ category: { $in: matchedCategories } });
 				terms.forEach((term, index, array) => {
 					//* Remove matched categories from the terms array to eliminate repeat DB searches
-					if (matchedCategories.match(term)) {
+					if (matchedCategories.includes(term)) {
 						array.splice(index, 1);
 					}
 				});
@@ -140,7 +140,7 @@ const resolvers = {
 				searchConditions.push({ tags: { tag: { $in: matchedTags } } });
 				terms.forEach((term, index, array) => {
 					//* Remove matched tags from the terms array to eliminate repeat DB searches
-					if (matchedTags.match(term)) {
+					if (matchedTags.includes(term)) {
 						array.splice(index, 1);
 					}
 				});

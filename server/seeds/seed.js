@@ -19,6 +19,26 @@ const mockObjectId = (str, options) => {
 };
 //console.log(mockObjectId("a string", {}));
 
+function randomInteger(max) {
+	return Math.floor(Math.random() * max);
+}
+
+function randomTagIds(tagsArray) {
+	const max = randomInteger(tagsArray.length);
+	const usedIndexes = [];
+	const tagIds = [];
+	for (let i = 0; i < max; i++) {
+		let randomIndex = randomInteger(max);
+		if (!usedIndexes.includes(randomIndex)) {
+			tagIds.push(tagsArray[randomIndex]._id);
+			usedIndexes.push(randomIndex);
+		} else {
+			continue;
+		}
+	}
+	return tagIds;
+}
+
 db.once("open", async () => {
 	try {
 		await User.deleteMany();
@@ -37,36 +57,48 @@ db.once("open", async () => {
 		// ]);
 
 		await Category.create(categorySeeds);
-		await tags.create(tagSeeds);
+		await Tag.create(tagSeeds);
 
-		await Listing.insertMany([
-			{
-				title: "JNCOS",
-				description: `${mockObjectId("id")}`,
-				price: 120,
-				category: categories[0]._id,
-				tags: [tags[0]._id, tags[1]._id],
-				size: "XXL",
-				color: ["red"],
-				condition: "NEW",
-				image: "https://via.placeholder.com/1000",
-				listing_date: "listed today",
-				seller: mockObjectId("seller"),
-			},
-			{
-				title: "JNCOS2",
-				description: `${mockObjectId("id2")}`,
-				price: 120,
-				category: categories[0]._id,
-				tags: [tags[0]._id, tags[1]._id],
-				size: "XXXL",
-				color: ["red", "green", "blue"],
-				condition: "NEW",
-				image: "https://via.placeholder.com/1000",
-				listing_date: "listed today",
-				seller: mockObjectId("seller"),
-			},
-		]);
+		// await Listing.insertMany([
+		// 	{
+		// 		title: "JNCOS",
+		// 		description: `${mockObjectId("id")}`,
+		// 		price: 120,
+		// 		category: categories[0]._id,
+		// 		tags: [tags[0]._id, tags[1]._id],
+		// 		size: "XXL",
+		// 		color: ["red"],
+		// 		condition: "NEW",
+		// 		image: "https://via.placeholder.com/1000",
+		// 		listing_date: "listed today",
+		// 		seller: mockObjectId("seller"),
+		// 	},
+		// 	{
+		// 		title: "JNCOS2",
+		// 		description: `${mockObjectId("id2")}`,
+		// 		price: 120,
+		// 		category: categories[0]._id,
+		// 		tags: [tags[0]._id, tags[1]._id],
+		// 		size: "XXXL",
+		// 		color: ["red", "green", "blue"],
+		// 		condition: "NEW",
+		// 		image: "https://via.placeholder.com/1000",
+		// 		listing_date: "listed today",
+		// 		seller: mockObjectId("seller"),
+		// 	},
+		// ]);
+
+		const allCategories = await Category.find();
+		const allTags = await Tag.find();
+
+		for (let i = 0; i < listingSeeds.length; i++) {
+			listingSeeds[i]["category"] =
+				allCategories[randomInteger(allCategories.length)]._id;
+			listingSeeds[i]["tags"] = randomTagIds(allTags);
+			listingSeeds[i]["listing_date"] = Date();
+			listingSeeds[i]["seller"] = mockObjectId("seller");
+		}
+
 		let allListings = await Listing.find();
 		allListings = allListings.map((listing) => listing._id);
 
@@ -75,7 +107,7 @@ db.once("open", async () => {
 			email: "test@test.com",
 			username: "test",
 			password: "password",
-			listings: allListings,
+			//listings: allListings,
 		});
 
 		const user = await User.findOne({ username: "test" });

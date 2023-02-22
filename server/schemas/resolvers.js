@@ -112,7 +112,8 @@ const resolvers = {
 			context,
 			info
 		) => {
-			//! Search listing titles and descriptions. May need aggregate: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
+			//! Search listing titles and descriptions. Considered aggregate...: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
+			//! But used $text: $search instead: https://stackoverflow.com/questions/28775051/best-way-to-perform-a-full-text-search-in-mongodb-and-mongoose
 
 			let terms = searchString.split(" "); //! Assumes that all tags, categories, titles, and descriptions are single words only.
 			const searchConditions = []; //! Array for holding each search clause using $or

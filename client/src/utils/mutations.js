@@ -138,7 +138,6 @@ export const UNFAVORITE_LISTING = gql`
 // 		}
 // 	}`;
 
-// TODO REMOVE_CART
 export const REMOVE_CART = gql`
 	mutation REMOVE_CART {
 		removeCart {

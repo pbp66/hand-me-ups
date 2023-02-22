@@ -146,18 +146,14 @@ const resolvers = {
 		},
 		myPaymentMethods: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"user"
-				);
+				const user = await User.findById(context.user._id);
 				return user.payment_methods;
 			}
 			throwUnauthenticatedError();
 		},
 		myAddresses: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"user"
-				);
+				const user = await User.findById(context.user._id);
 				return user.addresses;
 			}
 			throwUnauthenticatedError();

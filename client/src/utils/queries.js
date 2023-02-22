@@ -235,7 +235,17 @@ export const QUERY_ALL_CATEGORIES = gql`
 	}
 `;
 
-// TODO MY_PAYMENT_METHODS
+export const QUERY_MY_PAYMENT_METHODS = gql`
+	query MY_PAYMENT_METHODS {
+		myPaymentMethods {
+			_id
+			card_number
+			card_brand
+			expiration_date
+			security_code
+		}
+	}
+`;
 
 export const QUERY_MY_ADDRESSES = gql`
 	query MY_ADDRESSES {

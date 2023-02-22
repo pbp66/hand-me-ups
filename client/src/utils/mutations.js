@@ -149,3 +149,34 @@ export const REMOVE_FROM_CART = gql`
 		}
 	}
 `;
+
+// TODO ADD_ADDRESS
+
+// TODO REMOVE_ADDRESS
+
+// TODO UPDATE_ADDRESS
+
+// TODO ADD_PAYMENT_METHOD
+
+// TODO REMOVE_PAYMENT_METHOD
+
+// TODO UPDATE_PAYMENT_METHOD
+
+// TODO UPDATE_DEFAULT_PAYMENT
+
+// TODO UPDATE_DEFAULT_ADDRESS
+
+export const ADD_TAG = gql`
+	mutation ADD_TAG($tag: String) {
+		addTag(tag: $tag) {
+			_id
+			tag
+		}
+	}
+`;
+
+// TODO REMOVE_TAG
+
+// TODO ADD_CATEGORY
+
+// TODO REMOVE_CATEGORY

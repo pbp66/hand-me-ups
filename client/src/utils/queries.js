@@ -185,9 +185,43 @@ export const QUERY_ALL_ORDERS = gql`
 	}
 `;
 
-// TODO GET_ORDER
+export const QUERY_GET_ONE_ORDER = gql`
+	query QUERY_GET_ONE_ORDER {
+		getOrder {
+			_id
+			date_purchased
+			purchased_listings
+			billing_address
+			shipping_address
+			purchaser
+			payment_method
+			subtotal
+			shipping_handling
+			pretax_total
+			estimated_tax
+			order_total
+		}
+	}
+`;
 
-// TODO MY_ORDER
+export const QUERY_MY_ORDER = gql`
+	query QUERY_Y_ORDER {
+		myOrder {
+			_id
+			date_purchased
+			purchased_listings
+			billing_address
+			shipping_address
+			purchaser
+			payment_method
+			subtotal
+			shipping_handling
+			pretax_total
+			estimated_tax
+			order_total
+		}
+	}
+`;
 
 // TODO ALL_TAGS
 

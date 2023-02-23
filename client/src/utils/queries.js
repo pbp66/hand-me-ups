@@ -174,7 +174,7 @@ export const QUERY_FAVORITE_LISTINGS = gql`
 		favoriteListings {
 			_id
 			title
-			descriptions
+			description
 			price
 			image
 		}

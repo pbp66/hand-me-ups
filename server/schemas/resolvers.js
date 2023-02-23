@@ -94,9 +94,9 @@ const resolvers = {
 		favoriteListings: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findById(context.user._id).populate(
-					"saved_items"
+					"favorites"
 				);
-				return user.saved_items;
+				return user.favorites;
 			}
 			throwUnauthenticatedError();
 		},

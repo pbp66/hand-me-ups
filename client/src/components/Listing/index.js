@@ -1,6 +1,6 @@
 import { Card, Button, Container, Row, Col } from 'react-bootstrap'
 import { useMutation, useQuery } from "@apollo/client"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
 import { useStoreContext } from '../../ctx/storeContext'
@@ -11,14 +11,11 @@ import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/qu
 
 
 
-const Listing = (props) => {
-    const [state, dispatch] = useStoreContext()
-    const [favorite, setFavorite] = useState(false)
-    const [inCart, setInCart] = useState(false)
-    const [show, setShow] = useState(false)
-    // const handleClose = () => setShow(false)
-    // const handleShow = () => setShow(true)
 
+const Listing = (props) => {
+    console.log(useParams())
+    const [show, setShow] = useState(true)
+    const [toggle, setToggle] = useState(true)
     const {
         _id,
         title,
@@ -34,16 +31,30 @@ const Listing = (props) => {
         seller
     } = props.listing
     const { data: cartData, loading, error } = useQuery(QUERY_MY_CART);
+    const [removeFromCart] = useMutation(REMOVE_FROM_CART)
     const [addToCart, { data }] = useMutation(ADD_TO_CART);
     const [favoriteListing] = useMutation(FAVORITE_LISTING)
 
-
+    console.log(cartData)
     const handleAddToCart = async (id) => {
         console.log(cartData?.myCart.items)
-        console.log(_id)
+        setToggle(!toggle)
         await addToCart({
             variables: {
                 listingId: _id,
+            },
+            refetchQueries: [
+                { query: QUERY_MY_CART },
+                "QUERY_MY_CART"
+            ],
+        })
+    }
+
+    const handleRemoveFromCart = async (id) => {
+        setToggle(!toggle)
+        await removeFromCart({
+            variables: {
+                listingId: id
             },
             refetchQueries: [
                 { query: QUERY_MY_CART },
@@ -65,8 +76,8 @@ const Listing = (props) => {
             <Link
                 to={`/listings/${_id}`}>
                 <Card
-                    onMouseEnter={() => setShow(true)}
-                    onMouseLeave={() => setShow(false)}
+                // onMouseEnter={() => setShow(true)}
+                // onMouseLeave={() => setShow(false)}
                 >
                     {show ?
                         <Card.Body>
@@ -89,14 +100,19 @@ const Listing = (props) => {
                         <Row>
                             <Col>
                                 {
-                                    <>
+                                    <> {cartData?.myCart.items.some((listing) => listing._id === _id)
+                                        ?
                                         <Button
-                                            disabled={cartData?.myCart.items.some((listing) => listing._id === _id)}
-                                            onClick={() => { handleAddToCart(_id) }}>
-                                            {cartData?.myCart.items.some((listing) => listing._id === _id)
-                                                ? 'Added to Cart!'
-                                                : 'Add to Cart!'}
+                                            onClick={() => { handleRemoveFromCart(_id)}}>
+                                            Remove from Cart
                                         </Button>
+                                        :
+                                        <Button
+                                            onClick={() => { handleAddToCart(_id)}}>
+                                            Add to Cart
+                                        </Button>
+                                    }
+
                                     </>
                                 }
                             </Col>

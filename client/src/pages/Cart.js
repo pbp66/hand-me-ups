@@ -15,12 +15,7 @@ import Auth from '../utils/auth';
 
 const Cart = () => {
     // const [cart, setCart] = useState([])
-    const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
-        refetchQueries: [
-            {query: QUERY_MY_CART},
-            "QUERY_MY_CART"
-        ],
-    })
+    
     const { data: cartData, loading, error } = useQuery(QUERY_MY_CART);
    
     
@@ -41,14 +36,6 @@ const Cart = () => {
 
 
 
-    const handleRemoveFromCart = async (id) => {
-        await removeFromCart({
-            variables: {
-                listingId: id
-            }
-        })
-        // setCart(myCart)
-    }
 
     return (<>
         <h1>My Cart</h1>
@@ -62,10 +49,7 @@ const Cart = () => {
                     >
                     </Listing>
                     <>
-                        <Button
-                            onClick={() => { handleRemoveFromCart(listing._id) }}>
-                            Remove from Cart
-                        </Button>
+                        
                     </>
                 </>)
             })}

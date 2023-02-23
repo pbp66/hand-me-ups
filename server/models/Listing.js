@@ -89,5 +89,8 @@ const listingSchema = new Schema(
 	}
 );
 
+//! NOTE: Adds significant overhead to DB as each additional listing increases the storage requirement to be able to properly search each word of any contained string within the Listing Schema
+listingSchema.index({ "$**": "text" }); //* Enables the $text search feature for ALL strings fields on this schema
+
 const Listing = model("Listing", listingSchema);
 export default Listing;

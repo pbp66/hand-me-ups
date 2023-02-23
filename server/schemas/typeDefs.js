@@ -134,6 +134,10 @@ const typeDefs = `
 		user: User!
 		items: [Listing]
 	}
+	
+	type Checkout {
+		session: ID
+	  }
 
 	input cartInput { # Identical to Listing, but input types require scalars or other inputs...
 		title: String
@@ -156,7 +160,7 @@ const typeDefs = `
 		userListings(userId: ID!): [Listing]
 		myListings: [Listing]
 		favoriteListings: [Listing]
-		searchListings(searchTerms: [String]!, tags: [ID!]): [Listing]
+		searchListings(searchString: String!): [Listing]
 		allOrders: [Order]
 		getOrder(orderId: ID!): Order
 		myOrders: [Order]
@@ -165,6 +169,7 @@ const typeDefs = `
 		myPaymentMethods: [Payment]
 		myAddresses: [Address]
 		myCart: Cart
+		checkout(listing: [ID]!): Checkout
   	}
 
   	type Mutation {

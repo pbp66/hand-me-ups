@@ -12,11 +12,11 @@ html {
 	-webkit-text-size-adjust: 100%;
 	/* 2 */
 }
-.card-img-top {
+/* .card-img-top {
     width: 25%;
     height: 25%;
     object-fit: cover;
-}
+} */
 
 input::file-selector-button {
 	
@@ -1031,7 +1031,9 @@ a:hover {
 	background-color: #2d3e50;
 	color: #d9e9e8;
 	margin: 30px;
-	position: sticky;
+	position: absolute;
+    right: 100px;
+    top: 85px;
 }
 
 .btn.btn-primary:hover {
@@ -1104,7 +1106,7 @@ a:hover {
 
 .card {
 	border: 1px solid #1a1a1a;
-	margin-top: 50px;
+	margin-top: 85px;
 }
 
 .card .card-header {

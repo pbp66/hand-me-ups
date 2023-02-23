@@ -1,6 +1,6 @@
 import { Card, Button, Container, Row, Col } from 'react-bootstrap'
-import { useMutation } from "@apollo/client"
-import { Link } from "react-router-dom"
+import { useMutation, useQuery } from "@apollo/client"
+import { Link, useParams } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
 // import {REMOVE_FROM_CART,ADD_TO_CART, UPDATE_LISTINGS} from '../../ctx/actions'
@@ -8,85 +8,69 @@ import { REMOVE_LISTING, ADD_TO_CART, FAVORITE_LISTING, REMOVE_FROM_CART } from 
 import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/queries'
 
 
-
-
 const Listing = (props) => {
-    const [favorite, setFavorite] = useState(false)
-    const [inCart, setInCart] = useState(false)
+
     const [show, setShow] = useState(true)
     // const handleClose = () => setShow(false)
     // const handleShow = () => setShow(true)
-
     const {
         _id,
         title,
         image,
         description,
         price,
-        // size,
-        // color,
+        size,
+        color,
         condition,
-        // tags,
-        // listing_date,
-        // category,
+        tags,
+        listing_date,
+        category,
         seller
     } = props.listing
+    const { data: cartData, loading, error } = useQuery(QUERY_MY_CART);
+    const [removeFromCart] = useMutation(REMOVE_FROM_CART)
+    const [addToCart, { data }] = useMutation(ADD_TO_CART);
+    const [favoriteListing] = useMutation(FAVORITE_LISTING)
 
-    const [addToCart, { data }] = useMutation(ADD_TO_CART, {
-        variables: {
-            listingId: _id,
-        },
-        refetchQueries: [
-            { query: QUERY_MY_CART },
-            "QUERY_MY_CART"
-        ],
-    }
-    );
-console.log(data)
-    const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
-        variables: {
-            listingId: _id,
-        }
-    })
-
-    //move this to my Listings since we wont show the users listings on discover page
-    const [removeListing] = useMutation(REMOVE_LISTING, {
-        variables: {
-            listingId: _id,
-        },
-        refetchQueries: [
-            { query: QUERY_MY_LISTINGS },
-            "QUERY_MY_LISTINGS",
-            { query: QUERY_LISTINGS },
-            "QUERY_LISTINGS"
-        ],
-    });
-
-    const [favoriteListing] = useMutation(FAVORITE_LISTING, {
-        variables: {
-            listingId: _id
-        }
-    })
-
-    const toggleFavorite = () => {
-        //change favorite button style to show added to favorites
-        setFavorite(!favorite)
-        favoriteListing()
+    console.log(cartData)
+    const handleAddToCart = async (id) => {
+        await addToCart({
+            variables: {
+                listingId: _id,
+            },
+            refetchQueries: [
+                { query: QUERY_MY_CART },
+                "QUERY_MY_CART"
+            ],
+        })
     }
 
-    const toggleInCart = () => {
-        setInCart(!inCart)
-        console.log(inCart)
+    const handleRemoveFromCart = async (id) => {
+        await removeFromCart({
+            variables: {
+                listingId: id
+            },
+            refetchQueries: [
+                { query: QUERY_MY_CART },
+                "QUERY_MY_CART"
+            ],
+        })
     }
 
-
-
+    const handleFavoriteListing = async (id) => {
+        await favoriteListing({
+            variables: {
+                listingId: _id
+            }
+        })
+    }
     // console.log(`Token for graphql header ${Auth.getToken()}`)
     return (
         <>
             <Link
                 to={`/listings/${_id}`}>
                 <Card
+
                     // onMouseEnter={() => setShow(true)}
                     // onMouseLeave={() => setShow(false)}
                 >
@@ -110,26 +94,28 @@ console.log(data)
                     <Container>
                         <Row>
                             <Col>
-                                {!inCart ?
-                                    <>
+                                {
+                                    <> {cartData?.myCart.items.some((listing) => listing._id === _id)
+                                        ?
                                         <Button
-                                            onClick={() => { toggleInCart(); addToCart(); }}>
+                                            onClick={() => { handleRemoveFromCart(_id) }}>
+                                            Remove from Cart
+                                        </Button>
+                                        :
+                                        <Button
+                                            onClick={() => { handleAddToCart(_id) }}>
                                             Add to Cart
                                         </Button>
-                                    </>
-                                    :
-                                    <>
-                                        <Button
-                                            onClick={() => { toggleInCart(); removeFromCart(); }}>
-                                            Remove From Cart
-                                        </Button>
+                                    }
                                     </>
                                 }
                             </Col>
                             <Col>
                                 <Button
-                                    onClick={toggleFavorite}>
-                                    Save!
+
+                                    onClick={() => { handleFavoriteListing(_id) }}>
+                                    Save to favorites
+
                                 </Button>
                             </Col>
                         </Row>

@@ -1031,6 +1031,7 @@ a:hover {
 	background-color: #2d3e50;
 	color: #d9e9e8;
 	margin: 30px;
+	position: sticky;
 }
 
 .btn.btn-primary:hover {
@@ -1103,7 +1104,7 @@ a:hover {
 
 .card {
 	border: 1px solid #1a1a1a;
-	margin-bottom: 1rem;
+	margin-top: 50px;
 }
 
 .card .card-header {
@@ -1462,6 +1463,7 @@ label form [type="radio"] {
 	.col-md-3 {
 		flex: 0 0 25%;
 		max-width: 25%;
+
 	}
 	.col-md-4 {
 		flex: 0 0 33.33333%;

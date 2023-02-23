@@ -55,7 +55,7 @@ const typeDefs = `
 		title: String!
 		description: String!
 		price: Float!
-		category: String! # Convert to category schema in resolver
+		category: String # Convert to category schema in resolver
 		tags: [String] # Convert to tag schema in resolver
 		size: String
 		color: [String]
@@ -64,13 +64,13 @@ const typeDefs = `
 	}
 
 	type Tag {
-		_id: ID!
-		tag: String!
+		_id: ID
+		tag: String
 	}
 
 	type Category {
-		_id: ID!
-		category: String!
+		_id: ID
+		category: String
 	}
 
 	type Order { # TODO: Ensure listings is the default item to save/link. Otherwise, Id can be used. 

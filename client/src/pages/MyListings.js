@@ -74,6 +74,7 @@ const MyListings = (props) => {
 					animation={false}
 					show={show}
 					onHide={handleClose}
+					onSubmit={handleClose}
 				>
 					<Modal.Header closeButton>
 						<Modal.Title>Add Listing</Modal.Title>

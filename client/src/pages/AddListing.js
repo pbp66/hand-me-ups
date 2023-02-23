@@ -8,9 +8,11 @@ import { isMobile } from "react-device-detect";
 import { ADD_LISTING } from "../utils/mutations";
 import { QUERY_ALL_CATEGORIES, QUERY_MY_LISTINGS } from "../utils/queries";
 import auth from "../utils/auth";
+import { useStoreContext } from "../ctx/storeContext";
 
 
 function AddListing() {
+	const[state, dispatch]=useStoreContext()
 	const {
 		data,
 		loading: categoriesLoading,
@@ -43,7 +45,7 @@ function AddListing() {
 			"QUERY_MY_LISTINGS"
 		],
 	});
-console.log(error)
+
 	const handleInputs = (e) => {
 		const { value, name } = e.target;
 		if (!value.length) {

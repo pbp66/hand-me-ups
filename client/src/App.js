@@ -7,6 +7,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { StoreProvider } from "./ctx/storeContext";
 
 import Discover from "./pages/Discover";
 import Favorites from "./pages/Favorites"
@@ -55,6 +56,7 @@ function App() {
 		<ApolloProvider client={client}>
 			<Router>
 				<div className="flex-column justify-flex-start min-100-vh">
+				<StoreProvider>
 						<Header />
 						<div className="container" style={myStyle}>
 							<Routes>
@@ -70,6 +72,7 @@ function App() {
 							</Routes>
 						</div>
 						<Footer />
+						</StoreProvider>
 				</div>
 			</Router>
 		</ApolloProvider>

@@ -3,7 +3,8 @@ import { useMutation } from "@apollo/client"
 import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
-
+import { useStoreContext } from '../../ctx/storeContext'
+// import {REMOVE_FROM_CART,ADD_TO_CART, UPDATE_LISTINGS} from '../../ctx/actions'
 import { REMOVE_LISTING, ADD_TO_CART, FAVORITE_LISTING, REMOVE_FROM_CART } from '../../utils/mutations'
 import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/queries'
 
@@ -11,6 +12,7 @@ import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/qu
 
 
 const Listing = (props) => {
+    const [state, dispatch] = useStoreContext()
     const [favorite, setFavorite] = useState(false)
     const [inCart, setInCart] = useState(false)
     const [show, setShow] = useState(false)
@@ -32,7 +34,7 @@ const Listing = (props) => {
         seller
     } = props.listing
 
-    const [addToCart] = useMutation(ADD_TO_CART, {
+    const [addToCart, { data }] = useMutation(ADD_TO_CART, {
         variables: {
             listingId: _id,
         },
@@ -42,10 +44,9 @@ const Listing = (props) => {
         ],
     }
     );
-
+console.log(data)
     const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
         variables: {
-      
             listingId: _id,
         }
     })
@@ -73,9 +74,6 @@ const Listing = (props) => {
         //change favorite button style to show added to favorites
         setFavorite(!favorite)
         favoriteListing()
-        if (favorite) {
-            console.log('added to cart')
-        }
     }
 
     const toggleInCart = () => {
@@ -85,7 +83,7 @@ const Listing = (props) => {
 
 
 
-    console.log(`Token for graphql header ${Auth.getToken()}`)
+    // console.log(`Token for graphql header ${Auth.getToken()}`)
     return (
         <>
             <Link
@@ -120,16 +118,15 @@ const Listing = (props) => {
                                             onClick={() => { toggleInCart(); addToCart(); }}>
                                             Add to Cart
                                         </Button>
-                                    </> 
+                                    </>
                                     :
                                     <>
-                                    <Button
-                                        onClick={() => { toggleInCart(); removeFromCart(); }}>
-                                        Remove From Cart
-                                    </Button>
-                                </> 
-                        }
-
+                                        <Button
+                                            onClick={() => { toggleInCart(); removeFromCart(); }}>
+                                            Remove From Cart
+                                        </Button>
+                                    </>
+                                }
                             </Col>
                             <Col>
                                 <Button
@@ -142,17 +139,7 @@ const Listing = (props) => {
                     <br />
                 </>
                 :
-                <>
-                    <Container>
-                        <Row>
-                            <Col>
-                                <Button onClick={removeListing}>
-                                    Remove Listing
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Container>
-                </>
+                <></>
             }
         </>
     )

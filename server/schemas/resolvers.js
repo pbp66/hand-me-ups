@@ -325,14 +325,18 @@ const resolvers = {
 						});
 					});
 
-					listingTags = await tagsToCreate.map(
-						async (tagName) => await Tag.create({ tag: tagName })
-					);
+					for (let i = 0; i < tagsToCreate.length; i++) {
+						let response = await Tag.create({
+							tag: tagsToCreate[i],
+						});
+						listingTags.push(response);
+					}
 				} else {
 					listingTags = foundTags;
 				}
 			}
-			newListing["tags"] = await listingTags;
+
+			newListing["tags"] = listingTags;
 
 			const listing = await Listing.create({
 				...newListing,

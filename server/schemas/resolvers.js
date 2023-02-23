@@ -354,23 +354,25 @@ const resolvers = {
 			context,
 			info
 		) => {
-			const user = await User.findByIdAndUpdate(context.user._id, {
-				$pull: { listings: listingId },
-			}).populate("listings");
-
+			const user = await User.findById(context.user._id).populate(
+				"listings"
+			);
 			if (!user) {
-				throwUnauthenticatedError();
 			}
 
-			// Copy the listing Ids for comparison
+			// Verify the listingId is present in the user's listings
 			const listingIds = user.listings.map((listing) =>
 				listing._id.toString()
 			);
 			if (listingIds.includes(listingId)) {
-				return await Listing.findByIdAndDelete(listingId);
+				await Listing.findByIdAndDelete(listingId);
 			} else {
-				return {};
+				throwUnauthenticatedError();
 			}
+
+			return await User.findByIdAndUpdate(context.user._id, {
+				$pull: { listings: listingId },
+			}).populate("listings");
 		},
 		//* update listing
 

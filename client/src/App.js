@@ -9,7 +9,7 @@ import { setContext } from "@apollo/client/link/context";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Discover from "./pages/Discover";
-import SavedItems from "./pages/SavedItems"
+import Favorites from "./pages/Favorites"
 import MyListings from "./pages/MyListings"
 import Cart from "./pages/Cart"
 import Login from "./pages/Login";
@@ -59,7 +59,7 @@ function App() {
 						<div className="container" style={myStyle}>
 							<Routes>
 								<Route path="/" element={<Discover />} />
-								<Route path="/SavedItems" element={<SavedItems />} />
+								<Route path="/Favorites" element={<Favorites />} />
 								<Route path="/MyListings/:id" element={<MyListings />} />
 								<Route path="/Cart" element={<Cart />} />
 								<Route path="/Login" element={<Login />} />

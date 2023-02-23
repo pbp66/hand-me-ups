@@ -40,6 +40,7 @@ const typeDefs = `
 		listing_date: String! # Date represented as a string
 		edit_status: Boolean! # Default of false unless updated through saveListing mutation
 		edit_dates: [String] # Date represented as a string
+		purchase_status: Boolean!
 	}
 
 	enum Condition {
@@ -60,7 +61,6 @@ const typeDefs = `
 		color: [String]
 		condition: Condition!
 		image: String! # Link to image in firebase?
-
 	}
 
 	type Tag {
@@ -89,6 +89,7 @@ const typeDefs = `
 	}
 
 	input orderInput {
+		cart: [cartInput]
 		payment_method: paymentInput
 		billing_address: addressInput
 		shipping_address: addressInput
@@ -133,10 +134,25 @@ const typeDefs = `
 		user: User!
 		items: [Listing]
 	}
+	
+	type Checkout {
+		session: ID
+	  }
+
+	input cartInput { # Identical to Listing, but input types require scalars or other inputs...
+		title: String
+		description: String
+		price: Float
+		size: String
+		color: [String]
+		image: String # Link to image in firebase?
+		seller_username: String
+	}
 
   	type Query {
     	allUsers: [User]
     	oneUser(userId: ID!): User
+		findUserByUsername(username: String!): User
     	# Because we have the context functionality in place to check a JWT and decode its data, we can use a query that will always find and return the logged in user's data
     	me: User
 		allListings: [Listing]
@@ -144,7 +160,7 @@ const typeDefs = `
 		userListings(userId: ID!): [Listing]
 		myListings: [Listing]
 		favoriteListings: [Listing]
-		searchListings(searchTerms: [String]!, tags: [ID!]): [Listing]
+		searchListings(searchString: String!): [Listing]
 		allOrders: [Order]
 		getOrder(orderId: ID!): Order
 		myOrders: [Order]
@@ -153,6 +169,7 @@ const typeDefs = `
 		myPaymentMethods: [Payment]
 		myAddresses: [Address]
 		myCart: Cart
+		checkout(listing: [ID]!): Checkout
   	}
 
   	type Mutation {
@@ -160,18 +177,17 @@ const typeDefs = `
     	login(email: String!, password: String!): Auth
     	removeUser: User
 		addListing(listing: listingInput!): Listing
+		favoriteListing(listingId: ID!): [Listing]
 		removeListing(listingId: ID!): User
-		addOrder(cartId: ID!, orderDetails: orderInput!): Order
+		addOrder(orderDetails: orderInput!): Order
 		updateMe(userId: ID!, user: updateUserInput): User
 		saveListing(listingId: ID!, listing: listingInput): Listing
-		favoriteListing(listingId: ID!): [Listing]
 		unFavoriteListing(listing: ID!): [Listing]
 		removeOrder(orderId: ID!): Order
 		updateOrder(orderId: ID!, order: orderInput): Order
-		createCart: Cart
-		removeCart(cartId: ID!): Cart
-		addToCart(cartId: ID!, listingId: ID!): Cart
-		removeFromCart(cartId: ID!, listingId: ID!): Cart
+		removeCart: Cart
+		addToCart(listingId: ID!): Cart
+		removeFromCart(listingId: ID!): Cart
 		addAddress(address: addressInput!): [Address]
 		removeAddress(addressId: ID!): [Address]
 		updateAddress(addressId: ID!, address: addressInput): [Address]

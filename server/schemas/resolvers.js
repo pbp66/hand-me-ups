@@ -24,26 +24,47 @@ function throwUnauthenticatedError() {
 const resolvers = {
 	Query: {
 		allUsers: async (parent, args, context, info) => {
-			return User.find();
+			return await User.find();
 		},
 		oneUser: async (parent, { userId }, context, info) => {
-			return User.findById(userId);
+			return await User.findById(userId);
+		},
+		findUserByUsername: async (parent, { username }, context, info) => {
+			return await User.findOne({ username: username });
 		},
 		// By adding context to our query, we can retrieve the logged in user without specifically searching for them
 		me: async (parent, args, context, info) => {
 			if (context.user) {
-				return User.findById(context.user._id);
+				return await User.findById(context.user._id)
+					.populate("listings")
+					.populate("favorites")
+					.populate("orders")
+					.populate("payment_methods")
+					.populate("addresses")
+					.populate("default_address")
+					.populate("default_payment")
+					.populate("cart");
 			}
 			throwUnauthenticatedError();
 		},
 		allListings: async (parent, args, context, info) => {
-			return Listing.find();
+			const listings = await Listing.find({
+				purchased_status: { $not: { $eq: true } }, // If a listing is purchased, we don't want to list it
+			})
+				.populate("category")
+				.populate("tags");
+			console.log(await Listing.find());
+			return listings;
 		},
-		oneListing: async (parent, {listingId}, context, info) => {
-			return Listing.findById(listingId)
+		oneListing: async (parent, { listingId }, context, info) => {
+			return await Listing.findById(listingId)
+				.populate("category")
+				.populate("tags");
 		},
 		userListings: async (parent, { userId }, context, info) => {
-			const user = await User.findById(userId).populate("listings");
+			const user = await User.findById(userId)
+				.populate("category")
+				.populate("tags");
 			if (!user) {
 				throw new GraphQLError("User does not exist", {
 					extensions: {
@@ -56,20 +77,22 @@ const resolvers = {
 		},
 		myListings: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"listings"
-				);
-				const updatedListings = []
+				const user = await User.findById(context.user._id)
+					.populate("category")
+					.populate("tags");
+				const updatedListings = [];
 				for (const listing of user.listings) {
 					if (listing.category) {
-						const category = await Category.findById(listing.category)
+						const category = await Category.findById(
+							listing.category
+						);
 						if (category) {
-							listing.category = category
+							listing.category = category;
 						}
 					}
-					updatedListings.push(listing)
+					updatedListings.push(listing);
 				}
-				
+
 				return updatedListings;
 			}
 			throwUnauthenticatedError();
@@ -77,33 +100,138 @@ const resolvers = {
 		favoriteListings: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findById(context.user._id).populate(
-					"saved_items"
+					"favorites"
 				);
-				return user.saved_items;
+				return user.favorites;
 			}
 			throwUnauthenticatedError();
 		},
-		// searchListings: async (
-		// 	parent,
-		// 	{ searchTerms, tags, ...args },
-		// 	context,
-		// 	info
-		// ) => {
-		// TODO: Search listing titles and descriptions. May need aggregate: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
-		// TODO: Create list of matching categories and tags from the tags variable
-		// 	Listing.find({});
-		// },
+		//! Returns group of listings that contain any of the search terms in the title, description, tags, and or categories. AS A WARNING, I'm pretty sure this query is a steaming pile of bulls*** currently... I HAVE NOT THOROUGHLY TESTED IT. AT ALL. Sincerely, @pbp66
+		searchListings: async (
+			parent,
+			{ searchString, ...args },
+			context,
+			info
+		) => {
+			//! Search listing titles and descriptions. Considered aggregate...: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
+			//! But used $text: $search instead: https://stackoverflow.com/questions/28775051/best-way-to-perform-a-full-text-search-in-mongodb-and-mongoose
+
+			let terms = searchString.split(" "); //! Assumes that all tags, categories, titles, and descriptions are single words only.
+			const searchConditions = []; //! Array for holding each search clause using $or
+
+			const matchedCategories = Category.find({
+				category: { $in: terms }, // returns all matching category documents
+			});
+
+			if (matchedCategories.length > 0) {
+				searchConditions.push({ category: { $in: matchedCategories } });
+				terms.forEach((term, index, array) => {
+					//* Remove matched categories from the terms array to eliminate repeat DB searches
+					if (matchedCategories.includes(term)) {
+						array.splice(index, 1);
+					}
+				});
+			}
+
+			const matchedTags = Tag.find({
+				tag: { $in: terms }, // returns all matching tag documents
+			});
+
+			if (matchedTags.length > 0) {
+				searchConditions.push({ tags: { tag: { $in: matchedTags } } });
+				terms.forEach((term, index, array) => {
+					//* Remove matched tags from the terms array to eliminate repeat DB searches
+					if (matchedTags.includes(term)) {
+						array.splice(index, 1);
+					}
+				});
+			}
+
+			searchConditions.push({ size: { $in: searchString } });
+
+			const matchedConditions = terms.filter((term, index, array) => {
+				const matchBool = [
+					"NEW",
+					"USED_LIKE_NEW",
+					"USED_GOOD",
+					"USED_FAIR",
+					"USED_POOR",
+				].contains(term);
+
+				//* Remove any conditions from the array to eliminate repeat DB searches
+				if (matchBool) {
+					array.splice(index, 1);
+				}
+				return matchBool;
+			});
+
+			if (matchedConditions.length > 0) {
+				searchConditions.push({
+					condition: { $in: matchedConditions },
+				});
+			}
+
+			Listing.find({
+				$or: [
+					...searchConditions,
+					{ $text: { $search: { $in: terms } } }, //! I am not confident at all
+				],
+			})
+				.populate("category")
+				.populate("tags");
+			return;
+			/*
+			 * Return Object:
+			 * _id
+			 * title
+			 * description
+			 * price
+			 * category {
+			 * 	_id
+			 * 	category
+			 * }
+			 * tags {
+			 * 	_id
+			 * 	tag
+			 * }
+			 * size
+			 * color
+			 * condition
+			 * image
+			 * seller {
+			 * 	_id
+			 * 	username
+			 * 	email
+			 * }
+			 * listing_date
+			 * edit_status
+			 * edit_dates
+			 */
+		},
 		allOrders: async (parent, args, context, info) => {
-			return Order.find();
+			return Order.find()
+				.populate("purchased_listings")
+				.populate("billing_address")
+				.populate("shipping_address")
+				.populate("purchaser")
+				.populate("payment_method");
 		},
 		getOrder: async (parent, { orderId }, context, info) => {
-			return Order.findById(orderId);
+			return Order.findById(orderId)
+				.populate("purchased_listings")
+				.populate("billing_address")
+				.populate("shipping_address")
+				.populate("purchaser")
+				.populate("payment_method");
 		},
 		myOrders: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"order"
-				);
+				const user = await User.findById(context.user._id)
+					.populate("purchased_listings")
+					.populate("billing_address")
+					.populate("shipping_address")
+					.populate("purchaser")
+					.populate("payment_method");
 				return user.orders;
 			}
 			throwUnauthenticatedError();
@@ -116,30 +244,67 @@ const resolvers = {
 		},
 		myPaymentMethods: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"payment_methods"
-				);
+				const user = await User.findById(context.user._id);
 				return user.payment_methods;
 			}
 			throwUnauthenticatedError();
 		},
 		myAddresses: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"addresses"
-				);
+				const user = await User.findById(context.user._id);
 				return user.addresses;
 			}
 			throwUnauthenticatedError();
 		},
 		myCart: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"cart"
-				);
-				return user.cart;
+				const cart = await Cart.findById(context.user._id)
+					.populate("user")
+					.populate("items");
+				return cart;
 			}
 			throwUnauthenticatedError();
+		},
+		checkout: async (parent, args, context) => {
+			//get context url
+			const url = new URL(context.headers.referer).origin;
+			//create new order from listings in cart
+			const order = new Order({ listings: args.listings });
+			console.log(order);
+			const line_items = [];
+			//pull the listings out of the order
+			const { listings } = await order.populate("listing");
+
+			//create new stripeProducts from listings
+			for (let i = 0; i < listings.length; i++) {
+				const product = await stripe.products.create({
+					name: listings[i].name,
+					description: listings[i].description,
+					images: listings[i].image,
+				});
+				console.log(product);
+				//create stripe prices
+				const price = await stripe.prices.create({
+					product: product.id,
+					unit_amount: listings[i].price * 100,
+					currency: "usd",
+				});
+				//
+				line_items.push({
+					price: price.id,
+					quantity: 1,
+				});
+			}
+
+			const session = await stripe.checkout.sessions.create({
+				payment_method_types: ["card"],
+				line_items,
+				mode: "payment",
+				success_url: `${url}/success?session_id={CHECKOUT_SESSION_ID}`,
+				cancel_url: `${url}/`,
+			});
+
+			return { session: session.id };
 		},
 	},
 	Mutation: {
@@ -182,7 +347,12 @@ const resolvers = {
 		//* Set up mutation so a logged in user can only remove their user and no one else's
 		removeUser: async (parent, args, context, info) => {
 			if (context.user) {
-				return User.findOneAndDelete({ _id: context.user._id });
+				Listing.deleteMany({ seller: context.user._id });
+				Order.deleteMany({ purchaser: context.user._id });
+				Payment.deleteMany({ user: context.user._id });
+				Address.deleteMany({ user: context.user._id });
+				Cart.deleteMany({ user: context.user._id });
+				return await User.findByIdAndDelete(context.user._id);
 			}
 			throwUnauthenticatedError();
 		},
@@ -239,7 +409,7 @@ const resolvers = {
 			newListing["image"] = image;
 			newListing["category"] = await Category.findById(category);
 
-			console.log(context)
+			console.log(context);
 
 			if (size) {
 				newListing["size"] = size;
@@ -279,10 +449,12 @@ const resolvers = {
 				...newListing,
 			});
 
-			await User.findByIdAndUpdate(context.user._id, {$push: {listings: listing._id}})
+			await User.findByIdAndUpdate(context.user._id, {
+				$push: { listings: listing._id },
+			});
 			//todo: add _id to listing._id, push in listing array
 
-			return listing
+			return listing;
 		},
 		removeListing: async (
 			parent,
@@ -293,6 +465,8 @@ const resolvers = {
 			return await Listing.findByIdAndDelete(listingId);
 		},
 		//* update listing
+
+		//do we need both save listing and favorite listing?
 		saveListing: async (
 			parent,
 			{ listingId, listing, ...args }, // Listing contains title, description, etc...
@@ -347,33 +521,30 @@ const resolvers = {
 		},
 		// TODO
 		updateOrder: async (parent, args, context, info) => {},
-		createCart: async (parent, args, context, info) => {
-			return await Cart.create({ user: context.user, items: [] });
+
+		//only when user is deleted will we delete a cart
+		removeCart: async (parent, args, context, info) => {
+			return await Cart.findByIdAndDelete(context.user._id);
 		},
-		removeCart: async (parent, { cartId, ...args }, context, info) => {
-			return await Cart.findByIdAndDelete(cartId);
-		},
-		addToCart: async (
-			parent,
-			{ cartId, listingId, ...args }, // TODO: Do we need cartId if it is a part of the user object?
-			context,
-			info
-		) => {
-			return await Cart.findByIdAndUpdate(
-				cartId,
-				{ $push: { listingId } },
+
+		// Carts are created when User is created. cart_id = user_id
+
+		addToCart: async (parent, { listingId, ...args }, context, info) => {
+			return Cart.findByIdAndUpdate(
+				context.user._id,
+				{ $push: { items: listingId } },
 				{ new: true, runValidators: true }
 			);
 		},
 		removeFromCart: async (
 			parent,
-			{ cartId, listingId, ...args }, // TODO: Do we need cartId if it is a part of the user object?
+			{ listingId, ...args },
 			context,
 			info
 		) => {
 			return await Cart.findByIdAndUpdate(
-				cartId,
-				{ $pull: { listingId } },
+				context.user._id,
+				{ $pull: { items: listingId } },
 				{ new: true, runValidators: true }
 			);
 		},
@@ -467,13 +638,13 @@ const resolvers = {
 			);
 		},
 		addTag: async (parent, { tag, ...args }, context, info) => {
-			return await Tag.create({ tag });
+			return await Tag.create({ tag: tag });
 		},
 		removeTag: async (parent, { tagId, ...args }, context, info) => {
 			return await Tag.findByIdAndDelete(tagId);
 		},
 		addCategory: async (parent, { category, ...args }, context, info) => {
-			return await Category.create({ category });
+			return await Category.create({ description: category });
 		},
 		removeCategory: async (
 			parent,

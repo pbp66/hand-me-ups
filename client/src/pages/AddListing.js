@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { isMobile } from "react-device-detect";
 import { ADD_LISTING } from "../utils/mutations";
-import { QUERY_ALL_CATEGORIES } from "../utils/queries";
+import { QUERY_ALL_CATEGORIES, QUERY_MY_LISTINGS } from "../utils/queries";
 import auth from "../utils/auth";
 
 
@@ -31,18 +31,6 @@ function AddListing() {
 			condition: "",
 		});
 
-	// {
-	// 	title: "JNCOS",
-	// 		description: "JNCOS",
-	// 			price: 250.25,
-	// 				category: "Shirt",
-	// 					tags: ["90s", "other"],
-	// 						size: "XXL",
-	// 							color: ["red"],
-	// 								condition: "NEW",
-	// 									image: "image.com",
-	// }
-
 	const [errorMessage, setErrorMessage] = useState("");
 	const [disabled, setDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
@@ -50,7 +38,12 @@ function AddListing() {
 	const [newColor, setNewColor] = useState("");
 	const [files, setFiles] = useState(null);
 
-	const [addListing, { error }] = useMutation(ADD_LISTING);
+	const [addListing, { error }] = useMutation(ADD_LISTING, {
+		refetchQueries: [
+			{query: QUERY_MY_LISTINGS},
+			"QUERY_MY_LISTINGS"
+		],
+	});
 
 	const handleInputs = (e) => {
 		const { value, name } = e.target;

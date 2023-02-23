@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client"
 import Grid from "../components/Grid"
 import Listing from '../components/Listing'
 import '../styles/discover.css'
+import Auth from "../utils/auth"
 
 
 const Discover = () => {
@@ -20,18 +21,24 @@ const Discover = () => {
 	// const handleFormSubmit = async (event) => {
 	// 	event.preventDefault();
 	// }
-
+	console.log(allListings)
 	return (<>
 		<h1>Discover</h1>
 		<Grid colCount={4} md={3}>
+
 			{allListings.map(listing => {
-				return (<>
-					<Listing
-						key={listing._id}
-						listing={listing}
-					>
-					</Listing>
-				</>)
+				{
+					Auth.getProfile().data?._id === listing.seller._id ?
+						<></>
+						:
+						<>
+							<Listing
+								key={listing._id}
+								listing={listing}
+							>
+							</Listing>
+						</>
+				}
 			})}
 		</Grid>
 	</>

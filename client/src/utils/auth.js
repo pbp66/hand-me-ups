@@ -7,6 +7,7 @@ class AuthService {
 
 	loggedIn() {
 		const token = this.getToken();
+		console.log(token)
 		return token && !this.isTokenExpired(token) ? true : false;
 	}
 
@@ -25,8 +26,8 @@ class AuthService {
 
 	login(idToken) {
 		localStorage.setItem("id_token", idToken);
-		const decoded = decode(idToken)
-		const {_id} = decoded?.data
+		const decoded = decode(idToken, { header: true })
+		const { _id } = decoded?.data
 		window.location.assign(`/MyListings/${_id}`);
 	}
 

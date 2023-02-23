@@ -9,9 +9,6 @@ import { REMOVE_LISTING, ADD_TO_CART, FAVORITE_LISTING, REMOVE_FROM_CART } from 
 import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/queries'
 
 
-
-
-
 const Listing = (props) => {
     console.log(useParams())
     const [show, setShow] = useState(true)
@@ -22,12 +19,12 @@ const Listing = (props) => {
         image,
         description,
         price,
-        // size,
-        // color,
+        size,
+        color,
         condition,
-        // tags,
-        // listing_date,
-        // category,
+        tags,
+        listing_date,
+        category,
         seller
     } = props.listing
     const { data: cartData, loading, error } = useQuery(QUERY_MY_CART);
@@ -103,16 +100,15 @@ const Listing = (props) => {
                                     <> {cartData?.myCart.items.some((listing) => listing._id === _id)
                                         ?
                                         <Button
-                                            onClick={() => { handleRemoveFromCart(_id)}}>
+                                            onClick={() => { handleRemoveFromCart(_id) }}>
                                             Remove from Cart
                                         </Button>
                                         :
                                         <Button
-                                            onClick={() => { handleAddToCart(_id)}}>
+                                            onClick={() => { handleAddToCart(_id) }}>
                                             Add to Cart
                                         </Button>
                                     }
-
                                     </>
                                 }
                             </Col>

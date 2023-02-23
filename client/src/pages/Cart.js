@@ -9,49 +9,31 @@ import { QUERY_MY_CART } from '../utils/queries';
 import { REMOVE_FROM_CART } from '../utils/mutations';
 import Auth from '../utils/auth';
 
-
-
 // // const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 
 const Cart = () => {
-    // const [cart, setCart] = useState([])
-    
     const { data: cartData, loading, error } = useQuery(QUERY_MY_CART);
-   
-    
-    
-
-
-
     if (loading) return <p>loading</p>
-    // console.log(data?.myCart)
     if (error) return <p>error {error.message} </p>
     const myCart = cartData?.myCart?.items || [];
 
-
-    //CHECKOUT METHODS
+    //CHECKOUT METHOD
     //cant redirect from back end
-    // make rediretc happen from getCheckout
-    //re
-
-
-
+    // make redirect happen from getCheckout
 
     return (<>
         <h1>My Cart</h1>
         <Grid colCount={4} md={3}>
             {myCart.map(listing => {
-
-                return (<>
-                    <Listing
-                        key={listing._id}
-                        listing={listing}
-                    >
-                    </Listing>
+                return (
                     <>
-                        
-                    </>
-                </>)
+                        <Listing
+                            key={listing._id}
+                            listing={listing}
+                        />
+                        <>
+                        </>
+                    </>)
             })}
         </Grid>
     </>

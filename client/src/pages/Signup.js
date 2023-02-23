@@ -12,30 +12,22 @@ const Signup = () => {
 		password: "",
 	});
 	const [addUser, { error, data }] = useMutation(ADD_USER);
-
 	// update state based on form input changes
 	const handleChange = (event) => {
-
 		const { name, value } = event.target;
-		console.log(name)
-
 		setFormState({
 			...formState,
 			[name]: value,
 		});
 	};
-
 	// submit form
 	const handleFormSubmit = async (event) => {
 		event.stopPropagation()
 		event.preventDefault();
-		console.log(formState);
-		console.log(data)
 		try {
 			const { data } = await addUser({
 				variables: { ...formState },
 			});
-
 			Auth.login(data.addUser.token);
 		} catch (e) {
 			console.error(e);
@@ -90,7 +82,6 @@ const Signup = () => {
 								</button>
 							</form>
 						)}
-
 						{error && (
 							<div className="my-3 p-3 bg-danger text-white">
 								{error.message}

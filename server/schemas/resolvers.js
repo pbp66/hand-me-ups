@@ -165,7 +165,7 @@ const resolvers = {
 				});
 			}
 
-			Listing.find({
+			return Listing.find({
 				$or: [
 					...searchConditions,
 					{ $text: { $search: { $in: terms } } }, //! I am not confident at all
@@ -173,34 +173,7 @@ const resolvers = {
 			})
 				.populate("category")
 				.populate("tags");
-			return;
-			/*
-			 * Return Object:
-			 * _id
-			 * title
-			 * description
-			 * price
-			 * category {
-			 * 	_id
-			 * 	category
-			 * }
-			 * tags {
-			 * 	_id
-			 * 	tag
-			 * }
-			 * size
-			 * color
-			 * condition
-			 * image
-			 * seller {
-			 * 	_id
-			 * 	username
-			 * 	email
-			 * }
-			 * listing_date
-			 * edit_status
-			 * edit_dates
-			 */
+		},
 		allOrders: async (parent, args, context, info) => {
 			return Order.find();
 		},

@@ -1,5 +1,5 @@
 import { Card, Button, Container, Row, Col } from 'react-bootstrap'
-import { useMutation } from "@apollo/client"
+import { useMutation, useQuery } from "@apollo/client"
 import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
@@ -33,56 +33,45 @@ const Listing = (props) => {
         // category,
         seller
     } = props.listing
+    const { data: cartData, loading, error } = useQuery(QUERY_MY_CART);
+    const [addToCart, { data }] = useMutation(ADD_TO_CART);
+    const [removeFromCart] = useMutation(REMOVE_FROM_CART)
+    const [favoriteListing] = useMutation(FAVORITE_LISTING)
 
-    const [addToCart, { data }] = useMutation(ADD_TO_CART, {
-        variables: {
-            listingId: _id,
-        },
-        refetchQueries: [
-            { query: QUERY_MY_CART },
-            "QUERY_MY_CART"
-        ],
+
+    const handleAddToCart = async (id) => {
+        console.log(cartData?.myCart.items)
+        console.log(_id)
+        await addToCart({
+            variables: {
+                listingId: _id,
+            },
+            refetchQueries: [
+                { query: QUERY_MY_CART },
+                "QUERY_MY_CART"
+            ],
+        })
+
+        console.log()
+        
+        // .some((listingId) => listingId === _id)
     }
-    );
-console.log(data)
-    const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
-        variables: {
-            listingId: _id,
-        }
-    })
-
-    //move this to my Listings since we wont show the users listings on discover page
-    const [removeListing] = useMutation(REMOVE_LISTING, {
-        variables: {
-            listingId: _id,
-        },
-        refetchQueries: [
-            { query: QUERY_MY_LISTINGS },
-            "QUERY_MY_LISTINGS",
-            { query: QUERY_LISTINGS },
-            "QUERY_LISTINGS"
-        ],
-    });
-
-    const [favoriteListing] = useMutation(FAVORITE_LISTING, {
-        variables: {
-            listingId: _id
-        }
-    })
-
-    const toggleFavorite = () => {
-        //change favorite button style to show added to favorites
-        setFavorite(!favorite)
-        favoriteListing()
+    const handleRemoveFromCart = async (id) => {
+        await removeFromCart({
+            variables: {
+                listingId: _id,
+            }
+        })
+    }
+    const handleFavoriteListing = async (id) => {
+        await favoriteListing({
+            variables: {
+                listingId: _id
+            }
+        })
     }
 
-    const toggleInCart = () => {
-        setInCart(!inCart)
-        console.log(inCart)
-    }
-
-
-
+    console.log(cartData?.myCart.items)
     // console.log(`Token for graphql header ${Auth.getToken()}`)
     return (
         <>
@@ -115,14 +104,16 @@ console.log(data)
                                 {!inCart ?
                                     <>
                                         <Button
-                                            onClick={() => { toggleInCart(); addToCart(); }}>
-                                            Add to Cart
+                                            onClick={() => { handleAddToCart(_id) }}>
+                                            {cartData?.myCart.items.some((listing) => listing._id === _id)
+                                                ? 'Already Added to Cart!'
+                                                : 'Add to Cart!'}
                                         </Button>
                                     </>
                                     :
                                     <>
                                         <Button
-                                            onClick={() => { toggleInCart(); removeFromCart(); }}>
+                                            onClick={() => { handleRemoveFromCart(_id) }}>
                                             Remove From Cart
                                         </Button>
                                     </>
@@ -130,7 +121,7 @@ console.log(data)
                             </Col>
                             <Col>
                                 <Button
-                                    onClick={toggleFavorite}>
+                                    onClick={() => { handleFavoriteListing(_id) }}>
                                     Save to favorites
                                 </Button>
                             </Col>

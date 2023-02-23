@@ -14,7 +14,6 @@ import Auth from '../utils/auth';
 
 const Cart = () => {
     const[state, dispatch] = useStoreContext()
-    console.log(state)
     
     const { data, loading, error } = useQuery(QUERY_MY_CART);
 
@@ -39,7 +38,6 @@ const Cart = () => {
     <h1>My Cart</h1>
         <Grid colCount={4} md={3}>
             {myCart.map(listing => {
-                console.log(listing)
                 return (<>
                     <Listing
                         key={listing._id}

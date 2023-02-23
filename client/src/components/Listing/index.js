@@ -3,7 +3,6 @@ import { useMutation } from "@apollo/client"
 import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
-import { useStoreContext } from '../../ctx/storeContext'
 // import {REMOVE_FROM_CART,ADD_TO_CART, UPDATE_LISTINGS} from '../../ctx/actions'
 import { REMOVE_LISTING, ADD_TO_CART, FAVORITE_LISTING, REMOVE_FROM_CART } from '../../utils/mutations'
 import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/queries'
@@ -12,10 +11,9 @@ import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/qu
 
 
 const Listing = (props) => {
-    const [state, dispatch] = useStoreContext()
     const [favorite, setFavorite] = useState(false)
     const [inCart, setInCart] = useState(false)
-    const [show, setShow] = useState(false)
+    const [show, setShow] = useState(true)
     // const handleClose = () => setShow(false)
     // const handleShow = () => setShow(true)
 
@@ -89,8 +87,8 @@ console.log(data)
             <Link
                 to={`/listings/${_id}`}>
                 <Card
-                    onMouseEnter={() => setShow(true)}
-                    onMouseLeave={() => setShow(false)}
+                    // onMouseEnter={() => setShow(true)}
+                    // onMouseLeave={() => setShow(false)}
                 >
                     {show ?
                         <Card.Body>
@@ -131,7 +129,7 @@ console.log(data)
                             <Col>
                                 <Button
                                     onClick={toggleFavorite}>
-                                    Save to favorites
+                                    Save!
                                 </Button>
                             </Col>
                         </Row>

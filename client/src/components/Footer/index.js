@@ -1,3 +1,5 @@
+import '../../styles/footer.css'
+
 const Footer = () => {
 	return (
 		<footer className="w-100 mt-auto text-dark p-4">

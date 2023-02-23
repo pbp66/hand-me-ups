@@ -9,12 +9,15 @@ const cartSchema = new Schema(
 			ref: "User",
 			required: true,
 		},
-		items: [
-			{
-				type: Schema.Types.ObjectId,
-				ref: "Listing",
-			},
-		],
+		items: {
+			type: [
+				{
+					type: Schema.Types.ObjectId,
+					ref: "Listing",
+				},
+			],
+			default: []
+		},
 	},
 	{
 		toJSON: {

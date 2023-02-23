@@ -19,18 +19,16 @@ const listingSchema = new Schema(
 			required: true,
 			trim: true,
 		},
-		categories: [
-			{
-				type: Schema.Types.ObjectId,
-				ref: "Category",
-				required: true,
-			},
-		],
+		category: {
+			type: Schema.Types.ObjectId,
+			ref: "Category",
+			required: true,
+		},
 		tags: [
 			{
 				type: Schema.Types.ObjectId,
 				ref: "Tag",
-				required: true,
+				// required: true,
 			},
 		],
 		size: {
@@ -47,10 +45,10 @@ const listingSchema = new Schema(
 			type: String,
 			enum: [
 				"NEW",
-				"USED - LIKE NEW",
-				"USED - GOOD",
-				"USED - FAIR",
-				"USED - POOR",
+				"USED_LIKE_NEW",
+				"USED_GOOD",
+				"USED_FAIR",
+				"USED_POOR",
 			],
 			default: "NEW",
 		},
@@ -76,6 +74,11 @@ const listingSchema = new Schema(
 		edit_dates: {
 			type: String,
 			trim: true,
+		},
+		purchased_status: {
+			type: Boolean,
+			required: true,
+			default: false,
 		},
 	},
 	{

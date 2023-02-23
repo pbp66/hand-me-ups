@@ -12,7 +12,11 @@ const LoginHeader = styled.h4`
 `
 
 const Login = (props) => {
-	const [formState, setFormState] = useState({ email: "", password: "" });
+	const [formState, setFormState] = useState(
+		{
+			email: "",
+			password: ""
+		});
 	const [login, { error, data }] = useMutation(LOGIN_USER);
 
 	// update state based on form input changes

@@ -1,4 +1,5 @@
 import { GraphQLError } from "graphql";
+import { DateTime } from "luxon";
 import {
 	User,
 	Listing,
@@ -11,32 +12,58 @@ import {
 } from "../models";
 import { signToken } from "../utils/auth";
 
+function throwUnauthenticatedError() {
+	throw new GraphQLError("User is not authenticated", {
+		extensions: {
+			code: "UNAUTHENTICATED",
+			http: { status: 401 },
+		},
+	});
+}
+
 const resolvers = {
 	Query: {
 		allUsers: async (parent, args, context, info) => {
-			return User.find();
+			return await User.find();
 		},
-
 		oneUser: async (parent, { userId }, context, info) => {
-			return User.findOneById(userId);
+			return await User.findById(userId);
+		},
+		findUserByUsername: async (parent, { username }, context, info) => {
+			return await User.findOne({ username: username });
 		},
 		// By adding context to our query, we can retrieve the logged in user without specifically searching for them
 		me: async (parent, args, context, info) => {
 			if (context.user) {
-				return User.findOneById(context.user._id);
+				return await User.findById(context.user._id)
+					.populate("listings")
+					.populate("favorites")
+					.populate("orders")
+					.populate("payment_methods")
+					.populate("addresses")
+					.populate("default_address")
+					.populate("default_payment")
+					.populate("cart");
 			}
-			throw new GraphQLError("User is not authenticated", {
-				extensions: {
-					code: "UNAUTHENTICATED",
-					http: { status: 401 },
-				},
-			});
+			throwUnauthenticatedError();
 		},
 		allListings: async (parent, args, context, info) => {
-			return Listing.find();
+			const listings = await Listing.find({
+				purchased_status: { $not: { $eq: true } }, // If a listing is purchased, we don't want to list it
+			})
+				.populate("category")
+				.populate("tags");
+			return listings;
+		},
+		oneListing: async (parent, { listingId }, context, info) => {
+			return await Listing.findById(listingId)
+				.populate("category")
+				.populate("tags");
 		},
 		userListings: async (parent, { userId }, context, info) => {
-			const user = await User.findOneById(userId).populate("listings");
+			const user = await User.findById(userId)
+				.populate("category")
+				.populate("tags");
 			if (!user) {
 				throw new GraphQLError("User does not exist", {
 					extensions: {
@@ -49,92 +76,111 @@ const resolvers = {
 		},
 		myListings: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findOneById(context.user._id).populate(
-					"listings"
-				);
-				return user.listings;
+				const user = await User.findById(context.user._id)
+					.populate("category")
+					.populate("tags");
+				const updatedListings = [];
+				for (const listing of user.listings) {
+					if (listing.category) {
+						const category = await Category.findById(
+							listing.category
+						);
+						if (category) {
+							listing.category = category;
+						}
+					}
+					updatedListings.push(listing);
+				}
+
+				return updatedListings;
 			}
-			throw new GraphQLError("User is not authenticated", {
-				extensions: {
-					code: "UNAUTHENTICATED",
-					http: { status: 401 },
-				},
-			});
+			throwUnauthenticatedError();
 		},
 		favoriteListings: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findOneById(context.user._id).populate(
-					"saved_items"
+				const user = await User.findById(context.user._id).populate(
+					"favorites"
 				);
-				return user.saved_items;
+				return user.favorites;
 			}
-			throw new GraphQLError("User is not authenticated", {
-				extensions: {
-					code: "UNAUTHENTICATED",
-					http: { status: 401 },
-				},
-			});
+			throwUnauthenticatedError();
 		},
-		searchListings: async (
-			parent,
-			{ searchTerms, tags, ...args },
-			context,
-			info
-		) => {
-			// TODO: Search listing titles and descriptions. May need aggregate: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
-			// TODO: Create list of matching categories and tags from the tags variable
-			Listing.find({});
-		},
+		// searchListings: async (
+		// 	parent,
+		// 	{ searchTerms, tags, ...args },
+		// 	context,
+		// 	info
+		// ) => {
+		// TODO: Search listing titles and descriptions. May need aggregate: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
+		// TODO: Create list of matching categories and tags from the tags variable
+		// 	Listing.find({});
+		// },
 		allOrders: async (parent, args, context, info) => {
-			return Order.find();
+			return Order.find()
+				.populate("purchased_listings")
+				.populate("billing_address")
+				.populate("shipping_address")
+				.populate("purchaser")
+				.populate("payment_method");
 		},
 		getOrder: async (parent, { orderId }, context, info) => {
-			return Order.findOneById(orderId);
-		},
-		userOrders: async (parent, { userId }, context, info) => {
-			const user = await User.findOneById(userId).populate("orders");
-			if (!user) {
-				throw new GraphQLError("User does not exist", {
-					extensions: {
-						code: "USER NOT FOUND",
-						http: { status: 401 },
-					},
-				});
-			}
-			return user.orders;
+			return Order.findById(orderId)
+				.populate("purchased_listings")
+				.populate("billing_address")
+				.populate("shipping_address")
+				.populate("purchaser")
+				.populate("payment_method");
 		},
 		myOrders: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findOneById(context.user._id).populate(
-					"orders"
-				);
+				const user = await User.findById(context.user._id)
+					.populate("purchased_listings")
+					.populate("billing_address")
+					.populate("shipping_address")
+					.populate("purchaser")
+					.populate("payment_method");
 				return user.orders;
 			}
-			throw new GraphQLError("User is not authenticated", {
-				extensions: {
-					code: "UNAUTHENTICATED",
-					http: { status: 401 },
-				},
-			});
+			throwUnauthenticatedError();
 		},
-
-		// TODO...
-		allTags: async (parent, args, context, info) => {},
-		allCategories: async (parent, args, context, info) => {},
-
-		userPaymentMethods: async (parent, args, context, info) => {},
-		userAddresses: async (parent, args, context, info) => {},
-
-		myPaymentMethods: async (parent, args, context, info) => {},
-		myAddresses: async (parent, args, context, info) => {},
-
-		userCart: async (parent, args, context, info) => {},
-		myCart: async (parent, args, context, info) => {},
+		allTags: async (parent, args, context, info) => {
+			return Tag.find();
+		},
+		allCategories: async (parent, args, context, info) => {
+			return await Category.find();
+		},
+		myPaymentMethods: async (parent, args, context, info) => {
+			if (context.user) {
+				const user = await User.findById(context.user._id);
+				return user.payment_methods;
+			}
+			throwUnauthenticatedError();
+		},
+		myAddresses: async (parent, args, context, info) => {
+			if (context.user) {
+				const user = await User.findById(context.user._id);
+				return user.addresses;
+			}
+			throwUnauthenticatedError();
+		},
+		myCart: async (parent, args, context, info) => {
+			if (context.user) {
+				const cart = await Cart.findById(context.user._id)
+					.populate("user")
+					.populate("items");
+				return cart;
+			}
+			throwUnauthenticatedError();
+		},
 	},
-
 	Mutation: {
-		addUser: async (parent, { name, email, password }, context, info) => {
-			const user = await User.create({ name, email, password });
+		addUser: async (
+			parent,
+			{ username, email, password },
+			context,
+			info
+		) => {
+			const user = await User.create({ username, email, password });
 			const token = signToken(user);
 
 			return { token, user };
@@ -152,7 +198,6 @@ const resolvers = {
 			}
 
 			const correctPw = await user.isCorrectPassword(password);
-
 			if (!correctPw) {
 				throw new GraphQLError("Wrong Password", {
 					extensions: {
@@ -165,56 +210,315 @@ const resolvers = {
 			const token = signToken(user);
 			return { token, user };
 		},
-
-		// Set up mutation so a logged in user can only remove their user and no one else's
+		//* Set up mutation so a logged in user can only remove their user and no one else's
 		removeUser: async (parent, args, context, info) => {
 			if (context.user) {
-				return User.findOneAndDelete({ _id: context.user._id });
+				Listing.deleteMany({ seller: context.user._id });
+				Order.deleteMany({ purchaser: context.user._id });
+				Payment.deleteMany({ user: context.user._id });
+				Address.deleteMany({ user: context.user._id });
+				Cart.deleteMany({ user: context.user._id });
+				return await User.findByIdAndDelete(context.user._id);
 			}
-			throw new GraphQLError("User is not authenticated", {
-				extensions: {
-					code: "UNAUTHENTICATED",
-					http: { status: 401 },
-				},
-			});
+			throwUnauthenticatedError();
 		},
+		updateMe: async (parent, { user, ...args }, context, info) => {
+			try {
+				const updatedUser = await User.findByIdAndUpdate(
+					context.user._id,
+					{
+						username: user.username,
+						email: user.email,
+						password: user.password,
+					},
+					{ new: true, runValidators: true }
+				);
+				if (!updatedUser) {
+					throw new GraphQLError("User does not exist", {
+						extensions: {
+							code: "USER NOT FOUND",
+							http: { status: 401 },
+						},
+					});
+				}
+				return updatedUser;
+			} catch (err) {
+				console.error(err);
+			}
+		},
+		addListing: async (
+			parent,
+			{
+				listing: {
+					title,
+					description,
+					price,
+					condition,
+					image,
+					category,
+					size,
+					tags,
+					color,
+				},
+				...args
+			},
+			context,
+			info
+		) => {
+			const newListing = {};
+			newListing["seller"] = context.user._id;
+			newListing["listing_date"] = DateTime.now().toISO();
+			newListing["title"] = title;
+			newListing["description"] = description;
+			newListing["price"] = price;
+			newListing["condition"] = condition;
+			newListing["image"] = image;
+			newListing["category"] = await Category.findById(category);
 
-		// TODO...
-		updateUser: async (parent, args, context, info) => {}, // update password, username, etc...
+			console.log(context);
 
-		addListing: async (parent, args, context, info) => {},
-		removeListing: async (parent, args, context, info) => {},
-		saveListing: async (parent, args, context, info) => {}, // update listing
+			if (size) {
+				newListing["size"] = size;
+			}
+			if (color) {
+				newListing["color"] = color;
+			}
 
-		favoriteListing: async (parent, args, context, info) => {}, // save listing to favorites list
-		removeFavoriteListing: async (parent, args, context, info) => {},
+			let listingTags = [];
+			if (tags.length > 0) {
+				const foundTags = await Tag.find({
+					tag: { $in: tags },
+				});
+				if (tags.length !== foundTags.length) {
+					const allTagIds = [];
+					if (foundTags) {
+						foundTags.forEach((tag) => allTagIds.push(tag._id));
+					}
 
+					//* Filter all tags and return the tags that do not exist in the database
+					const tagsToCreate = tags.filter((tagName) => {
+						//* Return true for any tags NOT found in the foundTags array
+						return !foundTags.find((foundTag) => {
+							//* Verify that the current tagName exists within foundTags array
+							return foundTag.tag === tagName;
+						});
+					});
+					listingTags = await tagsToCreate.map(
+						async (tagName) => await Tag.create({ tagName })
+					);
+				} else {
+					listingTags = foundTags;
+				}
+			}
+			newListing["tags"] = listingTags;
+			const listing = await Listing.create({
+				...newListing,
+			});
+
+			await User.findByIdAndUpdate(context.user._id, {
+				$push: { listings: listing._id },
+			});
+			//todo: add _id to listing._id, push in listing array
+
+			return listing;
+		},
+		removeListing: async (
+			parent,
+			{ listingId, ...args },
+			context,
+			info
+		) => {
+			return await Listing.findByIdAndDelete(listingId);
+		},
+		//* update listing
+
+		//do we need both save listing and favorite listing?
+		saveListing: async (
+			parent,
+			{ listingId, listing, ...args }, // Listing contains title, description, etc...
+			context,
+			info
+		) => {
+			return await Listing.findByIdAndUpdate(
+				listingId,
+				{
+					...listing,
+					edit_status: true,
+					$push: { edit_dates: DateTime.now().toISO() },
+				},
+				{ new: true, runValidators: true }
+			);
+		},
+		//* save listing to favorites list
+		favoriteListing: async (
+			parent,
+			{ listingId, ...args },
+			context,
+			info
+		) => {
+			const user = await User.findByIdAndUpdate(
+				context.user._id,
+				{
+					$push: { favorites: listingId },
+				},
+				{ new: true, runValidators: true }
+			);
+			return user.favorites;
+		},
+		unFavoriteListing: async (
+			parent,
+			{ listingId, ...args },
+			context,
+			info
+		) => {
+			const user = await User.findByIdAndUpdate(
+				context.user._id,
+				{
+					$pull: { favorites: listingId },
+				},
+				{ new: true, runValidators: true }
+			);
+			return user.favorites;
+		},
+		// TODO
 		addOrder: async (parent, args, context, info) => {},
-		removeOrder: async (parent, args, context, info) => {},
+		removeOrder: async (parent, { orderId, ...args }, context, info) => {
+			return await Order.findByIdAndDelete(orderId);
+		},
+		// TODO
 		updateOrder: async (parent, args, context, info) => {},
 
-		createCart: async (parent, args, context, info) => {},
-		removeCart: async (parent, args, context, info) => {},
-		addToCart: async (parent, args, context, info) => {},
-		removeFromCart: async (parent, args, context, info) => {},
+		//only when user is deleted will we delete a cart
+		removeCart: async (parent, args, context, info) => {
+			return await Cart.findByIdAndDelete(context.user._id);
+		},
 
-		addAddress: async (parent, args, context, info) => {},
-		removeAddress: async (parent, args, context, info) => {},
-		updateAddress: async (parent, args, context, info) => {},
-		createAddress: async (parent, args, context, info) => {},
-
-		addPaymentMethod: async (parent, args, context, info) => {},
-		removePaymentMethod: async (parent, args, context, info) => {},
-		updatePaymentMethod: async (parent, args, context, info) => {},
-
-		updateDefaultPaymentMethod: async (parent, args, context, info) => {},
-		updateDefaultAddress: async (parent, args, context, info) => {},
-
-		addTag: async (parent, args, context, info) => {},
-		removeTag: async (parent, args, context, info) => {},
-
-		addCategory: async (parent, args, context, info) => {},
-		removeCategory: async (parent, args, context, info) => {},
+		// Carts are created when User is created. cart_id = user_id
+		addToCart: async (parent, { listingId, ...args }, context, info) => {
+			return Cart.findByIdAndUpdate(
+				context.user._id,
+				{ $push: { items: listingId } },
+				{ new: true, runValidators: true }
+			);
+		},
+		removeFromCart: async (
+			parent,
+			{ listingId, ...args },
+			context,
+			info
+		) => {
+			return await Cart.findByIdAndUpdate(
+				context.user._id,
+				{ $pull: { items: listingId } },
+				{ new: true, runValidators: true }
+			);
+		},
+		addAddress: async (parent, { address, ...args }, context, info) => {
+			const user = await User.findByIdAndUpdate(
+				context.user._id,
+				{
+					$push: { address },
+				},
+				{ new: true, runValidators: true }
+			);
+			return user.addresses;
+		},
+		removeAddress: async (
+			parent,
+			{ addressId, ...args },
+			context,
+			info
+		) => {
+			return await Address.findByIdAndDelete(addressId);
+		},
+		updateAddress: async (
+			parent,
+			{ addressId, address, ...args },
+			context,
+			info
+		) => {
+			return await Address.findByIdAndUpdate(
+				addressId,
+				{ ...address },
+				{ new: true, runValidators: true }
+			);
+		},
+		addPaymentMethod: async (
+			parent,
+			{ payment, ...args },
+			context,
+			info
+		) => {
+			const user = await User.findByIdAndUpdate(
+				context.user._id,
+				{
+					$push: { payment },
+				},
+				{ new: true, runValidators: true }
+			);
+			return user.payment_methods;
+		},
+		removePaymentMethod: async (
+			parent,
+			{ paymentId, ...args },
+			context,
+			info
+		) => {
+			return await Payment.findByIdAndDelete(paymentId);
+		},
+		updatePaymentMethod: async (
+			parent,
+			{ paymentId, payment, ...args },
+			context,
+			info
+		) => {
+			return await Payment.findByIdAndUpdate(
+				paymentId,
+				{ ...payment },
+				{ new: true, runValidators: true }
+			);
+		},
+		updateDefaultPaymentMethod: async (
+			parent,
+			{ payment, ...args },
+			context,
+			info
+		) => {
+			return await User.findByIdAndUpdate(
+				context.user._id,
+				{ default_payment: payment },
+				{ new: true, runValidators: true }
+			);
+		},
+		updateDefaultAddress: async (
+			parent,
+			{ address, ...args },
+			context,
+			info
+		) => {
+			return await User.findByIdAndUpdate(
+				context.user._id,
+				{ default_address: address },
+				{ new: true, runValidators: true }
+			);
+		},
+		addTag: async (parent, { tag, ...args }, context, info) => {
+			return await Tag.create({ tag: tag });
+		},
+		removeTag: async (parent, { tagId, ...args }, context, info) => {
+			return await Tag.findByIdAndDelete(tagId);
+		},
+		addCategory: async (parent, { category, ...args }, context, info) => {
+			return await Category.create({ description: category });
+		},
+		removeCategory: async (
+			parent,
+			{ categoryId, ...args },
+			context,
+			info
+		) => {
+			return await Category.findByIdAndDelete(categoryId);
+		},
 	},
 };
 

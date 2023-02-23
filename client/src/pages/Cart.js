@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
+import { Button } from 'react-bootstrap';
 import { loadStripe } from '@stripe/stripe-js';
 import Grid from '../components/Grid';
 import Listing from '../components/Listing';
-import { useLazyQuery, useQuery } from '@apollo/client';
-import { QUERY_MY_CART } from '../utils/queries';
-import { useStoreContext } from '../ctx/storeContext';
-import { TOGGLE_CART } from '../ctx/actions';
+import { useLazyQuery, useQuery, useMutation } from '@apollo/client';
+import { QUERY_MY_CART} from '../utils/queries';
+import { REMOVE_FROM_CART } from '../utils/mutations';
 import Auth from '../utils/auth';
 
 
@@ -13,9 +13,9 @@ import Auth from '../utils/auth';
 // // const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 
 const Cart = () => {
-    const[state, dispatch] = useStoreContext()
-    
-    const { data, loading, error } = useQuery(QUERY_MY_CART);
+    const [removeFromCart] = useMutation(REMOVE_FROM_CART)
+
+    const { data: cartData, loading, error } = useQuery(QUERY_MY_CART);
 
 
 
@@ -23,7 +23,7 @@ const Cart = () => {
     if (loading) return <p>loading</p>
     // console.log(data?.myCart)
     if (error) return <p>error {error.message} </p>
-    const myCart = data?.myCart?.items || [];
+    const myCart = cartData?.myCart?.items || [];
 
     //CHECKOUT METHODS
     //cant redirect from back end
@@ -32,19 +32,31 @@ const Cart = () => {
 
 
 
-
+    const handleRemoveFromCart = async (id) => {
+        await removeFromCart({
+            variables: {
+                listingId: id
+            }
+        })
+    }
 
     return (<>
-    <h1>My Cart</h1>
+        <h1>My Cart</h1>
         <Grid colCount={4} md={3}>
             {myCart.map(listing => {
+                
                 return (<>
                     <Listing
                         key={listing._id}
                         listing={listing}
                     >
-                       <h1>TEST</h1>{listing._id}
                     </Listing>
+                    <>
+                        <Button
+                            onClick={() => { handleRemoveFromCart(listing._id) }}>
+                            Remove from Cart
+                        </Button>
+                    </>
                 </>)
             })}
         </Grid>

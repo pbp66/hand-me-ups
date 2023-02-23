@@ -51,10 +51,6 @@ const Listing = (props) => {
                 "QUERY_MY_CART"
             ],
         })
-
-        console.log()
-        
-        // .some((listingId) => listingId === _id)
     }
     const handleRemoveFromCart = async (id) => {
         await removeFromCart({
@@ -70,8 +66,6 @@ const Listing = (props) => {
             }
         })
     }
-
-    console.log(cartData?.myCart.items)
     // console.log(`Token for graphql header ${Auth.getToken()}`)
     return (
         <>
@@ -101,7 +95,7 @@ const Listing = (props) => {
                     <Container>
                         <Row>
                             <Col>
-                                {!inCart ?
+                                {
                                     <>
                                         <Button
                                             disabled={cartData?.myCart.items.some((listing) => listing._id === _id)}
@@ -109,13 +103,6 @@ const Listing = (props) => {
                                             {cartData?.myCart.items.some((listing) => listing._id === _id)
                                                 ? 'Already Added to Cart!'
                                                 : 'Add to Cart!'}
-                                        </Button>
-                                    </>
-                                    :
-                                    <>
-                                        <Button
-                                            onClick={() => { handleRemoveFromCart(_id) }}>
-                                            Remove From Cart
                                         </Button>
                                     </>
                                 }

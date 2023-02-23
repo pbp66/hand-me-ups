@@ -12,7 +12,7 @@ import { useStoreContext } from '../ctx/storeContext';
 
 
 const MyListings = (props) => {
-	const[state, dispatch]= useStoreContext()
+	const [state, dispatch] = useStoreContext()
 	const {
 		data,
 		loading,
@@ -23,19 +23,23 @@ const MyListings = (props) => {
 	const handleClose = () => setShow(false)
 	const handleShow = () => setShow(true)
 
-	//move this to my Listings since we wont show the users listings on discover page
-	// const [removeListing] = useMutation(REMOVE_LISTING, {
-	// 	variables: {
-	// 		listingId: _id,
-	// 	},
-	// 	refetchQueries: [
-	// 		{ query: QUERY_MY_LISTINGS },
-	// 		"QUERY_MY_LISTINGS",
-	// 		{ query: QUERY_LISTINGS },
-	// 		"QUERY_LISTINGS"
-	// 	],
-	// });
+	// move this to my Listings since we wont show the users listings on discover page
 
+	const [removeListing] = useMutation(REMOVE_LISTING, {
+		refetchQueries: [
+			{ query: QUERY_MY_LISTINGS },
+			"QUERY_MY_LISTINGS",
+			{ query: QUERY_LISTINGS },
+			"QUERY_LISTINGS"
+		],
+	});
+
+	const handleRemoveListing = async (id) => {
+		console.log(id)
+		await removeListing({
+			variables: {listingId: id}
+		})
+	}
 
 	return (
 		<>
@@ -45,15 +49,16 @@ const MyListings = (props) => {
 						<>
 							<Listing
 								key={listing._id}
-								listing={listing}>
+								listing={listing}
+							>
 							</Listing>
 
 							<Container>
 								<Row>
 									<Col>
-										{/* <Button onClick={removeListing}>
+										<Button onClick={() => { handleRemoveListing(listing._id) }}>
 											Remove Listing
-										</Button> */}
+										</Button>
 									</Col>
 								</Row>
 							</Container>

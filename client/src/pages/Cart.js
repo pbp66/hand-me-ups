@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-// import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import Grid from '../components/Grid';
 import Listing from '../components/Listing';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import { QUERY_MY_CART } from '../utils/queries';
-import CartItem from '../pages/CartItem';
+import { useStoreContext } from '../ctx/storeContext';
+import { TOGGLE_CART } from '../ctx/actions';
 import Auth from '../utils/auth';
 
 
@@ -12,8 +13,9 @@ import Auth from '../utils/auth';
 // // const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 
 const Cart = () => {
+    const[state, dispatch] = useStoreContext()
+    console.log(state)
     
-
     const { data, loading, error } = useQuery(QUERY_MY_CART);
 
 

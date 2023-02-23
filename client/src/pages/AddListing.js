@@ -8,9 +8,11 @@ import { isMobile } from "react-device-detect";
 import { ADD_LISTING } from "../utils/mutations";
 import { QUERY_ALL_CATEGORIES, QUERY_MY_LISTINGS } from "../utils/queries";
 import auth from "../utils/auth";
+import { useStoreContext } from "../ctx/storeContext";
 
 
 function AddListing() {
+	const[state, dispatch]=useStoreContext()
 	const {
 		data,
 		loading: categoriesLoading,
@@ -33,7 +35,6 @@ function AddListing() {
 
 	const [errorMessage, setErrorMessage] = useState("");
 	const [disabled, setDisabled] = useState(true);
-	const [loading, setLoading] = useState(false);
 	const [newTag, setNewTag] = useState("");
 	const [newColor, setNewColor] = useState("");
 	const [files, setFiles] = useState(null);

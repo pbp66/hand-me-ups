@@ -2,7 +2,6 @@ import React from "react";
 import { Col, Row, Container } from 'react-bootstrap'
 
 const Grid = ({ colCount, md, children }) => {
-    console.log(children)
     let rowcount = (children.length / colCount +1)
     let index = 0
 

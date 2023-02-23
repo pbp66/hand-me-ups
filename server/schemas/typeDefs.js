@@ -55,7 +55,7 @@ const typeDefs = `
 		title: String!
 		description: String!
 		price: Float!
-		category: String! # Convert to category schema in resolver
+		category: String # Convert to category schema in resolver
 		tags: [String] # Convert to tag schema in resolver
 		size: String
 		color: [String]
@@ -64,13 +64,13 @@ const typeDefs = `
 	}
 
 	type Tag {
-		_id: ID!
-		tag: String!
+		_id: ID
+		tag: String
 	}
 
 	type Category {
-		_id: ID!
-		category: String!
+		_id: ID
+		category: String
 	}
 
 	type Order { # TODO: Ensure listings is the default item to save/link. Otherwise, Id can be used. 
@@ -134,6 +134,10 @@ const typeDefs = `
 		user: User!
 		items: [Listing]
 	}
+	
+	type Checkout {
+		session: ID
+	  }
 
 	input cartInput { # Identical to Listing, but input types require scalars or other inputs...
 		title: String
@@ -156,7 +160,7 @@ const typeDefs = `
 		userListings(userId: ID!): [Listing]
 		myListings: [Listing]
 		favoriteListings: [Listing]
-		searchListings(searchTerms: [String]!, tags: [ID!]): [Listing]
+		searchListings(searchString: String!): [Listing]
 		allOrders: [Order]
 		getOrder(orderId: ID!): Order
 		myOrders: [Order]
@@ -165,6 +169,7 @@ const typeDefs = `
 		myPaymentMethods: [Payment]
 		myAddresses: [Address]
 		myCart: Cart
+		checkout(listing: [ID]!): Checkout
   	}
 
   	type Mutation {

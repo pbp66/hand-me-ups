@@ -1,0 +1,56 @@
+[
+	{
+		"title": "Worn Jeans",
+		"description": "Lightly worn jeans. No rips or tears",
+		"price": 45.99,
+		"size": "XXL",
+		"color": ["blue", "denim"],
+		"condition": "USED_LIKE_NEW",
+		"image": "https://via.placeholder.com/1000"
+	},
+	{
+		"title": "New Coat!",
+		"description": "Never Worn! Great for winter weather",
+		"price": 232.99,
+		"size": "L",
+		"color": ["black", "white"],
+		"condition": "NEW",
+		"image": "https://via.placeholder.com/1000"
+	},
+	{
+		"title": "Handmade Jorts",
+		"description": "You know you want them. Don't lie to yourself. They're WORTH the price ;)",
+		"price": 420.69,
+		"size": "XS",
+		"color": ["blue", "denim"],
+		"condition": "USED_GOOD",
+		"image": "https://via.placeholder.com/1000"
+	},
+	{
+		"title": "Heavily Used Socks. Holes Included",
+		"description": "Worn socks for $0.99. What a STEAL!",
+		"price": 0.99,
+		"size": "XXXL",
+		"color": ["white", "yellow", "grime?"],
+		"condition": "USED_POOR",
+		"image": "https://via.placeholder.com/1000"
+	},
+	{
+		"title": "IDK. Fair?",
+		"description": "See title",
+		"price": 5.01,
+		"size": "S",
+		"color": [
+			"black",
+			"red",
+			"orange",
+			"yellow",
+			"green",
+			"blue",
+			"purple",
+			"white"
+		],
+		"condition": "USED_FAIR",
+		"image": "https://via.placeholder.com/1000"
+	}
+]

@@ -90,6 +90,7 @@ function AddListing() {
 		} catch (err) {
 			console.error(err);
 		}
+
 	};
 	return (
 		<form

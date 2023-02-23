@@ -1,11 +1,11 @@
-import { Card, Button, Container, Row, Col } from 'react-bootstrap'
-import { useMutation, useQuery } from "@apollo/client"
+import { Card, Button, Container, Row, Col, ButtonGroup } from 'react-bootstrap'
+
+import { parseAndCheckHttpResponse, useMutation, useQuery } from "@apollo/client"
 import { Link } from "react-router-dom"
 import Auth from '../../utils/auth'
 import { useState } from 'react'
-// import {REMOVE_FROM_CART,ADD_TO_CART, UPDATE_LISTINGS} from '../../ctx/actions'
-import { REMOVE_LISTING, ADD_TO_CART, FAVORITE_LISTING, REMOVE_FROM_CART } from '../../utils/mutations'
-import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/queries'
+import { REMOVE_LISTING, ADD_TO_CART, FAVORITE_LISTING, REMOVE_FROM_CART, UNFAVORITE_LISTING } from '../../utils/mutations'
+import { QUERY_FAVORITE_LISTINGS, QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/queries'
 
 
 
@@ -30,16 +30,18 @@ const Listing = (props) => {
         // category,
         seller
     } = props.listing
-    const { data: cartData, loading, error } = useQuery(QUERY_MY_CART);
+    const { data: cartData } = useQuery(QUERY_MY_CART);
+    const { data: favoriteData } = useQuery(QUERY_FAVORITE_LISTINGS)
+    console.log(favoriteData)
     const [removeFromCart] = useMutation(REMOVE_FROM_CART)
+    const [unFavoriteListing] = useMutation(UNFAVORITE_LISTING)
     const [addToCart, { data }] = useMutation(ADD_TO_CART);
     const [favoriteListing] = useMutation(FAVORITE_LISTING)
-
-    console.log(cartData)
+    console.log(unFavoriteListing)
     const handleAddToCart = async (id) => {
         await addToCart({
             variables: {
-                listingId: _id,
+                listingId: id,
             },
             refetchQueries: [
                 { query: QUERY_MY_CART },
@@ -63,72 +65,105 @@ const Listing = (props) => {
     const handleFavoriteListing = async (id) => {
         await favoriteListing({
             variables: {
-                listingId: _id
-            }
+                listingId: id
+            },
+            refetchQueries: [
+                { query: QUERY_FAVORITE_LISTINGS },
+                "FAVORITE_LISTINGS"
+            ],
         })
     }
-    // console.log(`Token for graphql header ${Auth.getToken()}`)
+
+    const handleUnfavorite = async (id) => {
+        await unFavoriteListing({
+            variables: {
+                listingId: id
+            },
+            refetchQueries: [
+                { query: QUERY_FAVORITE_LISTINGS },
+                "FAVORITE_LISTINGS"
+            ],
+        })
+    }
+
+    const checkSeller = () => {
+        return Auth.loggedIn() && Auth.getProfile().data?._id !== seller?._id
+    }
+    const inCart = () => {
+        return cartData?.myCart.items.some((listing) => listing._id === _id)
+    }
+
+    const isFav = () => {
+        return favoriteData?.favoriteListings.some((listing) => listing._id === _id)
+    }
+
+    console.log(`Token for graphql header ${Auth.getToken()}`)
     return (
         <>
             <Link
                 to={`/listings/${_id}`}>
                 <Card
-                    // onMouseEnter={() => setShow(true)}
-                    // onMouseLeave={() => setShow(false)}
+                // onMouseEnter={() => setShow(true)}
+                // onMouseLeave={() => setShow(false)}
                 >
-                    {show ?
-                        <Card.Body>
-                            <Card.Img src={image}></Card.Img>
-                            <Card.Header>{title}</Card.Header>
-                            <Card.Text>seed userID  {description}</Card.Text>
-                            <Card.Footer>{condition}${price}
-                            </Card.Footer>
-                        </Card.Body>
-                        :
-                        <Card.Body>
-                            <Card.Img src={image}></Card.Img>
-                        </Card.Body>
-                    }
+
+                    <Card.Body>
+                        <Card.Img src={image}></Card.Img>
+                        <Card.Header>{title}</Card.Header>
+                        <Card.Text>seed userID  {description}</Card.Text>
+                        <Card.Footer>{condition}${price}
+                        </Card.Footer>
+                    </Card.Body>
+
                 </Card>
             </Link>
-            {Auth.loggedIn() && Auth.getProfile().data?._id !== seller?._id ?
+            {checkSeller() ?
                 <>
-                    <Container>
-                        <Row>
-                            <Col>
-                                {
-                                    <> {cartData?.myCart.items.some((listing) => listing._id === _id)
-                                        ?
-                                        <Button
-                                            onClick={() => { handleRemoveFromCart(_id) }}>
-                                            Remove from Cart
-                                        </Button>
-                                        :
-                                        <Button
-                                            onClick={() => { handleAddToCart(_id) }}>
-                                            Add to Cart
-                                        </Button>
-                                    }
-                                    </>
+                    <center
+                    text-align='justify'>
+                        {
+                            <> {inCart()
+                                ?
+                                <button
+                                    onClick={() => { handleRemoveFromCart(_id) }}><span role="img" aria-label="trash">
+                                        ← 🛒
+                                    </span>
+                                </button>
+                                :
+                                <button
+                                    onClick={() => { handleAddToCart(_id) }}>
+                                    → 🛒
+                                </button>
+                            }
+                            </>
+                        }
+                        
+                        {
+                            <>
+                                {isFav()
+                                    ?
+                                    <button
+                                        onClick={() => { handleUnfavorite(_id) }}
+                                    >
+                                        ★
+                                    </button>
+                                    :
+                                    <button
+                                        onClick={() => { handleFavoriteListing(_id) }}>
+                                        ☆
+                                    </button>
                                 }
-                            </Col>
-                            <Col>
-                                <Button
-
-                                    onClick={() => { handleFavoriteListing(_id) }}>
-                                    Save to favorites
-
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Container>
-                    <br />
-                </>
-                :
-                <></>
+                            </>
+                        }
+                        </center>
+                        <br />
+                    </>
+                    :
+                    <>
+                    </>
             }
-        </>
+                </>
     )
 }
 
-export default Listing
+            export default Listing

@@ -58,7 +58,7 @@ const MyListings = (props) => {
 												);
 											}}
 										>
-											Remove Listing
+											🗑️ 
 										</Button>
 									</Col>
 								</Row>

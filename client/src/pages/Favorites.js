@@ -9,11 +9,11 @@ import { QUERY_FAVORITE_LISTINGS } from '../utils/queries';
 
 const Favorites = () => {
 	const { data, loading, error } = useQuery(QUERY_FAVORITE_LISTINGS);
-	console.log(data)
+	
 	const myFavorites = data?.favoriteListings || [];
 
 
-
+	console.log(myFavorites)
 	return (
 		<>
 			<Grid colCount={4} md={3}>

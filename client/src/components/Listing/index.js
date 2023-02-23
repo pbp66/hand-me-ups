@@ -35,7 +35,6 @@ const Listing = (props) => {
     } = props.listing
     const { data: cartData, loading, error } = useQuery(QUERY_MY_CART);
     const [addToCart, { data }] = useMutation(ADD_TO_CART);
-    const [removeFromCart] = useMutation(REMOVE_FROM_CART)
     const [favoriteListing] = useMutation(FAVORITE_LISTING)
 
 
@@ -52,13 +51,7 @@ const Listing = (props) => {
             ],
         })
     }
-    const handleRemoveFromCart = async (id) => {
-        await removeFromCart({
-            variables: {
-                listingId: _id,
-            }
-        })
-    }
+
     const handleFavoriteListing = async (id) => {
         await favoriteListing({
             variables: {
@@ -101,7 +94,7 @@ const Listing = (props) => {
                                             disabled={cartData?.myCart.items.some((listing) => listing._id === _id)}
                                             onClick={() => { handleAddToCart(_id) }}>
                                             {cartData?.myCart.items.some((listing) => listing._id === _id)
-                                                ? 'Already Added to Cart!'
+                                                ? 'Added to Cart!'
                                                 : 'Add to Cart!'}
                                         </Button>
                                     </>

@@ -104,6 +104,7 @@ const Listing = (props) => {
                                 {!inCart ?
                                     <>
                                         <Button
+                                            disabled={cartData?.myCart.items.some((listing) => listing._id === _id)}
                                             onClick={() => { handleAddToCart(_id) }}>
                                             {cartData?.myCart.items.some((listing) => listing._id === _id)
                                                 ? 'Already Added to Cart!'

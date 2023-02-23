@@ -43,10 +43,9 @@ const resolvers = {
 				.populate("category")
 				.populate("tags");
 			return listings;
-
 		},
 		oneListing: async (parent, { listingId }, context, info) => {
-			return Listing.findById(listingId)
+			return Listing.findById(listingId);
 		},
 		userListings: async (parent, { userId }, context, info) => {
 			const user = await User.findById(userId).populate("listings");
@@ -65,15 +64,17 @@ const resolvers = {
 				const user = await User.findById(context.user._id).populate(
 					"listings"
 				);
-				const updatedListings = []
+				const updatedListings = [];
 				for (const listing of user.listings) {
 					if (listing.category) {
-						const category = await Category.findById(listing.category)
+						const category = await Category.findById(
+							listing.category
+						);
 						if (category) {
-							listing.category = category
+							listing.category = category;
 						}
 					}
-					updatedListings.push(listing)
+					updatedListings.push(listing);
 				}
 
 				return updatedListings;
@@ -285,8 +286,6 @@ const resolvers = {
 			newListing["image"] = image;
 			newListing["category"] = await Category.findById(category);
 
-			console.log(context)
-
 			if (size) {
 				newListing["size"] = size;
 			}
@@ -295,40 +294,45 @@ const resolvers = {
 			}
 
 			let listingTags = [];
+
 			if (tags.length > 0) {
 				const foundTags = await Tag.find({
 					tag: { $in: tags },
 				});
+
 				if (tags.length !== foundTags.length) {
 					const allTagIds = [];
 					if (foundTags) {
 						foundTags.forEach((tag) => allTagIds.push(tag._id));
 					}
 
-					//* Filter all tags and return the tags that do not exist in the database
+					//* Filter all tags and return the tags that do not exist in the database.
+					//* Return true for any tags NOT found in the foundTags array.
+					//* Verify that the current tagName exists within foundTags array
 					const tagsToCreate = tags.filter((tagName) => {
-						//* Return true for any tags NOT found in the foundTags array
 						return !foundTags.find((foundTag) => {
-							//* Verify that the current tagName exists within foundTags array
 							return foundTag.tag === tagName;
 						});
 					});
+
 					listingTags = await tagsToCreate.map(
-						async (tagName) => await Tag.create({ tagName })
+						async (tagName) => await Tag.create({ tag: tagName })
 					);
 				} else {
 					listingTags = foundTags;
 				}
 			}
-			newListing["tags"] = listingTags;
+			newListing["tags"] = await listingTags;
+
 			const listing = await Listing.create({
 				...newListing,
 			});
 
-			await User.findByIdAndUpdate(context.user._id, { $push: { listings: listing._id } })
-			//todo: add _id to listing._id, push in listing array
+			await User.findByIdAndUpdate(context.user._id, {
+				$push: { listings: listing._id },
+			});
 
-			return listing
+			return listing;
 		},
 		removeListing: async (
 			parent,
@@ -336,7 +340,13 @@ const resolvers = {
 			context,
 			info
 		) => {
-			return await Listing.findByIdAndDelete(listingId);
+			const user = User.findById(context.user._id).populate("listings");
+			// TODO: Remove after testing is finished
+			console.log(user.listings);
+			if (user && user.listings.includes(listingId)) {
+				return await Listing.findByIdAndDelete(listingId);
+			}
+			throwUnauthenticatedError();
 		},
 		//* update listing
 
@@ -402,12 +412,7 @@ const resolvers = {
 		},
 
 		// Carts are created when User is created. cart_id = user_id
-		addToCart: async (
-			parent,
-			{ listingId, ...args },
-			context,
-			info
-		) => {
+		addToCart: async (parent, { listingId, ...args }, context, info) => {
 			return Cart.findByIdAndUpdate(
 				context.user._id,
 				{ $push: { items: listingId } },

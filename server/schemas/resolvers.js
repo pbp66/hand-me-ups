@@ -61,9 +61,19 @@ const resolvers = {
 		},
 		myListings: async (parent, args, context, info) => {
 			if (context.user) {
-				const user = await User.findById(context.user._id).populate(
-					"listings"
-				);
+				const user = await User.findById(context.user._id)
+					.populate("listings")
+					.populate({
+						path: "listings",
+						populate: {
+							path: "seller",
+							model: "User",
+						},
+					});
+				if (!user) {
+					throwUnauthenticatedError();
+					return;
+				}
 				const updatedListings = [];
 				for (const listing of user.listings) {
 					if (listing.category) {

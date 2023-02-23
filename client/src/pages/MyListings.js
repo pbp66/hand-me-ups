@@ -1,23 +1,16 @@
 import { Button, Modal, Container, Row, Col } from 'react-bootstrap'
 import { useParams } from "react-router-dom"
 import AddListing from "./AddListing";
-import Listing from '../components/Listing';
-import Grid from "../components/Grid"
-import { useState } from 'react'
-import { useQuery } from '@apollo/client'
-import { useMutation } from '@apollo/client';
-import { QUERY_MY_LISTINGS, QUERY_LISTINGS } from '../utils/queries';
-import { REMOVE_LISTING } from '../utils/mutations';
-import { useStoreContext } from '../ctx/storeContext';
-
+import Listing from "../components/Listing";
+import Grid from "../components/Grid";
+import { useState } from "react";
+import { useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import { QUERY_MY_LISTINGS, QUERY_LISTINGS } from "../utils/queries";
+import { REMOVE_LISTING } from "../utils/mutations";
 
 const MyListings = (props) => {
-	const [state, dispatch] = useStoreContext()
-	const {
-		data,
-		loading,
-		error
-	} = useQuery(QUERY_MY_LISTINGS);
+	const { data, loading, error } = useQuery(QUERY_MY_LISTINGS);
 	const myListings = data?.myListings || [];
 	const [show, setShow] = useState(false)
 	const handleClose = () => setShow(false)

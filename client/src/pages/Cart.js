@@ -6,10 +6,10 @@ import Listing from '../components/Listing';
 import { useLazyQuery, useQuery, useMutation } from '@apollo/client';
 import { useState } from 'react'
 import { QUERY_MY_CART } from '../utils/queries';
-import { REMOVE_FROM_CART } from '../utils/mutations';
 import Auth from '../utils/auth';
 
 // // const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+
 
 const Cart = () => {
     const { data: cartData, loading, error } = useQuery(QUERY_MY_CART);

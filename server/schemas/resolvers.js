@@ -37,7 +37,13 @@ const resolvers = {
 			throwUnauthenticatedError();
 		},
 		allListings: async (parent, args, context, info) => {
-			return Listing.find();
+			const listings = await Listing.find({
+				purchased_status: { $not: { $eq: true } }, // If a listing is purchased, we don't want to list it
+			})
+				.populate("category")
+				.populate("tags");
+			return listings;
+
 		},
 		oneListing: async (parent, { listingId }, context, info) => {
 			return Listing.findById(listingId)
@@ -148,39 +154,39 @@ const resolvers = {
 			const order = new Order({ listings: args.listings });
 			const line_items = [];
 			//pull the listings out of the order
-			const { listings } = await order.populate('listing');
-		
-				//create new stripeProducts from listings
+			const { listings } = await order.populate("listing");
+
+			//create new stripeProducts from listings
 			for (let i = 0; i < listings.length; i++) {
 				const product = await stripe.products.create({
 					name: listings[i].name,
 					description: listings[i].description,
-					images: listings[i].image
+					images: listings[i].image,
 				});
-				console.log(product)
+				console.log(product);
 				//create stripe prices
 				const price = await stripe.prices.create({
 					product: product.id,
 					unit_amount: listings[i].price * 100,
-					currency: 'usd',
+					currency: "usd",
 				});
 				//
 				line_items.push({
 					price: price.id,
-					quantity: 1
+					quantity: 1,
 				});
 			}
 
 			const session = await stripe.checkout.sessions.create({
-				payment_method_types: ['card'],
+				payment_method_types: ["card"],
 				line_items,
-				mode: 'payment',
+				mode: "payment",
 				success_url: `${url}/success?session_id={CHECKOUT_SESSION_ID}`,
-				cancel_url: `${url}/`
+				cancel_url: `${url}/`,
 			});
 
 			return { session: session.id };
-		}
+		},
 	},
 	Mutation: {
 		addUser: async (
@@ -383,12 +389,12 @@ const resolvers = {
 			return user.favorites;
 		},
 		// TODO
-		addOrder: async (parent, args, context, info) => { },
+		addOrder: async (parent, args, context, info) => {},
 		removeOrder: async (parent, { orderId, ...args }, context, info) => {
 			return await Order.findByIdAndDelete(orderId);
 		},
 		// TODO
-		updateOrder: async (parent, args, context, info) => { },
+		updateOrder: async (parent, args, context, info) => {},
 
 		//only when user is deleted will we delete a cart
 		removeCart: async (parent, args, context, info) => {

@@ -7,7 +7,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { isMobile } from "react-device-detect";
 import { ADD_LISTING } from "../utils/mutations";
 import { QUERY_ALL_CATEGORIES, QUERY_MY_LISTINGS } from "../utils/queries";
-import auth from "../utils/auth";
+import Auth from "../utils/auth";
 import { useStoreContext } from "../ctx/storeContext";
 
 

@@ -8,12 +8,7 @@ import Auth from "../utils/auth"
 
 
 const Discover = () => {
-
-
 	const { data, loading, error } = useQuery(QUERY_LISTINGS);
-
-
-
 
 	if (loading) return <p>loading</p>
 	if (error) return <p>error {error.message} </p>
@@ -21,23 +16,24 @@ const Discover = () => {
 	// const handleFormSubmit = async (event) => {
 	// 	event.preventDefault();
 	// }
-	console.log(allListings)
+
 	return (<>
 		<h1>Discover</h1>
 		<Grid colCount={4} md={3}>
-
 			{allListings.map(listing => {
 				{
-					Auth.getProfile().data?._id === listing.seller._id ?
-						<></>
-						:
-						<>
-							<Listing
-								key={listing._id}
-								listing={listing}
-							>
-							</Listing>
-						</>
+					// Auth.loggedIn() && Auth.getProfile().data?._id === listing.seller._id ?
+					// 		<>
+					// 		</>
+					// 		:
+							<>
+								<Listing
+									key={listing._id}
+									listing={listing}
+								>
+								</Listing>
+							</>
+			
 				}
 			})}
 		</Grid>

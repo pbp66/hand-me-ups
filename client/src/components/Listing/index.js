@@ -16,6 +16,13 @@ const AddButton = styled.button `
     &:hover {
         background-color: #96BBBB;
 `
+const RemoveButton = styled.button `
+    background-color: cream;
+    color: #3A606E;
+    padding: 10px;
+    &:hover {
+        background-color: #E08DAC;
+`
 const FavoriteButton = styled.button `
     background-color: #E0E0E0;
      color: #3A606E;
@@ -135,10 +142,10 @@ console.log(data)
                                     </>
                                     :
                                     <>
-                                        <Button
+                                        <RemoveButton
                                             onClick={() => { toggleInCart(); removeFromCart(); }}>
                                             Remove From Cart
-                                        </Button>
+                                        </RemoveButton>
                                     </>
                                 }
                             </Col>

@@ -479,6 +479,7 @@ const resolvers = {
 			context,
 			info
 		) => {
+			console.log("listingId", listingId);
 			const user = await User.findByIdAndUpdate(
 				context.user._id,
 				{

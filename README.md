@@ -2,7 +2,7 @@
 
 ## Description
 
-TODO
+This is a full stack MERN ecommerce application. The purpose of the site is to provide a place for users to buy and sell clothing.
 
 User Story:
 
@@ -49,7 +49,6 @@ AS A USER i want to be able to sell clothes at a price of my choice...
 
 - [Hand-Me-Ups](#hand-me-ups)
   - [Description](#description)
-  - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Credits](#credits)
@@ -60,13 +59,40 @@ AS A USER i want to be able to sell clothes at a price of my choice...
 
 ## Installation
 
-TODO
+The user can clone the code from the GitHub repo. Once the code is cloned and opened in a code editor the user should install all npm packages by running 
+```
+npm i
+```
+The user can seed the database running
+```
+npm run seed
+```
+To invoke the application the user can run 
+
+```
+npm start
+```
+If the user wants to run in a dev environment so the server refreshes after changes are made the user should run
+```
+npm run develop
+```
 
 ## Usage
 
-TODO
+Once the user enters the site they can browse all the listings. Before they can interact with most of the site they will need to either login or signup. This can be done by clicking on the Login or Signup buttons in the navbar. Once logged in users can add their own listings, add listings to their cart, favorite a listing, and make an order.
+
+![Discover]()
+![Cart]()
+![Saved Items]()
+![My Listings]()
 
 ## Credits
+
+- [Apollo](https://www.apollographql.com/docs/)
+- [MongoDB](https://www.mongodb.com/docs/)
+- [Stripe](https://stripe.com/docs)
+- [MDN Web Docs](https://developer.mozilla.org/en-US/)
+- [React](https://reactjs.org/docs/getting-started.html)
 
 ## License
 

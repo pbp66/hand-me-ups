@@ -1,148 +1,196 @@
-import { Card, Button, Container, Row, Col } from 'react-bootstrap'
-import { useMutation } from "@apollo/client"
-import { Link } from "react-router-dom"
-import Auth from '../../utils/auth'
-import { useState } from 'react'
-import { useStoreContext } from '../../ctx/storeContext'
-// import {REMOVE_FROM_CART,ADD_TO_CART, UPDATE_LISTINGS} from '../../ctx/actions'
-import { REMOVE_LISTING, ADD_TO_CART, FAVORITE_LISTING, REMOVE_FROM_CART } from '../../utils/mutations'
-import { QUERY_LISTINGS, QUERY_MY_CART, QUERY_MY_LISTINGS } from '../../utils/queries'
+import {
+	Card,
+	Button,
+	Container,
+	Row,
+	Col,
+	ButtonGroup,
+} from "react-bootstrap";
 
-
-
+import {
+	parseAndCheckHttpResponse,
+	useMutation,
+	useQuery,
+} from "@apollo/client";
+import { Link } from "react-router-dom";
+import Auth from "../../utils/auth";
+import { useState } from "react";
+import {
+	REMOVE_LISTING,
+	ADD_TO_CART,
+	FAVORITE_LISTING,
+	REMOVE_FROM_CART,
+	UNFAVORITE_LISTING,
+} from "../../utils/mutations";
+import {
+	QUERY_FAVORITE_LISTINGS,
+	QUERY_LISTINGS,
+	QUERY_MY_CART,
+	QUERY_MY_LISTINGS,
+} from "../../utils/queries";
 
 const Listing = (props) => {
-    const [state, dispatch] = useStoreContext()
-    const [favorite, setFavorite] = useState(false)
-    const [inCart, setInCart] = useState(false)
-    const [show, setShow] = useState(false)
-    // const handleClose = () => setShow(false)
-    // const handleShow = () => setShow(true)
+	const [show, setShow] = useState(true);
+	// const handleClose = () => setShow(false)
+	// const handleShow = () => setShow(true)
 
-    const {
-        _id,
-        title,
-        image,
-        description,
-        price,
-        // size,
-        // color,
-        condition,
-        // tags,
-        // listing_date,
-        // category,
-        seller
-    } = props.listing
+	const {
+		_id,
+		title,
+		image,
+		description,
+		price,
+		// size,
+		// color,
+		condition,
+		// tags,
+		// listing_date,
+		// category,
+		seller,
+	} = props.listing;
+	const { data: cartData } = useQuery(QUERY_MY_CART);
+	const { data: favoriteData } = useQuery(QUERY_FAVORITE_LISTINGS);
 
-    const [addToCart, { data }] = useMutation(ADD_TO_CART, {
-        variables: {
-            listingId: _id,
-        },
-        refetchQueries: [
-            { query: QUERY_MY_CART },
-            "QUERY_MY_CART"
-        ],
-    }
-    );
-console.log(data)
-    const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
-        variables: {
-            listingId: _id,
-        }
-    })
+	const [removeFromCart] = useMutation(REMOVE_FROM_CART);
+	const [unFavoriteListing, error] = useMutation(UNFAVORITE_LISTING);
+	console.log("unfavorite listing error:", error);
+	const [addToCart, { data }] = useMutation(ADD_TO_CART);
+	const [favoriteListing] = useMutation(FAVORITE_LISTING);
 
-    //move this to my Listings since we wont show the users listings on discover page
-    const [removeListing] = useMutation(REMOVE_LISTING, {
-        variables: {
-            listingId: _id,
-        },
-        refetchQueries: [
-            { query: QUERY_MY_LISTINGS },
-            "QUERY_MY_LISTINGS",
-            { query: QUERY_LISTINGS },
-            "QUERY_LISTINGS"
-        ],
-    });
+	const handleAddToCart = async (id) => {
+		await addToCart({
+			variables: {
+				listingId: id,
+			},
+			refetchQueries: [{ query: QUERY_MY_CART }, "QUERY_MY_CART"],
+		});
+	};
 
-    const [favoriteListing] = useMutation(FAVORITE_LISTING, {
-        variables: {
-            listingId: _id
-        }
-    })
+	const handleRemoveFromCart = async (id) => {
+		await removeFromCart({
+			variables: {
+				listingId: id,
+			},
+			refetchQueries: [{ query: QUERY_MY_CART }, "QUERY_MY_CART"],
+		});
+	};
 
-    const toggleFavorite = () => {
-        //change favorite button style to show added to favorites
-        setFavorite(!favorite)
-        favoriteListing()
-    }
+	const handleFavoriteListing = async (id) => {
+		await favoriteListing({
+			variables: {
+				listingId: id,
+			},
+			refetchQueries: [
+				{ query: QUERY_FAVORITE_LISTINGS },
+				"FAVORITE_LISTINGS",
+			],
+		});
+	};
 
-    const toggleInCart = () => {
-        setInCart(!inCart)
-        console.log(inCart)
-    }
+	const handleUnfavorite = async (id) => {
+		console.log("listing id to unfavorite", id);
+		await unFavoriteListing({
+			variables: {
+				listingId: id,
+			},
+			refetchQueries: [
+				{ query: QUERY_FAVORITE_LISTINGS },
+				"FAVORITE_LISTINGS",
+			],
+		});
+	};
 
+	const checkSeller = () => {
+		return Auth.loggedIn() && Auth.getProfile().data?._id !== seller?._id;
+	};
+	const inCart = () => {
+		return cartData?.myCart.items.some((listing) => listing._id === _id);
+	};
 
+	const isFav = () => {
+		return favoriteData?.favoriteListings.some(
+			(listing) => listing._id === _id
+		);
+	};
 
-    // console.log(`Token for graphql header ${Auth.getToken()}`)
-    return (
-        <>
-            <Link
-                to={`/listings/${_id}`}>
-                <Card
-                    onMouseEnter={() => setShow(true)}
-                    onMouseLeave={() => setShow(false)}
-                >
-                    {show ?
-                        <Card.Body>
-                            <Card.Img src={image}></Card.Img>
-                            <Card.Header>{title}</Card.Header>
-                            <Card.Text>seed userID  {description}</Card.Text>
-                            <Card.Footer>{condition}${price}
-                            </Card.Footer>
-                        </Card.Body>
-                        :
-                        <Card.Body>
-                            <Card.Img src={image}></Card.Img>
-                        </Card.Body>
-                    }
-                </Card>
-            </Link>
-            {Auth.loggedIn() && Auth.getProfile().data?._id !== seller?._id ?
-                <>
-                    <Container>
-                        <Row>
-                            <Col>
-                                {!inCart ?
-                                    <>
-                                        <Button
-                                            onClick={() => { toggleInCart(); addToCart(); }}>
-                                            Add to Cart
-                                        </Button>
-                                    </>
-                                    :
-                                    <>
-                                        <Button
-                                            onClick={() => { toggleInCart(); removeFromCart(); }}>
-                                            Remove From Cart
-                                        </Button>
-                                    </>
-                                }
-                            </Col>
-                            <Col>
-                                <Button
-                                    onClick={toggleFavorite}>
-                                    Save to favorites
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Container>
-                    <br />
-                </>
-                :
-                <></>
-            }
-        </>
-    )
-}
+	console.log(`Token for graphql header ${Auth.getToken()}`);
+	return (
+		<>
+			<Link to={`/listings/${_id}`}>
+				<Card
+				// onMouseEnter={() => setShow(true)}
+				// onMouseLeave={() => setShow(false)}
+				>
+					<Card.Body>
+						<Card.Img src={image}></Card.Img>
+						<Card.Header>{title}</Card.Header>
+						<Card.Text>seed userID {description}</Card.Text>
+						<Card.Footer>
+							{condition}${price}
+						</Card.Footer>
+					</Card.Body>
+				</Card>
+			</Link>
+			{checkSeller() ? (
+				<>
+					<center text-align="justify">
+						{
+							<>
+								{" "}
+								{inCart() ? (
+									<button
+										onClick={() => {
+											handleRemoveFromCart(_id);
+										}}
+									>
+										<span
+											role="img"
+											aria-label="trash"
+										>
+											← 🛒
+										</span>
+									</button>
+								) : (
+									<button
+										onClick={() => {
+											handleAddToCart(_id);
+										}}
+									>
+										→ 🛒
+									</button>
+								)}
+							</>
+						}
 
-export default Listing
+						{
+							<>
+								{isFav() ? (
+									<button
+										onClick={() => {
+											handleUnfavorite(_id);
+										}}
+									>
+										★
+									</button>
+								) : (
+									<button
+										onClick={() => {
+											handleFavoriteListing(_id);
+										}}
+									>
+										☆
+									</button>
+								)}
+							</>
+						}
+					</center>
+					<br />
+				</>
+			) : (
+				<></>
+			)}
+		</>
+	);
+};
+
+export default Listing;

@@ -8,10 +8,8 @@ import { useQuery } from "@apollo/client";
 import { useMutation } from "@apollo/client";
 import { QUERY_MY_LISTINGS, QUERY_LISTINGS } from "../utils/queries";
 import { REMOVE_LISTING } from "../utils/mutations";
-import { useStoreContext } from "../ctx/storeContext";
 
 const MyListings = (props) => {
-	const [state, dispatch] = useStoreContext();
 	const { data, loading, error } = useQuery(QUERY_MY_LISTINGS);
 	const myListings = data?.myListings || [];
 	const [show, setShow] = useState(false);
@@ -60,7 +58,7 @@ const MyListings = (props) => {
 												);
 											}}
 										>
-											Remove Listing
+											🗑️ 
 										</Button>
 									</Col>
 								</Row>
@@ -76,6 +74,7 @@ const MyListings = (props) => {
 					animation={false}
 					show={show}
 					onHide={handleClose}
+					onSubmit={handleClose}
 				>
 					<Modal.Header closeButton>
 						<Modal.Title>Add Listing</Modal.Title>

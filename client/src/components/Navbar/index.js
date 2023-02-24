@@ -26,7 +26,7 @@ const Navbar = () => {
                                     Account
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li><NavLink className="dropdown-item" to="/SavedItems">Saved Items</NavLink></li>
+                                    <li><NavLink className="dropdown-item" to="/Favorites">Favorites</NavLink></li>
                                     <li><NavLink className="dropdown-item" to={`/MyListings/${Auth.getProfile()?.data?._id}`}>My Listings</NavLink></li>
                                     <li><NavLink className="dropdown-item" to="/PurchaseHistory">Purchase History</NavLink></li>
                                     <li><hr className="dropdown-divider" /></li>

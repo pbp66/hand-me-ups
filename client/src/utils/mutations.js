@@ -116,7 +116,7 @@ export const ADD_ORDER = gql`
 
 export const UNFAVORITE_LISTING = gql`
 	mutation UNFAVORITE_LISTING($listingId: ID!) {
-		unFavoriteListing(listing: $listingId) {
+		unFavoriteListing(listingId: $listingId) {
 			_id
 		}
 	}

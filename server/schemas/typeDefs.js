@@ -182,7 +182,7 @@ const typeDefs = `
 		addOrder(orderDetails: orderInput!): Order
 		updateMe(userId: ID!, user: updateUserInput): User
 		saveListing(listingId: ID!, listing: listingInput): Listing
-		unFavoriteListing(listing: ID!): [Listing]
+		unFavoriteListing(listingId: ID!): [Listing]
 		removeOrder(orderId: ID!): Order
 		updateOrder(orderId: ID!, order: orderInput): Order
 		removeCart: Cart

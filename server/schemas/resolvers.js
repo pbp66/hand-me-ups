@@ -94,22 +94,86 @@ const resolvers = {
 		favoriteListings: async (parent, args, context, info) => {
 			if (context.user) {
 				const user = await User.findById(context.user._id).populate(
-					"saved_items"
+					"favorites"
 				);
-				return user.saved_items;
+				return user.favorites;
 			}
 			throwUnauthenticatedError();
 		},
-		// searchListings: async (
-		// 	parent,
-		// 	{ searchTerms, tags, ...args },
-		// 	context,
-		// 	info
-		// ) => {
-		// TODO: Search listing titles and descriptions. May need aggregate: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
-		// TODO: Create list of matching categories and tags from the tags variable
-		// 	Listing.find({});
-		// },
+		//! Returns group of listings that contain any of the search terms in the title, description, tags, and or categories. AS A WARNING, I'm pretty sure this query is a steaming pile of bulls*** currently... I HAVE NOT THOROUGHLY TESTED IT. AT ALL. Sincerely, @pbp66
+		searchListings: async (
+			parent,
+			{ searchString, ...args },
+			context,
+			info
+		) => {
+			//! Search listing titles and descriptions. Considered aggregate...: https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
+			//! But used $text: $search instead: https://stackoverflow.com/questions/28775051/best-way-to-perform-a-full-text-search-in-mongodb-and-mongoose
+
+			let terms = searchString.split(" "); //! Assumes that all tags, categories, titles, and descriptions are single words only.
+			const searchConditions = []; //! Array for holding each search clause using $or
+
+			const matchedCategories = Category.find({
+				category: { $in: terms }, // returns all matching category documents
+			});
+
+			if (matchedCategories.length > 0) {
+				searchConditions.push({ category: { $in: matchedCategories } });
+				terms.forEach((term, index, array) => {
+					//* Remove matched categories from the terms array to eliminate repeat DB searches
+					if (matchedCategories.match(term)) {
+						array.splice(index, 1);
+					}
+				});
+			}
+
+			const matchedTags = Tag.find({
+				tag: { $in: terms }, // returns all matching tag documents
+			});
+
+			if (matchedTags.length > 0) {
+				searchConditions.push({ tags: { tag: { $in: matchedTags } } });
+				terms.forEach((term, index, array) => {
+					//* Remove matched tags from the terms array to eliminate repeat DB searches
+					if (matchedTags.match(term)) {
+						array.splice(index, 1);
+					}
+				});
+			}
+
+			searchConditions.push({ size: { $in: searchString } });
+
+			const matchedConditions = terms.filter((term, index, array) => {
+				const matchBool = [
+					"NEW",
+					"USED_LIKE_NEW",
+					"USED_GOOD",
+					"USED_FAIR",
+					"USED_POOR",
+				].contains(term);
+
+				//* Remove any conditions from the array to eliminate repeat DB searches
+				if (matchBool) {
+					array.splice(index, 1);
+				}
+				return matchBool;
+			});
+
+			if (matchedConditions.length > 0) {
+				searchConditions.push({
+					condition: { $in: matchedConditions },
+				});
+			}
+
+			return Listing.find({
+				$or: [
+					...searchConditions,
+					{ $text: { $search: { $in: terms } } }, //! I am not confident at all
+				],
+			})
+				.populate("category")
+				.populate("tags");
+		},
 		allOrders: async (parent, args, context, info) => {
 			return Order.find();
 		},
@@ -415,6 +479,7 @@ const resolvers = {
 			context,
 			info
 		) => {
+			console.log("listingId", listingId);
 			const user = await User.findByIdAndUpdate(
 				context.user._id,
 				{

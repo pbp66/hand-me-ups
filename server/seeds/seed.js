@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import RandomGenerator from "random-seed-generator";
 import db from "../config/connection.js";
-import { Category, Listing, Tag, User } from "../models";
+import { Category, Listing, Tag, User } from "../models/index.js";
 import userSeeds from "./userSeeds.json" assert { type: "json" };
 import categorySeeds from "./categories.json" assert { type: "json" };
 import tagSeeds from "./tags.json" assert { type: "json" };

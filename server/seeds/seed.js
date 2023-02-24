@@ -48,8 +48,6 @@ db.once("open", async () => {
 		await Category.create(categorySeeds);
 		await Tag.create(tagSeeds);
 
-
-
 		const allCategories = await Category.find();
 		const allTags = await Tag.find();
 

@@ -20,7 +20,8 @@
 		"graphql": "^16.6.0",
 		"jsonwebtoken": "^8.5.1",
 		"luxon": "^3.2.1",
-		"mongoose": "^6.9.1"
+		"mongoose": "^6.9.1",
+		"random-seed-generator": "^0.0.7"
 	},
 	"devDependencies": {
 		"nodemon": "^2.0.3"

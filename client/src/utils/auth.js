@@ -25,9 +25,10 @@ class AuthService {
 
 	login(idToken) {
 		localStorage.setItem("id_token", idToken);
-		const decoded = decode(idToken)
-		const {_id} = decoded?.data
-		window.location.assign(`/MyListings/${_id}`);
+		const decoded = decode(idToken);
+		const { _id } = decoded?.data;
+		//window.location.assign(`/MyListings/{_id}`)
+		window.location.assign(`/`);
 	}
 
 	logout() {

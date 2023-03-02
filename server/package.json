@@ -10,7 +10,7 @@
 		"watch": "npx nodemon server.js"
 	},
 	"keywords": [],
-	"author": "",
+	"author": "pbp66",
 	"license": "MIT",
 	"dependencies": {
 		"@apollo/server": "^4.3.3",

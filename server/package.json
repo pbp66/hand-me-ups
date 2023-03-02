@@ -7,7 +7,8 @@
 	"scripts": {
 		"start": "node --experimental-modules --es-module-specifier-resolution=node server.js",
 		"seed": "node --experimental-modules --es-module-specifier-resolution=node seeds/seed.js",
-		"watch": "npx nodemon server.js"
+		"watch": "npx nodemon server.js",
+		"build": "./node_modules/.bin/esbuild server.js --bundle --outfile=build/index.js --platform=node --format=esm --external:nock --external:mock-aws-s3 --external:aws-sdk"
 	},
 	"keywords": [],
 	"author": "pbp66",
@@ -20,7 +21,8 @@
 		"jsonwebtoken": "^8.5.1",
 		"luxon": "^3.2.1",
 		"mongoose": "^6.9.1",
-		"random-seed-generator": "^0.0.7"
+		"random-seed-generator": "^0.0.7",
+		"esbuild": "0.17.10"
 	},
 	"devDependencies": {
 		"dotenv": "^16.0.3",

@@ -22,7 +22,7 @@
 		"url": "https://github.com/pbp66/hand-me-ups/issues"
 	},
 	"homepage": "https://github.com/pbp66/hand-me-ups#readme",
-	"dependencies": {
+	"devDependencies": {
 		"concurrently": "^7.6.0"
 	}
 }

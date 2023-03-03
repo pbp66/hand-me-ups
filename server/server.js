@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === "production") {
 	// 	express.static(new URL("../client/build", import.meta.url).pathname)
 	// );
 	app.use(
-		express.static(new URL(".dist/client/build", import.meta.url).pathname)
+		express.static(new URL("./dist/client", import.meta.url).pathname)
 	);
 }
 
@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
 	// 	new URL("../client/build/index.html", import.meta.url).pathname
 	// );
 	res.sendFile(
-		new URL("./dist/client/build/index.html", import.meta.url).pathname
+		new URL("./dist/client/index.html", import.meta.url).pathname
 	);
 });
 
